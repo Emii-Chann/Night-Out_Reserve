@@ -1,7 +1,7 @@
 # Database
 
 # Language
-- MySQL 8.2.
+- MySQL 8.4.
 
 ## Applications
 - [Docker](https://www.docker.com/products/docker-desktop)
