@@ -31,11 +31,11 @@ docker login || { echo "Docker login failed"; exit 1; }
 # ===== Build frontend image =====
 echo "Building frontend image: ${DOCKER_USER}/${IMAGE_NAME}"
 
-# Build context MUST be frontend/
+# Build context = frontend/
 FRONTEND_DIR="$(cd .. && pwd)"
 
 docker build \
-  -f docker-build/Dockerfile.frontend \
+  -f Dockerfile.frontend \
   -t ${DOCKER_USER}/${IMAGE_NAME} \
   "$FRONTEND_DIR" || { echo "Docker build failed"; exit 1; }
 

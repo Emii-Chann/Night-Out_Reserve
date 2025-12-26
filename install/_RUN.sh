@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start the services defined in the docker-compose.yml file
-#docker-compose up -d
+docker compose -p nightout up -d
 
 sleep 5
 
