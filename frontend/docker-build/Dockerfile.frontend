@@ -1,9 +1,16 @@
-# Dockerfile.frontend
+# syntax=docker/dockerfile:1.5
 FROM nginx:alpine
+
+# Install envsubst (part of gettext)
+RUN apk add --no-cache gettext
+
 WORKDIR /usr/share/nginx/html
 
-# Copy all frontend files from ../app to container
-COPY ../app/ ./
+# Copy frontend files (relative to build context: frontend/)
+COPY app/ ./
 
-# Replace ${APP_BASE_URL} in index.html at container start
-CMD ["/bin/sh", "-c", "envsubst '\$APP_BASE_URL' < /usr/share/nginx/html/index.html > /usr/share/nginx/html/index.generated.html && mv /usr/share/nginx/html/index.generated.html /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"]
+# Replace ${APP_BASE_URL} at container start and run nginx
+CMD ["/bin/sh", "-c", \
+  "envsubst '$APP_BASE_URL' < index.html > index.tmp.html && \
+   mv index.tmp.html index.html && \
+   nginx -g 'daemon off;'"]

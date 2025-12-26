@@ -1,17 +1,22 @@
 #!/bin/sh
 set -e
 
-# Go to script directory
+# ---------------------------------
+# Frontend Docker build & push
+# ---------------------------------
+
+# Go to script directory (frontend/docker-build)
 cd "$(dirname "$0")"
 
 # ===== Load environment variables =====
-if [ -f ../../install/.env ]; then
-    echo "Loading environment variables from install/.env"
+ENV_FILE="../../install/.env"
+if [ -f "$ENV_FILE" ]; then
+    echo "Loading environment variables from $ENV_FILE"
     set -a
-    . ../../install/.env
+    . "$ENV_FILE"
     set +a
 else
-    echo "Error: install/.env not found!"
+    echo "Error: $ENV_FILE not found!"
     exit 1
 fi
 
@@ -21,17 +26,21 @@ IMAGE_NAME="${FRONTEND_PROJECT_DOCKERHUB}"
 
 # ===== Docker login =====
 echo "Logging in to Docker Hub..."
-docker login || exit 1
+docker login || { echo "Docker login failed"; exit 1; }
 
 # ===== Build frontend image =====
-echo "Building frontend image..."
+echo "Building frontend image: ${DOCKER_USER}/${IMAGE_NAME}"
+
+# Build context MUST be frontend/
+FRONTEND_DIR="$(cd .. && pwd)"
+
 docker build \
-  -f Dockerfile.frontend \
+  -f docker-build/Dockerfile.frontend \
   -t ${DOCKER_USER}/${IMAGE_NAME} \
-  .. || exit 1
+  "$FRONTEND_DIR" || { echo "Docker build failed"; exit 1; }
 
 # ===== Push image =====
 echo "Pushing frontend image..."
-docker push ${DOCKER_USER}/${IMAGE_NAME} || exit 1
+docker push ${DOCKER_USER}/${IMAGE_NAME} || { echo "Docker push failed"; exit 1; }
 
-echo "Frontend image pushed to Docker Hub."
+echo "Frontend image pushed successfully: ${DOCKER_USER}/${IMAGE_NAME}"
