@@ -1,0 +1,9 @@
+# Dockerfile.frontend
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+
+# Copy all frontend files from ../app to container
+COPY ../app/ ./
+
+# Replace ${APP_BASE_URL} in index.html at container start
+CMD ["/bin/sh", "-c", "envsubst '\$APP_BASE_URL' < /usr/share/nginx/html/index.html > /usr/share/nginx/html/index.generated.html && mv /usr/share/nginx/html/index.generated.html /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"]
