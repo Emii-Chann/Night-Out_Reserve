@@ -1,1 +1,1 @@
-// some sql scripts
+-- some sql scripts
