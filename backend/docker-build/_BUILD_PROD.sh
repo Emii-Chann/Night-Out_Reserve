@@ -1,17 +1,22 @@
 #!/bin/sh
 set -e
 
-# Go to script directory
+# -------------------------------
+# Backend Docker build & push
+# -------------------------------
+
+# Go to script directory (docker-build/)
 cd "$(dirname "$0")"
 
-# Load environment variables from .install/.env
-if [ -f ../../.install/.env ]; then
-    echo "Loading environment variables from .install/.env"
-    set -a             # automatically export all variables
-    . ../../.install/.env
+# Load environment variables from install/.env
+ENV_FILE="../../install/.env"
+if [ -f "$ENV_FILE" ]; then
+    echo "Loading environment variables from $ENV_FILE"
+    set -a
+    . "$ENV_FILE"
     set +a
 else
-    echo "Error: .install/.env not found!"
+    echo "Error: $ENV_FILE not found!"
     exit 1
 fi
 
@@ -21,17 +26,21 @@ IMAGE_NAME="${BACKEND_PROJECT_DOCKERHUB}"
 
 # ===== LOGIN =====
 echo "Logging in to Docker Hub..."
-docker login || exit 1
+docker login || { echo "Docker login failed!"; exit 1; }
 
-# ===== BUILD PROD IMAGE =====
-echo "Building PROD image..."
+# ===== BUILD IMAGE =====
+echo "Building Docker image: ${DOCKER_USER}/${IMAGE_NAME}"
+
+# Absolute backend path as build context
+BACKEND_DIR="$(cd ../ && pwd)"
+
 docker build \
   -f Dockerfile.prod \
-  -t ${DOCKER_USER}/${IMAGE_NAME}:${PROD_TAG} \
-  . || exit 1
+  -t ${DOCKER_USER}/${IMAGE_NAME} \
+  "$BACKEND_DIR" || { echo "Docker build failed!"; exit 1; }
 
 # ===== PUSH IMAGE =====
-echo "Pushing PROD image..."
-docker push ${DOCKER_USER}/${IMAGE_NAME} || exit 1
+echo "Pushing Docker image: ${DOCKER_USER}/${IMAGE_NAME}"
+docker push ${DOCKER_USER}/${IMAGE_NAME} || { echo "Docker push failed!"; exit 1; }
 
-echo "Images pushed to Docker Hub as PROD."
+echo "Docker image pushed successfully: ${DOCKER_USER}/${IMAGE_NAME}"

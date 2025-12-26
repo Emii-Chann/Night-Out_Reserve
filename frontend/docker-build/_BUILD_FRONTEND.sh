@@ -5,13 +5,13 @@ set -e
 cd "$(dirname "$0")"
 
 # ===== Load environment variables =====
-if [ -f ../../.install/.env ]; then
-    echo "Loading environment variables from .install/.env"
+if [ -f ../../install/.env ]; then
+    echo "Loading environment variables from install/.env"
     set -a
-    . ../../.install/.env
+    . ../../install/.env
     set +a
 else
-    echo "Error: .install/.env not found!"
+    echo "Error: install/.env not found!"
     exit 1
 fi
 
