@@ -5,7 +5,7 @@ docker compose -p nightout up -d
 
 sleep 5
 
-# Open application in browser (8080)
+# Open application in browser (80)
 URL="http://localhost"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
