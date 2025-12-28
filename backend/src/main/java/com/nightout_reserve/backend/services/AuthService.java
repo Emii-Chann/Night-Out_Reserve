@@ -34,7 +34,6 @@ public class AuthService {
             throw new UserIsDeletedExistsException("A felhasználó már nem létezik");
         }
         if (!encoder.matches(ulDTO.getPasswordIn(), up.getPassword())) {
-            System.out.println(encoder.encode(ulDTO.getPasswordIn()));
             throw new UserWrongPasswordException("A jelszó hibás");
         }
 
