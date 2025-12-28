@@ -9,8 +9,8 @@ WORKDIR /usr/share/nginx/html
 # Copy frontend files (relative to build context: frontend/)
 COPY app/ ./
 
-# Replace ${APP_BASE_URL} at container start and run nginx
+# Replace ${BACKEND_BASE_URL} at container start and run nginx
 CMD ["/bin/sh", "-c", \
-  "envsubst '$APP_BASE_URL' < index.html > index.tmp.html && \
+  "envsubst '$BACKEND_BASE_URL' < index.html > index.tmp.html && \
    mv index.tmp.html index.html && \
    nginx -g 'daemon off;'"]
