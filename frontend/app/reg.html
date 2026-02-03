@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Regisztráció</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+   
+    <link rel="stylesheet" href="reg.css">
+</head>
+
+<body>
+
+    
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fa-regular fa-calendar-check"></i>
+        </div>
+        <span>Night-Out Reserve</span>
+    </div>
+
+    
+    <form method="GET" onsubmit="return validateForm()">
+
+        <h2>Regisztráció</h2>
+
+        <input type="text" id="username" placeholder="Felhasználónév (Minimum 4 karakter)">
+        <div class="error" id="userError"></div>
+
+        <input type="password" id="password" placeholder="Jelszó (Minimum 8 karakter)">
+        <div class="error" id="passError"></div>
+
+        <input type="password" id="password2" placeholder="Jelszó újra">
+        <div class="error" id="pass2Error"></div>
+
+        <input type="text" id="email" placeholder="Email (nev@gmail.com)">
+        <div class="error" id="emailError"></div>
+
+        <input type="text" id="phone" placeholder="Telefonszám (06 30 123 4567)">
+        <div class="error" id="phoneError"></div>
+ <a href="./login.html" class="tab ">Már van fiókom</a>
+<button type="submit">Regisztráció</button>
+
+<p class="success" id="successMsg"></p>
+    </form>
+    <script src="./regell.js"></script>
+</body>
+</html>
