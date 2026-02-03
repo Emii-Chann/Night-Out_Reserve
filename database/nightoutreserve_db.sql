@@ -451,6 +451,63 @@ ALTER TABLE `tulajokbelepes`
   ADD CONSTRAINT `fk_tulaj_belepes` FOREIGN KEY (`tulaj_id`) REFERENCES `tulajokadatai` (`id`) ON DELETE CASCADE;
 COMMIT;
 
+  DELIMITER $$
+
+  CREATE PROCEDURE felhasznalo_hozzaad (
+      IN p_nev VARCHAR(100),
+      IN p_email VARCHAR(150),
+      IN p_telefon VARCHAR(30),
+      IN p_jelszo_hash VARCHAR(60)
+  )
+  BEGIN
+      INSERT INTO felhasznalok (nev, email, telefon, jelszo)
+      VALUES (p_nev, p_email, p_telefon, p_jelszo);
+  END$$
+  DELIMITER ;
+
+  DELIMITER $$
+  CREATE PROCEDURE felhasznalo_lista ()
+  BEGIN
+      SELECT f.id, f.nev, f.email, f.telefon, f.created_at
+      FROM felhasznalok f
+      ORDER BY f.created_at DESC;
+  END$$
+  DELIMITER ;
+
+  DELIMITER $$
+  CREATE PROCEDURE felhasznalo_id_alapjan (IN p_id INT)
+  BEGIN
+      SELECT f.id, f.nev, f.email, f.telefon, f.created_at
+      FROM felhasznalok f
+      WHERE f.id = p_id;
+  END$$
+  DELIMITER ;
+
+  DELIMITER $$
+  CREATE PROCEDURE felhasznalo_modosit (
+      IN p_id INT,
+      IN p_nev VARCHAR(100),
+      IN p_email VARCHAR(150),
+      IN p_telefon VARCHAR(30)
+  )
+  BEGIN
+      UPDATE felhasznalok
+      SET nev = p_nev,
+          email = p_email,
+          telefon = p_telefon
+      WHERE id = p_id;
+  END$$
+  DELIMITER ;
+
+  DELIMITER $$
+  CREATE PROCEDURE felhasznalo_torol (IN p_id INT)
+  BEGIN
+      DELETE FROM felhasznalok
+      WHERE id = p_id;
+  END$$
+  DELIMITER ;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

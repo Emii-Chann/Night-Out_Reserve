@@ -313,11 +313,11 @@ CREATE PROCEDURE felhasznalo_hozzaad (
     IN p_nev VARCHAR(100),
     IN p_email VARCHAR(150),
     IN p_telefon VARCHAR(30),
-    IN p_jelszo_hash VARCHAR(60)
+    IN p_jelszo VARCHAR(60)
 )
 BEGIN
     INSERT INTO felhasznalok (nev, email, telefon, jelszo_hash)
-    VALUES (p_nev, p_email, p_telefon, p_jelszo_hash);
+    VALUES (p_nev, p_email, p_telefon, p_jelszo);
 END$$
 DELIMITER ;
 
