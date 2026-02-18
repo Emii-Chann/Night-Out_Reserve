@@ -41,7 +41,7 @@ function validateForm(){
 
 
     let phoneRegex = /^[0-9]{9,12}$/;
-    if(!phoneRegex.test(phone)){
+    if(!phoneRegex.test(phone) || phone){
         document.getElementById("phoneError").innerHTML =  "<span style='color:#ff6b6b;'>Hibás telefonszám!</span>";
         valid = false;
     }
