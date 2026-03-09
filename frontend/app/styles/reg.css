@@ -39,13 +39,45 @@
 body {
     min-height: 100vh;
     background:
-        radial-gradient(circle at top, rgba(139,92,246,0.15), transparent 60%),
-        var(--bg-color);
+        radial-gradient(circle at top, rgba(139, 92, 246, 0.45) 0%, transparent 55%),
+        radial-gradient(circle at bottom, rgba(56, 189, 248, 0.18) 0%, transparent 60%),
+        linear-gradient(180deg, #050314, #050814);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: var(--text-white);
+    position: relative;
+    overflow: hidden;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 120%;
+    height: 120%;
+    top: -10%;
+    left: -10%;
+    z-index: -1;
+    background-repeat: no-repeat;
+    background-size: 60% 60%;
+    opacity: 0.6;
+    filter: blur(120px);
+    animation: floatBG 30s ease-in-out infinite alternate;
+}
+
+body::before {
+    background-image:
+        radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 60%);
+    animation-duration: 35s;
+}
+
+body::after {
+    background-image:
+        radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, transparent 60%);
+    animation-duration: 45s;
+    animation-direction: alternate-reverse;
 }
 
 
@@ -75,6 +107,18 @@ form {
     gap: 15px;
 
     backdrop-filter: blur(10px);
+}
+
+.forgot-password-link {
+    font-size: 14px;
+    margin-top: 5px;
+    color: var(--primary-color);
+    text-decoration: none;
+    align-self: flex-start;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
 }
 
 

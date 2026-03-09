@@ -17,7 +17,10 @@
 }
 
 body {
-    background: linear-gradient(180deg, #0b0b15, #0f0f1a);
+    background:
+        radial-gradient(circle at top, rgba(139, 92, 246, 0.45) 0%, transparent 55%),
+        radial-gradient(circle at bottom, rgba(56, 189, 248, 0.18) 0%, transparent 60%),
+        linear-gradient(180deg, #050314, #050814);
     color: var(--text-white);
     position: relative;
     overflow-x: hidden;
@@ -102,16 +105,11 @@ body::after {
 
 .logo .highlight { font-weight: 300; }
 
-.user-profile {
-    font-size: 30px;
-    cursor: pointer;
-}
+
 
 
 .hero {
-    height: 80vh;   
-    background-size: cover;
-    background-position: center;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -195,6 +193,88 @@ body::after {
 
 .tab.active, .tab:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Featured carousel on homepage */
+.featured-carousel {
+    margin: 20px auto 30px auto;
+    max-width: 900px;
+    overflow: hidden;
+}
+
+.featured-track {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    animation: featuredSlide 25s linear infinite;
+}
+
+.featured-card {
+    min-width: 260px;
+    background-color: rgba(21, 21, 33, 0.9);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 18px 22px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+}
+
+.featured-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+.featured-category {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+.hero-cta-btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 12px 32px;
+    border-radius: 999px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 0 28px rgba(139, 92, 246, 0.6);
+    transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-cta-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px rgba(139, 92, 246, 0.8);
+}
+
+@keyframes featuredSlide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        padding-top: 120px;
+        padding-bottom: 80px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.4rem;
+    }
+
+    .featured-track {
+        animation-duration: 20s;
+    }
+
+    .featured-card {
+        min-width: 70%;
+    }
 }
 
 
@@ -403,4 +483,27 @@ body::after {
 
 .app-buttons img:hover {
     transform: scale(1.05);
+}
+
+.profil {
+    font-size: 30px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    color: white;
+}
+
+.navbar .profil,
+.navbar .profil i {
+    color: #ffffff;
+}
+
+.navbar a .profil,
+.navbar a .profil i {
+    color: #ffffff;
+}
+
+.navbar a .profil:hover,
+.navbar a .profil i:hover {
+    color: #ffffff;
 }
