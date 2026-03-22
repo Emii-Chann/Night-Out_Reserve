@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> getUserByUsernameLike(String searchByUsername) {
+    public List<User> getUsersByUsernameLike(String searchByUsername) {
         return userRepository.findUsersByUsernameLike(searchByUsername);
     }
 
@@ -55,8 +55,12 @@ public class UserServiceImpl implements UserService{
 
         userToUpdate.setUsername(body.getUsername());
         userToUpdate.setEmail(body.getEmail());
-        userToUpdate.setPhone(body.getPhone());
 
+        if (body.getPhone() != null) {
+            userToUpdate.setPhone(body.getPhone());
+        } else {
+            userToUpdate.setPhone(userToUpdate.getPhone());
+        }
         return userRepository.save(userToUpdate);
     }
 
@@ -73,7 +77,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void hardDeleteUser(Integer id) {
+    public void hardDeleteUserById(Integer id) {
         System.out.println("Deleting user with id "+ id);
         userRepository.deleteById(id);
     }

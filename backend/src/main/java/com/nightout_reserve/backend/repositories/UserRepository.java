@@ -14,12 +14,11 @@ public interface UserRepository extends JpaRepository<User, Integer>{
     @Procedure(procedureName = "login")
     User login(@Param("usernameIn") String usernameIn);
 
-    @Query("SELECT u FROM User u WHERE u.email = :email")
-    User findByEmail(@Param("email") String email);
+    User findByEmail(String email);
 
     User findByPhone(String phone);
 
 
-    @Query("SELECT u FROM User u WHERE u.username LIKE :username")
-    List<User> findUsersByUsernameLike(@Param("username") String username);
+    @Query("SELECT u FROM User u WHERE u.username LIKE %:username%")
+    List<User> findUsersByUsernameLike( String username);
 }

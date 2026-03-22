@@ -4,6 +4,8 @@ import com.nightout_reserve.backend.models.User;
 import com.nightout_reserve.backend.services.UserService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,26 +17,55 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
-    //endpoint
     @GetMapping("/")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
 
-
-    @GetMapping("/{userId}")
+    @GetMapping("/id/{userId}")
     public User getUserById(@PathVariable Integer userId){
         return userService.getUserById(userId);
     }
 
 
+    @GetMapping("/email/{userEmail}")
+    public User getUserByEmail(@PathVariable String userEmail){
+        return userService.getUserByEmail(userEmail);
+    }
+
+    @GetMapping("/phone/{userPhone}")
+    public User getUserById(@PathVariable String userPhone){
+        return userService.getUserByPhone(userPhone);
+    }
 
 
+    @GetMapping("/search/{usernameLike}")
+    public List<User> getUsersByUsernameLike(@PathVariable String usernameLike){
+        return userService.getUsersByUsernameLike(usernameLike);
+    }
+
+    @PostMapping("/create")
+    public User createUser(@RequestBody User user){
+        return userService.createUser(user);
+    }
+
+    @PutMapping("/update/{userId}")
+    public User updateUser(@PathVariable Integer userId,@RequestBody User user){
+        return userService.updateUserById(userId, user);
+    }
 
 
+    @PatchMapping("/softDelete/{userId}")
+    public User softDeleteUser(@PathVariable Integer userId){
+        return userService.softDeleteUserById(userId);
+    }
 
+    @DeleteMapping("/hardDelete/{userId}")
+    public String hardDeleteUser(@PathVariable Integer userId){
+        userService.hardDeleteUserById(userId);
 
+        return  "user with id: "+userId+" successfully deleted";
+    }
 
 
 }

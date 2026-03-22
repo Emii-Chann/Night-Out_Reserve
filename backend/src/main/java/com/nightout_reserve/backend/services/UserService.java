@@ -10,7 +10,7 @@ public interface UserService {
     User getUserByEmail(String email);
     User getUserByPhone(String phone);
     List<User> getAllUsers();
-    List<User> getUserByUsernameLike(String searchByUsername);
+    List<User> getUsersByUsernameLike(String searchByUsername);
 
     //create
     User createUser(User userToCreate);
@@ -21,5 +21,5 @@ public interface UserService {
 
     //delete
     User softDeleteUserById(Integer id);
-    void hardDeleteUser(Integer id);
+    void hardDeleteUserById(Integer id);
 }

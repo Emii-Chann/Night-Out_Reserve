@@ -33,12 +33,25 @@ public class User {
     private String password;
 
     @Column(name = "letrehozva_at", updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @Column(name = "torolve", nullable = false)
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
 
     @Column(name = "torolve_at")
     private LocalDateTime deletedAt;
+
+
+
+    @PrePersist
+    void onCreate(){
+       this.createdAt = LocalDateTime.now();
+
+       if(isDeleted == null || isDeleted){
+           isDeleted = true;
+       } else {
+           isDeleted = false;
+       }
+    }
 
 }
