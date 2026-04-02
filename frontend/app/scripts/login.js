@@ -1,4 +1,3 @@
-// 1. Figyelj az "async" szóra a function előtt!
 async function handleLogin(event) {
     event.preventDefault(); // Megállítjuk a 405-ös hibát
     

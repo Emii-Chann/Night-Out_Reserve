@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/login", "/users/**,/users/create\", \"/login\", \"/register\"").permitAll() // example of non authenticated path
+                        .requestMatchers("/api/helyszinek/**").permitAll()
+                       
                         // TODO: every unauthet paths here
                         .anyRequest().permitAll() // All other endpoints require authentication
                 )
