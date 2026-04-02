@@ -3,6 +3,7 @@ package com.nightout_reserve.backend.models;
 import jakarta.persistence.*; //important!
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

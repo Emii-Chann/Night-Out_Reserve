@@ -2,15 +2,17 @@ package com.nightout_reserve.backend.models;
 
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tulajokadatai")
+@Table(name = "tulajok")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -45,5 +47,24 @@ public class Owner {
 
     @Column(name = "letrehozva_at", nullable = false)
     private LocalDateTime createdAt;
+
+
+
+    @PrePersist
+    void onCreate(){
+        this.createdAt = LocalDateTime.now();
+
+        if(isDeleted == null || isDeleted){
+            isDeleted = true;
+        } else {
+            isDeleted = false;
+        }
+
+    }
+
+
+
+
+
 
 }
