@@ -16,7 +16,8 @@ async function betoltHelyszinek() {
                         <p class="hely-leiras">${hely.leiras || 'Kellemes szórakozóhely várja vendégeit.'}</p>
                         <div class="hely-footer">
                             <span>🪑 Asztalok: ${hely.asztalokSzama}</span>
-                            <button onclick="foglalas(${hely.id})" class="btn-foglalas">Foglalás</button>
+                            
+                            <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}')" class="btn-foglalas">Játék foglalás</button>
                         </div>
                     </div>
                 </div>
@@ -27,4 +28,6 @@ async function betoltHelyszinek() {
     }
 }
 
+// EZ A SOR HIÁNYZOTT! Ez mondja meg, hogy amint betölt az oldal, azonnal induljon el a függvény.
 document.addEventListener("DOMContentLoaded", betoltHelyszinek);
+

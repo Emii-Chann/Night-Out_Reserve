@@ -91,8 +91,8 @@ CREATE TABLE `felhasznalok` (
   `telefon` varchar(30) DEFAULT NULL,
   `jelszo` varchar(60) NOT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  'torolve' BOOLEAN DEFAULT FALSE
-  `torolve_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `torolve` BOOLEAN DEFAULT FALSE,
+  `torolve_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -249,7 +249,6 @@ CREATE TABLE `tulajokadatai` (
   `teljes_nev` varchar(100) NOT NULL,
   `email` varchar(150) NOT NULL,
   `telefon` varchar(30) DEFAULT NULL,
-  `cegnev` varchar(150) DEFAULT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -445,23 +444,25 @@ COMMIT;
 -- Kódolás: UTF-8
 -- Megjegyzés: mindenhol a végleges – SOFT/HARD törléssel.
 
-/*TARTALOM
---------
-1) HELY_FOGLALASOK CRUD
-2) JATEK_FOGLALASOK CRUD
-3) ASZTAL_FOGLALASOK CRUD
-4) FELHASZNALOK CRUD
-5) SZORAKOZOHELYEK CRUD
-6) ASZTALOK CRUD
-7) JATEKOK CRUD
-8) JATEK_SZORAKOZOHELYHEZ CRUD
-9) TULAJOKADATAI CRUD
-10) TULAJOKBELEPES CRUD*/
+-- TARTALOM
+-- --------
+-- 1) HELY_FOGLALASOK CRUD
+-- 2) JATEK_FOGLALASOK CRUD
+-- 3) ASZTAL_FOGLALASOK CRUD
+-- 4) FELHASZNALOK CRUD
+-- 5) SZORAKOZOHELYEK CRUD
+-- 6) ASZTALOK CRUD
+-- 7) JATEKOK CRUD
+-- 8) JATEK_SZORAKOZOHELYHEZ CRUD
+-- 9) TULAJOKADATAI CRUD
+-- 10) TULAJOKBELEPES CRUD
 
 
---------------------------------------------------
+
+
+-- --------------------------------------------------
 -- 1) HELY_FOGLALASOK (SOFT DELETE, külön IDŐPONT / ÁLLAPOT / MEGJEGYZÉS)
---------------------------------------------------
+-- ------------------------------------------------
 
 -- Beszúrás
 DELIMITER $$
@@ -563,9 +564,9 @@ DELIMITER ;
 -- CALL hely_foglalas_torol(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 2) JATEK_FOGLALASOK (SOFT DELETE)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE jatek_foglalas_hozzaad (
@@ -646,9 +647,9 @@ DELIMITER ;
 -- CALL jatek_foglalas_torol(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 3) ASZTAL_FOGLALASOK (SOFT DELETE, külön IDŐ / ÁLLAPOT / MEGJEGYZÉS)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE asztal_foglalas_hozzaad (
@@ -746,9 +747,9 @@ DELIMITER ;
 -- CALL asztal_foglalas_torol(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 4) FELHASZNALOK (HARD DELETE)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE felhasznalo_hozzaad (
@@ -813,9 +814,9 @@ DELIMITER ;
 -- CALL felhasznalo_torol(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 5) SZORAKOZOHELYEK (SOFT DELETE)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE szorakozohely_hozzaad (
@@ -889,9 +890,9 @@ DELIMITER ;
 -- CALL szorakozohely_torol(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 6) ASZTALOK (SOFT DELETE, összetett kulcs: szorakozohely_id + asztal_szam)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE asztal_hozzaad (
@@ -978,9 +979,9 @@ DELIMITER ;
 -- CALL asztal_visszaallit(2, 5);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 7) JATEKOK (SOFT DELETE, leiras = TEXT)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE jatek_hozzaad (
@@ -1053,9 +1054,9 @@ DELIMITER ;
 -- CALL jatek_visszaallit(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 8) JATEK_SZORAKOZOHELYHEZ (SOFT DELETE, összetett kulcs)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE jatek_hely_hozzaad (
@@ -1148,9 +1149,9 @@ DELIMITER ;
 -- CALL jatek_hely_visszaallit(2,1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 9) TULAJOKADATAI (SOFT DELETE)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE tulaj_hozzaad (
@@ -1229,9 +1230,9 @@ DELIMITER ;
 -- CALL tulaj_visszaallit(1);
 
 
---------------------------------------------------
+-- ------------------------------------------------
 -- 10) TULAJOKBELEPES (SOFT DELETE + LAST_LOGIN)
---------------------------------------------------
+-- ------------------------------------------------
 
 DELIMITER $$
 CREATE PROCEDURE tulajbelepes_hozzaad (
@@ -1306,26 +1307,49 @@ DELIMITER ;
 
 -- Login
 
+DROP PROCEDURE IF EXISTS login;
+
 DELIMITER //
 
 CREATE PROCEDURE login(IN p_username VARCHAR(255))
 BEGIN
-    SELECT * FROM felhasznalok WHERE nev = p_username OR email = p_username;
+    SELECT * FROM felhasznalok 
+    WHERE nev = p_username COLLATE utf8mb4_unicode_ci 
+       OR email = p_username COLLATE utf8mb4_unicode_ci;
 END //
 
 DELIMITER ;
 
-INSERT INTO `szorakozohelyek` 
-(`tulaj_id`, `nev`, `cim`, `varos`, `leiras`, `nyitvatartas`, `asztalok_szama`) 
+
+INSERT INTO NightoutReserve_DB.tulajokadatai 
+    (teljes_nev, email, telefon,letrehozva_at)
 VALUES
-(1, 'Blue Velvet Bar', 'Király utca 12.', 'Budapest', 'Exkluzív koktélbár élő jazz zenével és bársonyos fotelekkel.', 'H-P: 16:00-02:00, Szo-V: 18:00-04:00', 15),
-
-(1, 'Club After Eight', 'Akácfa utca 5.', 'Budapest', 'A belváros legpörgősebb underground elektronikus zenei klubja.', 'Cs-Szo: 22:00-06:00', 10),
-
-(1, 'Zöld Kert Vendéglő', 'Margit körút 44.', 'Budapest', 'Házias ízek, hatalmas kerthelyiség és családi hangulat.', 'H-V: 11:00-22:00', 25);
-
-
---VÉGE
--- ====================================================================
+    ('Kovács Péter', 'kovacs.peter@peldamail.hu', '+36301234567', CURRENT_TIMESTAMP),
+    ('Nagy Anna', 'anna.nagy@peldamail.hu', '+36209876543',CURRENT_TIMESTAMP),
+    ('Szabó Gábor', 'szabo.gabor@peldamail.hu', '+36705554433', CURRENT_TIMESTAMP),
+    ('Tóth Zoltán', 'toth.zoltan@peldamail.hu', '+36301112233',CURRENT_TIMESTAMP);
 
 
+INSERT INTO NightoutReserve_DB.szorakozohelyek 
+    (tulaj_id, nev, cim, varos, leiras, nyitvatartas, asztalok_szama, letrehozva_at, torolve_at)
+VALUES
+    (1, 'Neon Bár', 'Király utca 12.', 'Pécs', 'Hangulatos koktélbár a belvárosban élőzenével.', '18:00 - 02:00', 15, CURRENT_TIMESTAMP, NULL),
+    (2, 'Club Horizon', 'Petőfi Sándor sugárút 44.', 'Pécs', 'A város legnagyobb elektronikus zenei klubja.', '22:00 - 05:00', 30, CURRENT_TIMESTAMP, NULL),
+    (3, 'Pince Borozó', 'Zsolnay Vilmos utca 8.', 'Pécs', 'Klasszikus borozó helyi borkülönlegességekkel.', '16:00 - 23:00', 10, CURRENT_TIMESTAMP, NULL),
+    (1, 'Skyline Rooftop', 'Váci út 1.', 'Pécs', 'Exkluzív tetőterasz csodás kilátással és prémium italokkal.', '17:00 - 01:00', 25, CURRENT_TIMESTAMP, NULL),
+    (4, 'Retro Kert', 'Kossuth Lajos tér 5.', 'Pécs', 'Szabadtéri szórakozóhely a 80-as és 90-es évek slágereivel.', '19:00 - 04:00', 40, CURRENT_TIMESTAMP, NULL);
+
+
+-- 1. Játékok létrehozása
+INSERT INTO NightoutReserve_DB.jatekok (nev, leiras) VALUES 
+('Billiárd', 'Professzionális 9 lábas versenyasztal.'),
+('Csocsó', 'Garlando versenycsocsó.'),
+('Pingpong', 'Kiváló minőségű beltéri asztal.');
+
+-- 2. Játékok hozzárendelése a szórakozóhelyhez (szorakozohely_id = 1)
+-- Feltételezzük, hogy a játékok id-ja 1, 2, 3 lett.
+INSERT INTO NightoutReserve_DB.jatek_szorakozohelyhez 
+(szorakozohely_id, jatek_id, darab, ar_ora, min_idotartam_perc) VALUES 
+(1, 1, 3, 2500, 60), -- 3 db billiárd, 2500 Ft/óra, min 1 óra
+(1, 2, 2, 1500, 30), -- 2 db csocsó, 1500 Ft/óra, min 30 perc
+(1, 3, 1, 2000, 60); -- 1 db pingpong, 2000 Ft/óra, min 1 óra

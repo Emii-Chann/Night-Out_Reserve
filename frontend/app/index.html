@@ -13,18 +13,36 @@
         window.APP_CONFIG = {
         BACKEND_URL: "${BACKEND_BASE_URL}"
         };
+        document.addEventListener("DOMContentLoaded", betoltHelyszinekreel);
+
+
+async function betoltHelyszinekreel() {
+    try {
+        const response = await fetch('http://localhost:8080/api/helyszinek/list');
+        const adatok = await response.json();
+
+        const kontener = document.getElementById('helyszinek-gridreel');
+        kontener.innerHTML = ""; 
+
+        adatok.forEach(hely => {
+            kontener.innerHTML += `
+
+                    <div class="featured-card">
+                        <h3>${hely.nev}</h3>
+                        <p class="featured-category">Szórakozóhely</p>
+                    </div>
+                    
+                    `;
+        });
+    } catch (hiba) {
+        console.error("Nem sikerült betölteni a helyszíneket:", hiba);
+    }
+}
     </script>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div id="auth-links" class="logo">
-            <a href="./index.html"><div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div></a>
-            <span>Night-Out Reserve</span>
-        </div>
-     <a href="./reg.html"> <div class="profil"><i class="fa-regular fa-user"></i></a> 
-        </div>
-    </nav>
+    <div id="navbar-container"></div>
 
     <header class="hero">
         <div class="hero-content">
@@ -33,37 +51,15 @@
 
             <div class="featured-carousel">
                 <div class="featured-track">
-                    <div class="featured-card">
-                        <h3>The Purple Lounge</h3>
-                        <p class="featured-category">Szórakozóhely</p>
-                    </div>
-                    <div class="featured-card">
-                        <h3>Midnight Club</h3>
-                        <p class="featured-category">Szórakozóhely</p>
-                    </div>
-                    <div class="featured-card">
-                        <h3>Neon Sky Bar</h3>
-                        <p class="featured-category">Bár</p>
-                    </div>
+                <div id="helyszinek-gridreel"></div>
 
-                    <div class="featured-card">
-                        <h3>The Purple Lounge</h3>
-                        <p class="featured-category">Szórakozóhely</p>
-                    </div>
-                    <div class="featured-card">
-                        <h3>Midnight Club</h3>
-                        <p class="featured-category">Szórakozóhely</p>
-                    </div>
-                    <div class="featured-card">
-                        <h3>Neon Sky Bar</h3>
-                        <p class="featured-category">Bár</p>
-                    </div>
                 </div>
             </div>
 
             <a href="./szorakozohely.html" class="hero-cta-btn">Kezdjünk neki</a>
         </div>
-        <div id="helyszinek-grid"></div>
+   
+
     </header>
 
    
@@ -100,9 +96,8 @@
     </div>
 </footer>
 
-    <script src="./scripts/Night-Out Reserve.js">
-
-    </script> <script src="regell.js"></script>
-    <script src="./scripts/nav.js"></script>         ```
+    <script src="./scripts/Night-Out Reserve.js"></script>
+    <script src="./scripts/nav.js"></script>       
+    <script src="./scripts/helyszinek.js"></script>
 </body>
 </html>
