@@ -25,7 +25,7 @@ public class Owner {
     @Column(name = "teljes_nev", nullable = false, unique = true, length = 100)
     private String username;
 
-    @Column(name = "jelszo", nullable = false, length = 15)
+    @Column(name = "jelszo", nullable = false, length = 60)
     private String password;
 
     @Column(name = "email", nullable = false, unique = true, length = 150)

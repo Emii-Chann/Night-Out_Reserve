@@ -7,9 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+import java.util.HashMap;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import jakarta.validation.Valid;
+import com.nightout_reserve.backend.dto.UserRegistrationDTO;
+
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000") // Engedélyezzük a frontendnek a hozzáférést
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -44,10 +50,12 @@ public class UserController {
         return userService.getUsersByUsernameLike(usernameLike);
     }
 
-    @PostMapping("/create")
-    public User createUser(@RequestBody User user){
-        return userService.createUser(user);
-    }
+  @PostMapping("/create")
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserRegistrationDTO registrationDTO) {
+    // A service-nek adjuk át a DTO-t
+    User newUser = userService.createUser(registrationDTO);
+    return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+}
 
     @PutMapping("/update/{userId}")
     public User updateUser(@PathVariable Integer userId,@RequestBody User user){
