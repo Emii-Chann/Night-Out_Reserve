@@ -48,9 +48,30 @@ public class OwnerServiceImpl implements OwnerService {
     public Owner updateOwnerById(Integer ownerId, Owner body) {
         Owner ownerToUpdate = ownerRepository.findById(ownerId).orElseThrow(() -> new RuntimeException("Owner with id: "+ ownerId+ "not found"));
 
-        ownerToUpdate.setUsername(body.getUsername());
-        ownerToUpdate.setEmail(body.getEmail());
-        ownerToUpdate.setCompanyName(body.getCompanyName());
+        if (body.getUsername() != null) {
+            ownerToUpdate.setUsername(body.getUsername());
+        } else {
+            ownerToUpdate.setUsername(ownerToUpdate.getUsername());
+        }
+
+        if (body.getEmail() != null) {
+            ownerToUpdate.setEmail(body.getEmail());
+        } else {
+            ownerToUpdate.setEmail(ownerToUpdate.getEmail());
+        }
+
+        if (body.getPhone() != null) {
+            ownerToUpdate.setPhone(body.getPhone());
+        } else {
+            ownerToUpdate.setPhone(ownerToUpdate.getPhone());
+        }
+
+        if (body.getCompanyName() != null) {
+            ownerToUpdate.setCompanyName(body.getCompanyName());
+        } else {
+            ownerToUpdate.setCompanyName(ownerToUpdate.getCompanyName());
+        }
+
 
 
         return ownerRepository.save(ownerToUpdate);
