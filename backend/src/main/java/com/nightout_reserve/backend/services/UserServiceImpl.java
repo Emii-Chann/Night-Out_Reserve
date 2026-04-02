@@ -8,6 +8,11 @@ import com.nightout_reserve.backend.repositories.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.nightout_reserve.backend.dto.UserRegistrationDTO;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -44,9 +49,27 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User createUser(User userToCreate) {
-        return userRepository.save(userToCreate);
+    public User createUser(UserRegistrationDTO dto) {
+    // 1. Ellenőrizzük, létezik-e már ilyen felhasználó (opcionális, de ajánlott)
+    if (userRepository.findByEmail(dto.getEmail()) != null) {
+        throw new RuntimeException("Ez az email cím már foglalt!");
     }
+
+    // 2. Entitás létrehozása és adatok másolása
+    User user = new User();
+    user.setUsername(dto.getUsername());
+    user.setEmail(dto.getEmail());
+    user.setPhone(dto.getPhone());
+    
+    // 3. JELSZÓ TITKOSÍTÁSA (BCrypt) - SOHA ne mentsünk sima szöveget!
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    user.setPassword(encoder.encode(dto.getPassword()));
+
+    // 4. Alapértelmezett értékek beállítása
+    user.setIsDeleted(false);
+    
+    return userRepository.save(user);
+}
 
     @Override
     public User updateUserById(Integer userId, User body) {

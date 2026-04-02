@@ -91,6 +91,7 @@ CREATE TABLE `felhasznalok` (
   `telefon` varchar(30) DEFAULT NULL,
   `jelszo` varchar(60) NOT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  'torolve' BOOLEAN DEFAULT FALSE
   `torolve_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -438,69 +439,13 @@ ALTER TABLE `tulajokbelepes`
   ADD CONSTRAINT `fk_tulaj_belepes` FOREIGN KEY (`tulaj_id`) REFERENCES `tulajokadatai` (`id`) ON DELETE CASCADE;
 COMMIT;
 
-  DELIMITER $$
 
-  CREATE PROCEDURE felhasznalo_hozzaad (
-      IN p_nev VARCHAR(100),
-      IN p_email VARCHAR(150),
-      IN p_telefon VARCHAR(30),
-      IN p_jelszo_hash VARCHAR(60)
-  )
-  BEGIN
-      INSERT INTO felhasznalok (nev, email, telefon, jelszo)
-      VALUES (p_nev, p_email, p_telefon, p_jelszo);
-  END$$
-  DELIMITER ;
+-- NIGHTOUTRESERVE – TELJES CRUD GYŰJTEMÉNY (MySQL STORED PROCEDURES)
+-- ====================================================================
+-- Kódolás: UTF-8
+-- Megjegyzés: mindenhol a végleges – SOFT/HARD törléssel.
 
-  DELIMITER $$
-  CREATE PROCEDURE felhasznalo_lista ()
-  BEGIN
-      SELECT f.id, f.nev, f.email, f.telefon, f.created_at
-      FROM felhasznalok f
-      ORDER BY f.created_at DESC;
-  END$$
-  DELIMITER ;
-
-  DELIMITER $$
-  CREATE PROCEDURE felhasznalo_id_alapjan (IN p_id INT)
-  BEGIN
-      SELECT f.id, f.nev, f.email, f.telefon, f.created_at
-      FROM felhasznalok f
-      WHERE f.id = p_id;
-  END$$
-  DELIMITER ;
-
-  DELIMITER $$
-  CREATE PROCEDURE felhasznalo_modosit (
-      IN p_id INT,
-      IN p_nev VARCHAR(100),
-      IN p_email VARCHAR(150),
-      IN p_telefon VARCHAR(30)
-  )
-  BEGIN
-      UPDATE felhasznalok
-      SET nev = p_nev,
-          email = p_email,
-          telefon = p_telefon
-      WHERE id = p_id;
-  END$$
-  DELIMITER ;
-
-  DELIMITER $$
-  CREATE PROCEDURE felhasznalo_torol (IN p_id INT)
-  BEGIN
-      DELETE FROM felhasznalok
-      WHERE id = p_id;
-  END$$
-  DELIMITER ;
-
-
-  NIGHTOUTRESERVE – TELJES CRUD GYŰJTEMÉNY (MySQL STORED PROCEDURES)
-====================================================================
-Kódolás: UTF-8
-Megjegyzés: mindenhol a végleges – SOFT/HARD törléssel.
-
-TARTALOM
+/*TARTALOM
 --------
 1) HELY_FOGLALASOK CRUD
 2) JATEK_FOGLALASOK CRUD
@@ -511,11 +456,11 @@ TARTALOM
 7) JATEKOK CRUD
 8) JATEK_SZORAKOZOHELYHEZ CRUD
 9) TULAJOKADATAI CRUD
-10) TULAJOKBELEPES CRUD
+10) TULAJOKBELEPES CRUD*/
 
 
 --------------------------------------------------
-1) HELY_FOGLALASOK (SOFT DELETE, külön IDŐPONT / ÁLLAPOT / MEGJEGYZÉS)
+-- 1) HELY_FOGLALASOK (SOFT DELETE, külön IDŐPONT / ÁLLAPOT / MEGJEGYZÉS)
 --------------------------------------------------
 
 -- Beszúrás
@@ -619,7 +564,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-2) JATEK_FOGLALASOK (SOFT DELETE)
+-- 2) JATEK_FOGLALASOK (SOFT DELETE)
 --------------------------------------------------
 
 DELIMITER $$
@@ -702,7 +647,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-3) ASZTAL_FOGLALASOK (SOFT DELETE, külön IDŐ / ÁLLAPOT / MEGJEGYZÉS)
+-- 3) ASZTAL_FOGLALASOK (SOFT DELETE, külön IDŐ / ÁLLAPOT / MEGJEGYZÉS)
 --------------------------------------------------
 
 DELIMITER $$
@@ -802,7 +747,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-4) FELHASZNALOK (HARD DELETE)
+-- 4) FELHASZNALOK (HARD DELETE)
 --------------------------------------------------
 
 DELIMITER $$
@@ -813,7 +758,7 @@ CREATE PROCEDURE felhasznalo_hozzaad (
     IN p_jelszo VARCHAR(60)
 )
 BEGIN
-    INSERT INTO felhasznalok (nev, email, telefon, jelszo_hash)
+    INSERT INTO felhasznalok (nev, email, telefon, jelszo)
     VALUES (p_nev, p_email, p_telefon, p_jelszo);
 END$$
 DELIMITER ;
@@ -869,7 +814,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-5) SZORAKOZOHELYEK (SOFT DELETE)
+-- 5) SZORAKOZOHELYEK (SOFT DELETE)
 --------------------------------------------------
 
 DELIMITER $$
@@ -945,7 +890,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-6) ASZTALOK (SOFT DELETE, összetett kulcs: szorakozohely_id + asztal_szam)
+-- 6) ASZTALOK (SOFT DELETE, összetett kulcs: szorakozohely_id + asztal_szam)
 --------------------------------------------------
 
 DELIMITER $$
@@ -1034,7 +979,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-7) JATEKOK (SOFT DELETE, leiras = TEXT)
+-- 7) JATEKOK (SOFT DELETE, leiras = TEXT)
 --------------------------------------------------
 
 DELIMITER $$
@@ -1109,7 +1054,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-8) JATEK_SZORAKOZOHELYHEZ (SOFT DELETE, összetett kulcs)
+-- 8) JATEK_SZORAKOZOHELYHEZ (SOFT DELETE, összetett kulcs)
 --------------------------------------------------
 
 DELIMITER $$
@@ -1204,7 +1149,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-9) TULAJOKADATAI (SOFT DELETE)
+-- 9) TULAJOKADATAI (SOFT DELETE)
 --------------------------------------------------
 
 DELIMITER $$
@@ -1285,7 +1230,7 @@ DELIMITER ;
 
 
 --------------------------------------------------
-10) TULAJOKBELEPES (SOFT DELETE + LAST_LOGIN)
+-- 10) TULAJOKBELEPES (SOFT DELETE + LAST_LOGIN)
 --------------------------------------------------
 
 DELIMITER $$
@@ -1359,12 +1304,28 @@ DELIMITER ;
 -- CALL tulajbelepes_torol(1);
 -- CALL tulajbelepes_visszaallit(1);
 
+-- Login
 
-VÉGE
-====================================================================
+DELIMITER //
+
+CREATE PROCEDURE login(IN p_username VARCHAR(255))
+BEGIN
+    SELECT * FROM felhasznalok WHERE nev = p_username OR email = p_username;
+END //
+
+DELIMITER ;
+
+INSERT INTO `szorakozohelyek` 
+(`tulaj_id`, `nev`, `cim`, `varos`, `leiras`, `nyitvatartas`, `asztalok_szama`) 
+VALUES
+(1, 'Blue Velvet Bar', 'Király utca 12.', 'Budapest', 'Exkluzív koktélbár élő jazz zenével és bársonyos fotelekkel.', 'H-P: 16:00-02:00, Szo-V: 18:00-04:00', 15),
+
+(1, 'Club After Eight', 'Akácfa utca 5.', 'Budapest', 'A belváros legpörgősebb underground elektronikus zenei klubja.', 'Cs-Szo: 22:00-06:00', 10),
+
+(1, 'Zöld Kert Vendéglő', 'Margit körút 44.', 'Budapest', 'Házias ízek, hatalmas kerthelyiség és családi hangulat.', 'H-V: 11:00-22:00', 25);
 
 
+--VÉGE
+-- ====================================================================
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

@@ -27,7 +27,7 @@
         </div>
         
     
-    <form method="GET" onsubmit="return validateForm()">
+    <form method="POST" onsubmit="handleRegistration(event)">
 
         <h2>Regisztráció</h2>
 
@@ -46,8 +46,7 @@
         <input type="text" id="phone" placeholder="Telefonszám (06 30 123 4567)">
         <div class="error" id="phoneError"></div>
  <a href="./login.html" class="tab ">Már van fiókom</a>
-<button type="submit">Regisztráció</button>
-
+<button type="submit" class="submit-btn">Regisztráció</button>
 <p class="success" id="successMsg"></p>
     </form>
     <script src="./scripts/regell.js"></script>

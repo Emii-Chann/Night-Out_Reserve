@@ -1,5 +1,6 @@
 package com.nightout_reserve.backend.services;
 
+import com.nightout_reserve.backend.dto.UserRegistrationDTO;
 import com.nightout_reserve.backend.models.User;
 
 import java.util.List;
@@ -13,8 +14,7 @@ public interface UserService {
     List<User> getUsersByUsernameLike(String searchByUsername);
 
     //create
-    User createUser(User userToCreate);
-
+    User createUser(UserRegistrationDTO dto);
 
     //update
     User updateUserById(Integer userId, User body);
