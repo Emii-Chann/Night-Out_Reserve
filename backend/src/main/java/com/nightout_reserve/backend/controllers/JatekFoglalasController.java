@@ -1,35 +1,28 @@
 package com.nightout_reserve.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.nightout_reserve.backend.models.JatekFoglalas;
-import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
-import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
-
 import java.util.List;
-import java.util.Map;
 
+import com.nightout_reserve.backend.models.JatekFoglalas;
+import com.nightout_reserve.backend.services.JatekFoglalasService;
 
 @RestController
 @RequestMapping("/api/jatekok")
-@CrossOrigin(origins = "http://localhost:3000") // Vagy ahonnan a frontend fut
+@CrossOrigin(origins = "*")
 public class JatekFoglalasController {
 
     @Autowired
-    private JatekFoglalasRepository foglalasRepo;
+    private JatekFoglalasService service;
 
-    @Autowired
-private SzorakozohelyRepository repo; // Vagy amilyen nevű Repository-ba írtad a findJatekokByHelyId metódus    t
-
-    @PostMapping("/foglalas")
-    public String jatekFoglalasMentes(@RequestBody JatekFoglalas ujFoglalas) {
-        // Alapállapot beállítása (ha a frontend nem küldené)
-        if(ujFoglalas.getAllapot() == null) {
-            ujFoglalas.setAllapot("FÜGGŐ");
-        }
-        
-        foglalasRepo.save(ujFoglalas);
-        return "Sikeres mentés!";
+    @PostMapping("/mentes")
+    public ResponseEntity<String> mentes(@RequestBody JatekFoglalas ujFoglalas) {
+        return service.mentes(ujFoglalas);
     }
-  
+
+    @GetMapping("/felhasznalo/{id}")
+    public List<JatekFoglalas> getFelhasznaloFoglalasai(@PathVariable Integer id) {
+        return service.getFelhasznaloFoglalasai(id);
+    }
 }
