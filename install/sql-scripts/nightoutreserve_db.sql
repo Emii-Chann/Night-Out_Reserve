@@ -1353,3 +1353,9 @@ INSERT INTO NightoutReserve_DB.jatek_szorakozohelyhez
 (1, 1, 3, 2500, 60), -- 3 db billiárd, 2500 Ft/óra, min 1 óra
 (1, 2, 2, 1500, 30), -- 2 db csocsó, 1500 Ft/óra, min 30 perc
 (1, 3, 1, 2000, 60); -- 1 db pingpong, 2000 Ft/óra, min 1 óra
+
+INSERT INTO NightoutReserve_DB.asztalok (szorakozohely_id, asztal_szam, ferohely) VALUES 
+(1, 10, 2),
+(1, 11, 4),
+(1, 12, 6),
+(1, 13, 2);

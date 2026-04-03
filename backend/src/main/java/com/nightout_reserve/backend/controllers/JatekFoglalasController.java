@@ -25,7 +25,7 @@ private SzorakozohelyRepository repo; // Vagy amilyen nevű Repository-ba írtad
     public String jatekFoglalasMentes(@RequestBody JatekFoglalas ujFoglalas) {
         // Alapállapot beállítása (ha a frontend nem küldené)
         if(ujFoglalas.getAllapot() == null) {
-            ujFoglalas.setAllapot("FOGLALVA");
+            ujFoglalas.setAllapot("FÜGGŐ");
         }
         
         foglalasRepo.save(ujFoglalas);

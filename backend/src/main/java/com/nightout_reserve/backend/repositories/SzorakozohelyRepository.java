@@ -32,6 +32,8 @@ public interface SzorakozohelyRepository extends JpaRepository<Szorakozohely, In
                "WHERE jsz.szorakozohely_id = :helyId", nativeQuery = true)
             List<Map<String, Object>> findJatekokByHelyId(@Param("helyId") Integer helyId);
 
+    @Query(value = "SELECT asztal_szam, ferohely FROM asztalok WHERE szorakozohely_id = :helyId", nativeQuery = true)
+    List<Map<String, Object>> findAsztalokByHelyId(@Param("helyId") Integer helyId);
 
     
 

@@ -1,0 +1,130 @@
+let aktualisNyitvatartas = "";
+
+async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
+    aktualisNyitvatartas = nyitvatartas;
+    document.getElementById('asztal-foglalas-modal').style.display = 'block';
+    document.getElementById('asztal-modal-cim').innerText = `${helyNev} - Asztalfoglalás (${nyitvatartas})`;
+    document.getElementById('asztal-szorakozohely-id').value = szorakozohelyId;
+
+    const maiDatum = new Date().toISOString().split('T')[0];
+    document.getElementById('asztal-datum').setAttribute('min', maiDatum);
+
+    const asztalSelect = document.getElementById('asztal-szam-select');
+    asztalSelect.innerHTML = '<option>Betöltés...</option>';
+
+    try {
+        // Backend hívása az asztalokért
+        const response = await fetch(`http://localhost:8080/api/asztalok/${szorakozohelyId}/list`);
+        const asztalok = await response.json();
+
+        asztalSelect.innerHTML = '<option value="" disabled selected>Válaszd ki az asztalt</option>';
+        
+        asztalok.forEach(asztal => {
+            asztalSelect.innerHTML += `
+                <option value="${asztal.asztal_szam}" data-ferohely="${asztal.ferohely}">
+                    ${asztal.asztal_szam}. asztal (${asztal.ferohely} fős)
+                </option>
+            `;
+        });
+    } catch (hiba) {
+        console.error("Hiba az asztalok letöltésekor", hiba);
+        asztalSelect.innerHTML = '<option value="">Hiba a betöltéskor</option>';
+    }
+    // Figyeljük, ha a felhasználó asztalt választ
+    asztalSelect.addEventListener('change', function() {
+        const kivalasztottOption = this.options[this.selectedIndex];
+        const maxFerohely = kivalasztottOption.getAttribute('data-ferohely');
+        const letszamInput = document.getElementById('asztal-letszam');
+        
+        if (maxFerohely) {
+            letszamInput.setAttribute('max', maxFerohely); // Beállítja a HTML max értéket
+            
+            // Ha a jelenleg beírt létszám nagyobb lenne, mint a max férőhely, visszavesszük a maximumra
+            if (parseInt(letszamInput.value) > parseInt(maxFerohely)) {
+                letszamInput.value = maxFerohely;
+            }
+        }
+    });
+
+}
+
+function asztalModalBezarasa() {
+    document.getElementById('asztal-foglalas-modal').style.display = 'none';
+}
+
+async function asztalFoglalasBekuldese() {
+    const szorakozohelyId = document.getElementById('asztal-szorakozohely-id').value;
+    const asztalSzam = document.getElementById('asztal-szam-select').value;
+    const letszam = document.getElementById('asztal-letszam').value;
+    const datum = document.getElementById('asztal-datum').value;
+    const ido = document.getElementById('asztal-ido').value;
+
+
+
+    
+    if(!asztalSzam || !datum || !ido || !letszam) {
+        alert("Kérlek tölts ki minden mezőt!");
+        return;
+    }
+
+    const asztalSelect = document.getElementById('asztal-szam-select');
+    const kivalasztottOption = asztalSelect.options[asztalSelect.selectedIndex];
+    const maxFerohely = kivalasztottOption.getAttribute('data-ferohely');
+
+    if (maxFerohely && parseInt(letszam) > parseInt(maxFerohely)) {
+        alert(`Ehhez az asztalhoz maximum ${maxFerohely} fő fér el! Kérlek válassz nagyobb asztalt vagy csökkentsd a létszámot.`);
+        return; // Megállítjuk a küldést
+    }
+
+    // Alapértelmezetten 2 órára foglaljuk az asztalt (ezt később bővítheted, ha kell)
+    const idotartamOra = 2; 
+
+    // --- ELLENŐRZÉSEK (ugyanaz a logika, mint a játékoknál) ---
+    const valasztottKezdet = new Date(`${datum}T${ido}`);
+    if (valasztottKezdet < new Date()) {
+        alert("Nem foglalhatsz a múltba!");
+        return;
+    }
+
+    // Feltételezve, hogy az ellenorizNyitvatartas függvényt globálisan elérjük (pl. a jatekfoglalas.js-ből, vagy átmásolod ide is)
+    if (typeof ellenorizNyitvatartas === "function" && !ellenorizNyitvatartas(ido, idotartamOra, aktualisNyitvatartas)) {
+        return; 
+    }
+
+    // --- DÁTUM FORMÁZÁS ---
+    const formatum = (date) => {
+        const pad = (n) => n < 10 ? '0' + n : n;
+        return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) +
+               'T' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+    };
+
+    const vegeDatumObj = new Date(valasztottKezdet);
+    vegeDatumObj.setHours(vegeDatumObj.getHours() + idotartamOra);
+
+    const foglalasAdatok = {
+        szorakozohelyId: parseInt(szorakozohelyId),
+        asztalSzam: parseInt(asztalSzam),
+        letszam: parseInt(letszam),
+        felhasznaloId: 1, 
+        kezdet: formatum(valasztottKezdet),
+        vege: formatum(vegeDatumObj),
+        allapot: 'FOGLALVA'
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/api/asztalok/foglalas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(foglalasAdatok)
+        });
+
+        if (response.ok) {
+            alert("Sikeres asztalfoglalás!");
+            asztalModalBezarasa();
+        } else {
+            alert("Hiba történt a mentés során.");
+        }
+    } catch (hiba) {
+        console.error(hiba);
+    }
+}

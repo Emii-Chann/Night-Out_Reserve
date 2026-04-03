@@ -17,7 +17,7 @@ async function betoltHelyszinek() {
                         <div class="hely-footer">
                             <span>🪑 Asztalok: ${hely.asztalokSzama}</span>
                             
-                            <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}')" class="btn-foglalas">Játék foglalás</button>
+                            <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas"> Játék foglalás</button>
                         </div>
                     </div>
                 </div>

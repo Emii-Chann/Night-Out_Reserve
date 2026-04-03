@@ -1,29 +1,29 @@
-package com.nightout_reserve.backend.services;
+// package com.nightout_reserve.backend.services;
 
-import com.nightout_reserve.backend.models.Venue;
-import com.nightout_reserve.backend.repositories.VenueRepository;
+// import com.nightout_reserve.backend.models.Venue;
+// import com.nightout_reserve.backend.repositories.VenueRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
+// import java.time.LocalDateTime;
+// import java.util.List;
 
-public interface VenueService {
-    //get
-    Venue getVenueById(Integer id);
-    List<Venue> getALVenues();
-    List<Venue> getVenuesByOwnerId(Integer ownerId);
-    List<Venue> getVenuesByCity(String cityName);
-    List<Venue> getVenuesByOpenNow(LocalDateTime now);
-    List<Venue> getVenueByNameLike(String venueName);
+// public interface VenueService {
+//     //get
+//     Venue getVenueById(Integer id);
+//     List<Venue> getALVenues();
+//     List<Venue> getVenuesByOwnerId(Integer ownerId);
+//     List<Venue> getVenuesByCity(String cityName);
+//     List<Venue> getVenuesByOpenNow(LocalDateTime now);
+//     List<Venue> getVenueByNameLike(String venueName);
 
-    //create
-    Venue createVenue(Venue venue);
+//     //create
+//     Venue createVenue(Venue venue);
 
-    //update
-    Venue updateVenueById(Integer venueId, Venue body);
+//     //update
+//     Venue updateVenueById(Integer venueId, Venue body);
 
-    //delete TODO
-//    Venue softDeleteVenueById(Integer venueId);
-//    void hardDeleteVenueById(Integer venueId);
+//     //delete TODO
+// //    Venue softDeleteVenueById(Integer venueId);
+// //    void hardDeleteVenueById(Integer venueId);
 
 
-}
+// }

@@ -1,27 +1,22 @@
 package com.nightout_reserve.backend.models;
 
 import java.time.LocalDateTime;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "jatek_foglalasok")
+@Table(name = "asztal_foglalasok")
 @Getter
 @Setter
-public class JatekFoglalas {
+public class AsztalFoglalas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "jatek_foglalas_id")
-    private Integer id; // Figyelj, itt az oszlop neve jatek_foglalas_id!
+    @Column(name = "asztal_foglalas_id")
+    private Integer id;
 
     @Column(name = "felhasznalo_id")
     private Integer felhasznaloId;
@@ -29,23 +24,19 @@ public class JatekFoglalas {
     @Column(name = "szorakozohely_id")
     private Integer szorakozohelyId;
 
-    @Column(name = "jatek_id")
-    private Integer jatekId;
+    @Column(name = "asztal_szam")
+    private Integer asztalSzam;
 
+    private Integer letszam;
     private LocalDateTime kezdet;
-    
     private LocalDateTime vege;
-    
     private String allapot;
 
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;
 
-    @Column(name = "torolve_at")
-    private LocalDateTime torolveAt;
-
     @PrePersist
     protected void onCreate() {
-    this.letrehozvaAt = LocalDateTime.now();
-}
+        this.letrehozvaAt = LocalDateTime.now();
+    }
 }
