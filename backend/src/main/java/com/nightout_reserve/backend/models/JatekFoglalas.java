@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Transient;
 
 
 @Entity
@@ -43,6 +44,12 @@ public class JatekFoglalas {
 
     @Column(name = "torolve_at")
     private LocalDateTime torolveAt;
+
+    @Transient
+    private String szorakozohelyNev;
+
+    @Transient
+    private String jatekNev;
 
     @PrePersist
     protected void onCreate() {

@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 import com.nightout_reserve.backend.models.JatekFoglalas;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
+import com.nightout_reserve.backend.repositories.JatekRepository;
+import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 
 
 
@@ -17,8 +20,26 @@ public class JatekFoglalasService {
     @Autowired
     private JatekFoglalasRepository repo;
 
+    // Ezeket behúzzuk, hogy tudjunk neveket keresni az ID-k alapján
+    @Autowired
+    private SzorakozohelyRepository szorakozohelyRepo;
+
+    @Autowired
+    private JatekRepository jatekRepo;
+
     public List<JatekFoglalas> getFelhasznaloFoglalasai(Integer felhasznaloId) {
-        return repo.findByFelhasznaloId(felhasznaloId);
+        List<JatekFoglalas> foglalasok = repo.findByFelhasznaloId(felhasznaloId);
+
+        // EZ A CIKLUS TESZI BELE A NEVEKET!
+        for (JatekFoglalas f : foglalasok) {
+            szorakozohelyRepo.findById(f.getSzorakozohelyId())
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+
+            jatekRepo.findById(f.getJatekId())
+                .ifPresent(jatek -> f.setJatekNev(jatek.getNev()));
+        }
+
+        return foglalasok;
     }
 
     public ResponseEntity<String> mentes(JatekFoglalas ujFoglalas) {
