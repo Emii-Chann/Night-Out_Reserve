@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin bejelentkezés</title>
+    <title>Admin login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <link rel="stylesheet" href="./styles/admin.css">
@@ -20,17 +20,17 @@
 
     <main class="admin-auth-wrapper">
         <section class="admin-auth-card">
-            <h1>Admin bejelentkezés</h1>
-            <p class="admin-auth-subtitle">Lépj be a helyszínkezelő felületre a Gmail címeddel.</p>
+            <h1>Admin login</h1>
+            <p class="admin-auth-subtitle">Sign in to manage your venue with your Gmail account.</p>
 
             <form id="adminLoginForm">
-                <label for="adminEmail">Gmail cím</label>
+                <label for="adminEmail">Gmail address</label>
                 <input type="email" id="adminEmail" placeholder="tulajdonos@gmail.com" required>
 
-                <label for="adminPassword">Jelszó</label>
-                <input type="password" id="adminPassword" placeholder="Kezdeti jelszó" required>
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Initial password" required>
 
-                <button type="submit" class="admin-primary-btn">Belépés</button>
+                <button type="submit" class="admin-primary-btn">Login</button>
                 <p id="adminLoginError" class="admin-error"></p>
             </form>
         </section>

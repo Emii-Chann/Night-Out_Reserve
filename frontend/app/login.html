@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Bejelentkezés</title>
+    <title>Login</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -29,17 +29,18 @@
         
    
 <form id="loginForm" onsubmit="handleLogin(event)">
-    <h2>Bejelentkezés</h2>
+    <h2>Login</h2>
 
-    <input type="text" id="username" placeholder="Felhasználónév vagy Email">
+    <input type="text" id="username" placeholder="Username or email">
     <div class="error" id="userError"></div>
 
-    <input type="password" id="password" placeholder="Jelszó">
+    <input type="password" id="password" placeholder="Password">
     <div class="error" id="passError"></div>
 
-    <a href="./jelszo-csere.html" class="forgot-password-link">Elfelejtettem a jelszavam?</a>
+    <a href="./reg.html" class="forgot-password-link">I don’t have an account</a>
+    <a href="./jelszo-csere.html" class="forgot-password-link">Forgot password?</a>
 
-    <button type="submit">Bejelentkezés</button>
+    <button type="submit">Login</button>
 
     <p class="success" id="successMsg"></p>
 </form>

@@ -2,8 +2,8 @@ let aktualisNyitvatartas = "";
 
 async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
     aktualisNyitvatartas = nyitvatartas;
-    document.getElementById('asztal-foglalas-modal').style.display = 'block';
-    document.getElementById('asztal-modal-cim').innerText = `${helyNev} - Asztalfoglalás (${nyitvatartas})`;
+    document.getElementById('asztal-foglalas-modal').style.display = 'flex';
+    document.getElementById('asztal-modal-cim').innerText = `${helyNev} - Table booking (${nyitvatartas})`;
     document.getElementById('asztal-szorakozohely-id').value = szorakozohelyId;
 
     const maiDatum = new Date().toISOString().split('T')[0];
@@ -21,25 +21,25 @@ async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
     }
 
     const asztalSelect = document.getElementById('asztal-szam-select');
-    asztalSelect.innerHTML = '<option>Betöltés...</option>';
+    asztalSelect.innerHTML = '<option>Loading...</option>';
 
     try {
         // Backend hívása az asztalokért
         const response = await fetch(`http://localhost:8080/api/asztalok/${szorakozohelyId}/list`);
         const asztalok = await response.json();
 
-        asztalSelect.innerHTML = '<option value="" disabled selected>Válaszd ki az asztalt</option>';
+        asztalSelect.innerHTML = '<option value="" disabled selected>Select a table</option>';
         
         asztalok.forEach(asztal => {
             asztalSelect.innerHTML += `
                 <option value="${asztal.asztal_szam}" data-ferohely="${asztal.ferohely}">
-                    ${asztal.asztal_szam}. asztal (${asztal.ferohely} fős)
+                    Table ${asztal.asztal_szam} (${asztal.ferohely} seats)
                 </option>
             `;
         });
     } catch (hiba) {
-        console.error("Hiba az asztalok letöltésekor", hiba);
-        asztalSelect.innerHTML = '<option value="">Hiba a betöltéskor</option>';
+        console.error("Error loading tables", hiba);
+        asztalSelect.innerHTML = '<option value="">Failed to load</option>';
     }
     // Figyeljük, ha a felhasználó asztalt választ
     asztalSelect.addEventListener('change', function() {
@@ -74,7 +74,7 @@ async function asztalFoglalasBekuldese() {
 
     
     if(!asztalSzam || !datum || !ido || !letszam) {
-        alert("Kérlek tölts ki minden mezőt!");
+        alert("Please fill all fields.");
         return;
     }
 
@@ -83,7 +83,7 @@ async function asztalFoglalasBekuldese() {
     const maxFerohely = kivalasztottOption.getAttribute('data-ferohely');
 
     if (maxFerohely && parseInt(letszam) > parseInt(maxFerohely)) {
-        alert(`Ehhez az asztalhoz maximum ${maxFerohely} fő fér el! Kérlek válassz nagyobb asztalt vagy csökkentsd a létszámot.`);
+        alert(`This table allows maximum ${maxFerohely} people. Please choose a larger table or reduce the guest count.`);
         return; // Megállítjuk a küldést
     }
 
@@ -93,7 +93,7 @@ async function asztalFoglalasBekuldese() {
     // --- ELLENŐRZÉSEK (ugyanaz a logika, mint a játékoknál) ---
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < new Date()) {
-        alert("Nem foglalhatsz a múltba!");
+        alert("You cannot book in the past.");
         return;
     }
 
@@ -130,10 +130,10 @@ async function asztalFoglalasBekuldese() {
         });
 
         if (response.ok) {
-            alert("Sikeres asztalfoglalás!");
+            alert("Table booking successful!");
             asztalModalBezarasa();
         } else {
-            alert("Hiba történt a mentés során.");
+            alert("An error occurred while saving.");
         }
     } catch (hiba) {
         console.error(hiba);

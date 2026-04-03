@@ -5,7 +5,7 @@ async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
     const maiDatum = new Date().toISOString().split('T')[0];
     document.getElementById('foglalas-datum').setAttribute('min', maiDatum);
     // Modal megjelenítése és alap adatok beállítása
-    document.getElementById('foglalas-modal').style.display = 'block';
+    document.getElementById('foglalas-modal').style.display = 'flex';
     document.getElementById('modal-cim').innerText = `Book ${helyNev} (${nyitvatartas})`;
     document.getElementById('foglalas-szorakozohely-id').value = szorakozohelyId;
 
@@ -21,7 +21,7 @@ async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
     }
 
     const jatekSelect = document.getElementById('foglalas-jatek');
-    jatekSelect.innerHTML = '<option>Betöltés...</option>';
+    jatekSelect.innerHTML = '<option>Loading...</option>';
 
     try {
         // Backend hívása (A 2. lépésben megírt API)
@@ -29,19 +29,19 @@ async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
         const jatekok = await response.json();
 
         // Legördülő opciók generálása
-        jatekSelect.innerHTML = '<option value="" disabled selected>Válaszd ki a játékot</option>';
+        jatekSelect.innerHTML = '<option value="" disabled selected>Select a game</option>';
         
         jatekok.forEach(jatek => {
             // jatekId, nev, arOra - ahogy a Java lekérdezésben elneveztük (AS jatekId)
             jatekSelect.innerHTML += `
                 <option value="${jatek.jatekId}">
-                    ${jatek.nev} (${jatek.arOra} Ft/óra)
+                    ${jatek.nev} (${jatek.arOra} HUF/hour)
                 </option>
             `;
         });
     } catch (hiba) {
-        console.error("Hiba a játékok letöltésekor", hiba);
-        jatekSelect.innerHTML = '<option value="">Hiba a betöltéskor</option>';
+        console.error("Error loading games", hiba);
+        jatekSelect.innerHTML = '<option value="">Failed to load</option>';
     }
 }
 
@@ -76,12 +76,12 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     // -----------------------
 
     if (kezdetPercekben < nyitPercekben) {
-        alert(`Sajnos a hely még nincs nyitva! Nyitás: ${nyit}`);
+        alert(`The venue is not open yet. Opening time: ${nyit}`);
         return false;
     }
     
     if (vegPercekben > zarPercekben) {
-        alert(`A foglalás túlnyúlik a zárórán! Zárás: ${zar}`);
+        alert(`This booking exceeds closing time. Closing time: ${zar}`);
         return false;
     }
 
@@ -101,7 +101,7 @@ async function foglalasBekuldese() {
 
 
     if(!jatekId || !datum || !ido) {
-        alert("Kérlek tölts ki minden mezőt!");
+        alert("Please fill all fields.");
         return;
     }
 
@@ -129,7 +129,7 @@ const vegeISO = formatum(vegeDatumObj);
     const most = new Date();
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < most) {
-        alert("Nem foglalhatsz a múltba!");
+        alert("You cannot book in the past.");
         return;
     }
 
@@ -162,10 +162,10 @@ const vegeISO = formatum(vegeDatumObj);
         });
 
         if (response.ok) {
-            alert("Sikeres foglalás!");
+            alert("Booking successful!");
             modalBezarasa();
         } else {
-            alert("Valami hiba történt a mentés során.");
+            alert("An error occurred while saving.");
         }
     } catch (hiba) {
         console.error(hiba);

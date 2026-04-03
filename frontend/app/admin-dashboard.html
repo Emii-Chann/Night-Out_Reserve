@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin foglaláskezelés</title>
+    <title>Admin reservation management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <link rel="stylesheet" href="./styles/admin.css">
@@ -20,23 +20,23 @@
 
     <main class="admin-dashboard">
         <header class="admin-dashboard-header">
-            <h1>Foglalások kezelése</h1>
-            <p>Kezeled a helyszínedre érkező bejövő foglalásokat, és áttekinted az elfogadott / elutasított kéréseket.</p>
+            <h1>Manage reservations</h1>
+            <p>Review incoming bookings and track accepted or rejected requests.</p>
         </header>
 
         <section class="admin-sections">
             <div class="admin-section">
-                <h2>Bejövő foglalások</h2>
+                <h2>Incoming reservations</h2>
                 <div id="incomingReservations" class="admin-reservation-list"></div>
             </div>
 
             <div class="admin-section">
-                <h2>Elfogadott foglalások</h2>
+                <h2>Accepted reservations</h2>
                 <div id="acceptedReservations" class="admin-reservation-list"></div>
             </div>
 
             <div class="admin-section">
-                <h2>Elutasított foglalások</h2>
+                <h2>Rejected reservations</h2>
                 <div id="rejectedReservations" class="admin-reservation-list"></div>
             </div>
         </section>

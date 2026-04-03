@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Lecseréljük a profil ikont a névre és a Logout gombra
             authMenu.innerHTML = `
                 <div class="d-flex align-items-center gap-3">
-                    <span class="welcome-text">Szia, <strong>${username}</strong>!</span>
-                    <button onclick="handleLogout()" class="logout-btn btn btn-outline-light btn-sm">Kijelentkezés</button>
+                    <span class="welcome-text">Hi, <strong>${username}</strong>!</span>
+                    <button onclick="handleLogout()" class="logout-btn btn btn-outline-light btn-sm">Logout</button>
                 </div>
             `;
         } catch (error) {

@@ -2,8 +2,8 @@ let helyAktualisNyitvatartas = "";
 
 function helyModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
     helyAktualisNyitvatartas = nyitvatartas;
-    document.getElementById('hely-foglalas-modal').style.display = 'block';
-    document.getElementById('hely-modal-cim').innerText = `${helyNev} - Helyfoglalás (${nyitvatartas})`;
+    document.getElementById('hely-foglalas-modal').style.display = 'flex';
+    document.getElementById('hely-modal-cim').innerText = `${helyNev} - Venue booking (${nyitvatartas})`;
     document.getElementById('hely-szorakozohely-id').value = szorakozohelyId;
 
     const maiDatum = new Date().toISOString().split('T')[0];
@@ -35,14 +35,14 @@ async function helyFoglalasBekuldese() {
     const megjegyzes = document.getElementById('hely-megjegyzes').value;
 
     if(!datum || !ido || !letszam || !idotartam) {
-        alert("Kérlek töltsd ki a kötelező mezőket!");
+        alert("Please fill all required fields.");
         return;
     }
 
     // --- ELLENŐRZÉSEK ---
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < new Date()) {
-        alert("Nem foglalhatsz a múltba!");
+        alert("You cannot book in the past.");
         return;
     }
 
@@ -80,7 +80,7 @@ async function helyFoglalasBekuldese() {
         });
 
         if (response.ok) {
-            alert("Sikeres helyfoglalás!");
+            alert("Venue booking successful!");
             helyModalBezarasa();
             document.getElementById('hely-foglalas-form').reset();
         } else if (response.status === 409) {
@@ -88,10 +88,10 @@ async function helyFoglalasBekuldese() {
             const hibaSzoveg = await response.text();
             alert(hibaSzoveg);
         } else {
-            alert("Hiba történt a mentés során.");
+            alert("An error occurred while saving.");
         }
     } catch (hiba) {
-        console.error("Hálózati hiba:", hiba);
+        console.error("Network error:", hiba);
     }
 }
 
@@ -125,12 +125,12 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     // -----------------------
 
     if (kezdetPercekben < nyitPercekben) {
-        alert(`Sajnos a hely még nincs nyitva! Nyitás: ${nyit}`);
+        alert(`The venue is not open yet. Opening time: ${nyit}`);
         return false;
     }
     
     if (vegPercekben > zarPercekben) {
-        alert(`A foglalás túlnyúlik a zárórán! Zárás: ${zar}`);
+        alert(`This booking exceeds closing time. Closing time: ${zar}`);
         return false;
     }
 

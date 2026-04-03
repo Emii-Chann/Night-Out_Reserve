@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Regisztráció</title>
+    <title>Registration</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -29,24 +29,24 @@
     
     <form method="POST" onsubmit="handleRegistration(event)">
 
-        <h2>Regisztráció</h2>
+        <h2>Registration</h2>
 
-        <input type="text" id="username" placeholder="Felhasználónév (Minimum 4 karakter)">
+        <input type="text" id="username" placeholder="Username (minimum 4 characters)">
         <div class="error" id="userError"></div>
 
-        <input type="password" id="password" placeholder="Jelszó (Minimum 8 karakter)">
+        <input type="password" id="password" placeholder="Password (minimum 8 characters)">
         <div class="error" id="passError"></div>
 
-        <input type="password" id="password2" placeholder="Jelszó újra">
+        <input type="password" id="password2" placeholder="Confirm password">
         <div class="error" id="pass2Error"></div>
 
-        <input type="text" id="email" placeholder="Email (nev@gmail.com)">
+        <input type="text" id="email" placeholder="Email (name@gmail.com)">
         <div class="error" id="emailError"></div>
 
-        <input type="text" id="phone" placeholder="Telefonszám (06 30 123 4567)">
+        <input type="text" id="phone" placeholder="Phone number (06 30 123 4567)">
         <div class="error" id="phoneError"></div>
- <a href="./login.html" class="tab ">Már van fiókom</a>
-<button type="submit" class="submit-btn">Regisztráció</button>
+ <a href="./login.html" class="forgot-password-link">Already have an account</a>
+<button type="submit" class="submit-btn">Register</button>
 <p class="success" id="successMsg"></p>
     </form>
     <script src="./scripts/regell.js"></script>

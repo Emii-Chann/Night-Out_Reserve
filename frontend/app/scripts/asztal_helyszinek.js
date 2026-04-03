@@ -11,19 +11,26 @@ async function asztalHelyszinekBetoltese() {
         helyszinek.forEach(hely => {
             helyszinekDiv.innerHTML += `
                 <div class="card">
+                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop');">
+                        <span class="tag">Table</span>
+                    </div>
+                    <div class="card-content">
                     <h3>${hely.nev}</h3>
-                    <p>${hely.cim}</p>
-                    <p>Nyitva: ${hely.nyitvatartas}</p>
+                    <p class="location"><i class="fa-solid fa-location-dot"></i> ${hely.cim}</p>
+                    <div class="details">
+                        <span><i class="fa-regular fa-clock"></i> ${hely.nyitvatartas || 'Not set'}</span>
+                    </div>
                     
                     <button onclick="asztalModalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">
-                        Asztal foglalás
+                        Table booking
                     </button>
+                    </div>
                 </div>
             `;
         });
     } catch (hiba) {
         console.error("Hiba történt a helyszínek betöltésekor:", hiba);
-        helyszinekDiv.innerHTML = '<p>Nem sikerült betölteni a helyszíneket.</p>';
+        helyszinekDiv.innerHTML = '<p>Could not load venues.</p>';
     }
 }
 

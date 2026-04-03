@@ -95,6 +95,15 @@ body::after {
     font-weight: bold;
 }
 
+/* Ensure Bootstrap can't override homepage header/logo text */
+body .navbar .logo span {
+    color: #ffffff;
+}
+
+body .hero-content h1 {
+    color: #ffffff;
+}
+
 .logo-icon {
     background: var(--primary-color);
     width: 35px;
@@ -302,13 +311,13 @@ body::after {
     background-color: var(--card-bg);
     border-radius: 16px;
     border: 1px solid var(--border-color);
-    width: 400px;
-    height: auto;
+    width: 350px;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: left;
-     display: flex;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    min-height: 460px;
 }
 
 .card:hover {
@@ -345,7 +354,13 @@ body::after {
 }
 .rating i { color: #fbbf24; margin-right: 5px; }
 
-.card-content { padding: 20px; }
+.card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
 .card-content h3 { font-size: 20px; margin-bottom: 10px; }
 .location { color: var(--text-gray); font-size: 14px; margin-bottom: 15px; }
 .details { display: flex; gap: 20px; margin-bottom: 20px; color: var(--text-gray); font-size: 14px; }
@@ -357,6 +372,7 @@ body::after {
     align-items: center;
     border-top: 1px solid var(--border-color);
     padding-top: 15px;
+    margin-top: auto;
 }
 
 .price { display: flex; flex-direction: column; }
@@ -364,7 +380,7 @@ body::after {
 .price strong { color: #a78bfa; font-size: 18px; }
 
 .book-btn {
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -373,7 +389,10 @@ body::after {
     font-weight: 600;
     transition: background 0.3s;
 }
-.book-btn:hover { background-color: var(--primary-hover); }
+.book-btn:hover {
+    background: linear-gradient(90deg, #9b6dff, #8b5cf6);
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
+}
 
 
 .modal {
@@ -397,10 +416,15 @@ body::after {
     padding: 30px;
     width: 100%;
     max-width: 450px;
-    position: relative;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
     animation: fadeIn 0.3s;
     text-align: left;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
 }
 
 @keyframes fadeIn {
@@ -478,6 +502,122 @@ body::after {
     transition: 0.3s;
 }
 
+.modal-tartalom {
+    background-color: #0b0b15;
+    border: 1px solid var(--primary-color);
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    max-width: 560px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+    animation: fadeIn 0.3s;
+    text-align: left;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+}
+
+.modal-tartalom h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.modal-tartalom form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.modal-tartalom form input,
+.modal-tartalom form select,
+.modal-tartalom form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+}
+
+.modal-tartalom form button {
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.modal-tartalom form button:hover {
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
+}
+
+.modal-tartalom form button:last-child {
+    background: transparent;
+    border: 1px solid var(--border-color);
+}
+
+.hely-kartya,
+.helyszin-kartya {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    min-height: 460px;
+}
+
+.hely-kartya:hover,
+.helyszin-kartya:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+}
+
+.hely-info,
+.helyszin-kartya {
+    padding: 20px;
+}
+
+.hely-kartya .card-image,
+.helyszin-kartya .card-image {
+    height: 200px;
+}
+
+.hely-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.hely-cim,
+.hely-nyitva,
+.hely-leiras {
+    color: var(--text-gray);
+    margin-bottom: 10px;
+}
+
+.hely-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    margin-top: 12px;
+    margin-top: auto;
+}
+
 
 
 .app-buttons img {
@@ -542,8 +682,7 @@ body::after {
 
 #helyszinek-gridreel {
     display: flex;
-    /* A kártyák minimum 250px szélesek, de ha van hely, egyenletesen elnyúlnak (1fr) */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    flex-wrap: nowrap;
     gap: 20px;
     padding: 20px;
 }
@@ -572,7 +711,17 @@ body::after {
 
 #asztal-helyszinek-lista{
     display: flex;
-    height: 200px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 30px 20px 80px;
+}
 
-
+#helyszinek-grid,
+#hely-helyszinek-lista {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 30px 20px 80px;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,19 +12,19 @@
   <div id="navbar-container"></div>
     <header class="hero">
         <div class="hero-content">
-            <h1>Te éjszakád, <span class="text-purple">Te utad</span></h1>
-            <p>Foglalj exkluzív helyszíneket, VIP asztalokat és prémium játékokat a tökéletes éjszakai életért</p>
+            <h1>Your night, <span class="text-purple">your way</span></h1>
+            <p>Book exclusive venues, VIP tables, and premium games for the perfect nightlife experience.</p>
 
             <div class="search-bar">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" placeholder="">
-                <button class="search-btn">Keresés</button>
+                <button class="search-btn">Search</button>
             </div>
 
             <div class="category-tabs">
-                <a href="#" class="tab active">Szórakozóhelyek</a>
-                <a href="./asztalok.html" class="tab">Asztalok</a>
-                <a href="./jatekok.html" class="tab">Játékok</a>
+                <a href="#" class="tab active">Venues</a>
+                <a href="./asztalok.html" class="tab">Tables</a>
+                <a href="./jatekok.html" class="tab">Games</a>
             </div>
         </div>
     </header>
@@ -33,32 +33,62 @@
 
     <div id="hely-foglalas-modal" style="display: none;" class="modal">
     <div class="modal-tartalom">
-        <h2 id="hely-modal-cim">Helyszín foglalása</h2>
+        <h2 id="hely-modal-cim">Venue booking</h2>
         
         <form id="hely-foglalas-form">
-            <label>Dátum</label>
+            <label>Date</label>
             <input type="date" id="hely-datum" required>
 
-            <label>Érkezés időpontja</label>
+            <label>Arrival time</label>
             <select id="hely-ido" required> </select>
 
-            <label>Időtartam (óra)</label>
+            <label>Duration (hours)</label>
             <input type="number" id="hely-idotartam" value="2" min="1" required>
 
-            <label>Létszám (fő)</label>
+            <label>Guests</label>
             <input type="number" id="hely-letszam" value="2" min="1" required>
 
-            <label>Megjegyzés (pl. szülinap, egyedi kérés)</label>
-            <textarea id="hely-megjegyzes" rows="3" placeholder="Opcionális..."></textarea>
+            <label>Note (e.g. birthday, special request)</label>
+            <textarea id="hely-megjegyzes" rows="3" placeholder="Optional..."></textarea>
 
             <input type="hidden" id="hely-szorakozohely-id">
 
-            <button type="button" onclick="helyFoglalasBekuldese()">Foglalás elküldése</button>
-            <button type="button" onclick="helyModalBezarasa()">Mégsem</button>
+            <button type="button" onclick="helyFoglalasBekuldese()">Submit booking</button>
+            <button type="button" onclick="helyModalBezarasa()">Cancel</button>
         </form>
     </div>
 </div>
+<footer class="footer">
+    <div class="footer-container">
 
+        <div class="footer-column">
+            <h4>Night-Out Reserve</h4>
+            <p>Premium booking for nightlife and experiences.</p>
+        </div>
+
+        <div class="footer-column">
+            <h4>Pages</h4>
+            <a href="./index.html">Home</a>
+            <a href="./rolunk.html">About</a>
+            <a href="./kapcsolat.html">Contact</a>
+        </div>
+
+        <div class="footer-column">
+            <h4>Services</h4>
+            <a href="#">For Partners</a>
+            <a href="#">System Status</a>
+        </div>
+
+        <div class="footer-column">
+            <h4>Legal</h4>
+            <a href="#">Gift Card</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms of Use</a>
+        </div>
+
+        </div>
+
+    </div>
 </footer>
     <script src="./scripts/Night-Out Reserve.js"></script>
 <script src="./scripts/helyfoglalas.js"></script>

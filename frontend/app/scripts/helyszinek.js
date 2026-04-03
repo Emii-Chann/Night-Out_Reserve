@@ -9,15 +9,19 @@ async function betoltHelyszinek() {
         adatok.forEach(hely => {
             kontener.innerHTML += `
                 <div class="hely-kartya">
+                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop');">
+                        <span class="tag">Games</span>
+                       
+                    </div>
                     <div class="hely-info">
                         <h3>${hely.nev}</h3>
-                        <p class="hely-cim">📍 ${hely.varos}, ${hely.cim}</p>
-                        <p class="hely-nyitva">🕒 Nyitva: ${hely.nyitvatartas || 'Nincs megadva'}</p>
-                        <p class="hely-leiras">${hely.leiras || 'Kellemes szórakozóhely várja vendégeit.'}</p>
+                        <p class="hely-cim"><i class="fa-solid fa-location-dot"></i> ${hely.varos}, ${hely.cim}</p>
+                        <p class="hely-nyitva"><i class="fa-regular fa-clock"></i> Open: ${hely.nyitvatartas || 'Not set'}</p>
+                        <p class="hely-leiras">${hely.leiras || 'A premium nightlife venue waiting for your event.'}</p>
                         <div class="hely-footer">
-                            <span>🪑 Asztalok: ${hely.asztalokSzama}</span>
+                            <span><i class="fa-solid fa-chair"></i> Tables: ${hely.asztalokSzama}</span>
                             
-                            <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas"> Játék foglalás</button>
+                            <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">Game booking</button>
                         </div>
                     </div>
                 </div>

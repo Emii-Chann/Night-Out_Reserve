@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,19 +13,19 @@
 
     <header class="hero">
         <div class="hero-content">
-            <h1>Te éjszakád, <span class="text-purple">Te utad</span></h1>
-            <p>Foglalj exkluzív helyszíneket, VIP asztalokat és prémium játékokat a tökéletes éjszakai életért</p>
+            <h1>Your night, <span class="text-purple">your way</span></h1>
+            <p>Book exclusive venues, VIP tables, and premium games for the perfect nightlife experience.</p>
 
             <div class="search-bar">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" placeholder="">
-                <button class="search-btn">Keresés</button>
+                <button class="search-btn">Search</button>
             </div>
 
             <div class="category-tabs">
-                <a href="./szorakozohely.html" class="tab ">Szórakozóhelyek</a>
-                <a href="./asztalok.html" class="tab">Asztalok</a>
-                <a href="./jatekok.html" class="tab active">Játékok</a>
+                <a href="./szorakozohely.html" class="tab ">Venues</a>
+                <a href="./asztalok.html" class="tab">Tables</a>
+                <a href="./jatekok.html" class="tab active">Games</a>
             </div>
         </div>
     </header>
@@ -37,17 +37,17 @@
         <h2 id="modal-cim">Book Midnight Club</h2>
         
         <form id="jatek-foglalas-form">
-            <label>Dátum</label>
+            <label>Date</label>
             <input type="date" id="foglalas-datum" required>
 
-            <label>Időpont</label>
+            <label>Time</label>
           <select id="foglalas-ido" required>
     </select>
 
-            <label>Időtartam (óra)</label>
+            <label>Duration (hours)</label>
             <input type="number" id="foglalas-idotartam" value="1" min="1" required>
 
-            <label>Játék</label>
+            <label>Game</label>
             <select id="foglalas-jatek" required>
                 </select>
 
@@ -56,15 +56,43 @@
 
             <input type="hidden" id="foglalas-szorakozohely-id">
 
-            <button type="button" onclick="foglalasBekuldese()">Folytatás a fizetéshez</button>
-            <button type="button" onclick="modalBezarasa()">Mégsem</button>
+            <button type="button" onclick="foglalasBekuldese()">Continue to payment</button>
+            <button type="button" onclick="modalBezarasa()">Cancel</button>
         </form>
     </div>
 </div>
     
+<footer class="footer">
+    <div class="footer-container">
 
+        <div class="footer-column">
+            <h4>Night-Out Reserve</h4>
+            <p>Premium booking for nightlife and experiences.</p>
+        </div>
 
+        <div class="footer-column">
+            <h4>Pages</h4>
+            <a href="./index.html">Home</a>
+            <a href="./rolunk.html">About</a>
+            <a href="./kapcsolat.html">Contact</a>
+        </div>
 
+        <div class="footer-column">
+            <h4>Services</h4>
+            <a href="#">For Partners</a>
+            <a href="#">System Status</a>
+        </div>
+
+        <div class="footer-column">
+            <h4>Legal</h4>
+            <a href="#">Gift Card</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms of Use</a>
+        </div>
+
+        </div>
+
+    </div>
 </footer>
     <script src="./scripts/Night-Out Reserve.js"></script>
 <script src="./scripts/jatekfoglalas.js"></script>

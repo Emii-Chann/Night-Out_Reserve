@@ -11,30 +11,30 @@ function validateForm() {
     let valid = true;
 
     if (username.length < 4) {
-        document.getElementById("userError").innerHTML = "<span style='color:#ff6b6b;'>Min. 4 karakter</span>";
+        document.getElementById("userError").innerHTML = "<span style='color:#ff6b6b;'>Min. 4 characters</span>";
         valid = false;
     }
 
     if (password.length < 8) {
-        document.getElementById("passError").innerHTML = "<span style='color:#ff6b6b;'>Min. 8 karakter</span>";
+        document.getElementById("passError").innerHTML = "<span style='color:#ff6b6b;'>Min. 8 characters</span>";
         valid = false;
     }
 
     if (password !== password2) {
-        document.getElementById("pass2Error").innerHTML = "<span style='color:#ff6b6b;'>Nem egyezik!</span>";
+        document.getElementById("pass2Error").innerHTML = "<span style='color:#ff6b6b;'>Does not match!</span>";
         valid = false;
     }
 
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        document.getElementById("emailError").innerHTML = "<span style='color:#ff6b6b;'>Hibás email!</span>";
+        document.getElementById("emailError").innerHTML = "<span style='color:#ff6b6b;'>Invalid email!</span>";
         valid = false;
     }
 
     // JAVÍTVA: Csak akkor hiba, ha NEM üres ÉS NEM illeszkedik a regexre
     let phoneRegex = /^[0-9]{9,12}$/;
     if (phone !== "" && !phoneRegex.test(phone)) {
-        document.getElementById("phoneError").innerHTML = "<span style='color:#ff6b6b;'>Hibás telefonszám (9-12 számjegy)!</span>";
+        document.getElementById("phoneError").innerHTML = "<span style='color:#ff6b6b;'>Invalid phone number (9-12 digits)!</span>";
         valid = false;
     }
 
@@ -54,7 +54,7 @@ async function handleRegistration(event) {
         password: document.getElementById("password").value
     };
 
-    console.log("Küldés folyamatban...", userData);
+    console.log("Sending request...", userData);
 
     try {
         const response = await fetch('http://localhost:8080/users/create', {
@@ -64,15 +64,15 @@ async function handleRegistration(event) {
         });
 
         if (response.ok) {
-            alert("Sikeres regisztráció 🎉");
+            alert("Registration successful 🎉");
             window.location.href = "login.html";
         } else {
             // Megpróbáljuk kiolvasni a hibaüzenetet a bckendtől
-            const errorData = await response.json().catch(() => ({ message: "Ismeretlen hiba" }));
-            alert("Hiba: " + (errorData.message || "A regisztráció nem sikerült"));
+            const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
+            alert("Error: " + (errorData.message || "Registration failed"));
         }
     } catch (error) {
-        console.error("Hálózati hiba:", error);
-        alert("Nem sikerült elérni a szervert. Fut a Docker?");
+        console.error("Network error:", error);
+        alert("Could not reach the server. Is Docker running?");
     }
 }

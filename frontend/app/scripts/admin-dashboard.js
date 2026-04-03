@@ -68,12 +68,12 @@ function createReservationCard(reservation, withActions) {
 
     const meta = document.createElement("p");
     meta.className = "admin-reservation-meta";
-    meta.textContent = `${reservation.date} • ${reservation.time} • ${reservation.people} fő`;
+    meta.textContent = `${reservation.date} • ${reservation.time} • ${reservation.people} people`;
     card.appendChild(meta);
 
     const customer = document.createElement("p");
     customer.className = "admin-reservation-customer";
-    customer.textContent = `Ügyfél: ${reservation.customerName}`;
+    customer.textContent = `Customer: ${reservation.customerName}`;
     card.appendChild(customer);
 
     if (withActions) {
@@ -82,14 +82,14 @@ function createReservationCard(reservation, withActions) {
 
         const acceptBtn = document.createElement("button");
         acceptBtn.className = "admin-btn accept";
-        acceptBtn.textContent = "Elfogadás";
+        acceptBtn.textContent = "Accept";
         acceptBtn.addEventListener("click", () =>
             updateReservationStatus(reservation.id, "accepted")
         );
 
         const rejectBtn = document.createElement("button");
         rejectBtn.className = "admin-btn reject";
-        rejectBtn.textContent = "Elutasítás";
+        rejectBtn.textContent = "Reject";
         rejectBtn.addEventListener("click", () =>
             updateReservationStatus(reservation.id, "rejected")
         );

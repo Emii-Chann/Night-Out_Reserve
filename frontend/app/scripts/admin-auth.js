@@ -55,20 +55,20 @@ if (adminLoginForm) {
         const admin = admins.find((a) => a.email.toLowerCase() === email);
 
         if (!admin) {
-            errorEl.textContent = "Nincs ilyen admin fiók ezzel az email címmel.";
+            errorEl.textContent = "No admin account exists with this email address.";
             return;
         }
 
         if (!admin.passwordSet) {
             if (password !== admin.tempPassword) {
-                errorEl.textContent = "Hibás kezdeti jelszó.";
+                errorEl.textContent = "Invalid initial password.";
                 return;
             }
             setCurrentAdmin(admin.email);
             window.location.href = "./set-password.html";
         } else {
             if (password !== admin.password) {
-                errorEl.textContent = "Hibás jelszó.";
+                errorEl.textContent = "Invalid password.";
                 return;
             }
             setCurrentAdmin(admin.email);
@@ -96,12 +96,12 @@ if (setPasswordForm) {
         const confirmPass = confirmPassInput.value;
 
         if (newPass.length < 8) {
-            errorEl.textContent = "A jelszónak legalább 8 karakter hosszúnak kell lennie.";
+            errorEl.textContent = "Password must be at least 8 characters long.";
             return;
         }
 
         if (newPass !== confirmPass) {
-            errorEl.textContent = "A jelszavak nem egyeznek.";
+            errorEl.textContent = "Passwords do not match.";
             return;
         }
 
@@ -111,7 +111,7 @@ if (setPasswordForm) {
         );
 
         if (adminIndex === -1) {
-            errorEl.textContent = "Hiba történt. Jelentkezz be újra.";
+            errorEl.textContent = "An error occurred. Please log in again.";
             localStorage.removeItem(CURRENT_ADMIN_KEY);
             setTimeout(() => {
                 window.location.href = "./admin-login.html";

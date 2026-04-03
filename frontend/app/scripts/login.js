@@ -20,13 +20,13 @@ async function handleLogin(event) {
         if (response.ok) {
             const token = await response.text();
             localStorage.setItem("token", token);
-            alert("Sikeres belépés!");
+            alert("Login successful!");
             window.location.href = "index.html";
         } else {
             const errorMsg = await response.text();
-            alert("Hiba: " + errorMsg);
+            alert("Error: " + errorMsg);
         }
     } catch (err) {
-        console.error("Hiba történt:", err);
+        console.error("An error occurred:", err);
     }
 }
