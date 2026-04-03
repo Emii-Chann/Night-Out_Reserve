@@ -17,6 +17,9 @@
 }
 
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background:
         radial-gradient(circle at top, rgba(139, 92, 246, 0.45) 0%, transparent 55%),
         radial-gradient(circle at bottom, rgba(56, 189, 248, 0.18) 0%, transparent 60%),
@@ -439,7 +442,7 @@ body::after {
 .footer {
     background: #2e2e42;
     padding: 30px 30px;
-    margin-top: 40px;
+    margin-top: auto;
 }
 
 .footer-container {

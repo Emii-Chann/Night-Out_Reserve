@@ -1,0 +1,198 @@
+:root {
+    --admin-section-bg: rgba(15, 15, 26, 0.9);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-auth-wrapper,
+.admin-dashboard {
+    max-width: 1100px;
+    margin: 120px auto 40px auto;
+    padding: 0 20px 40px 20px;
+}
+
+.admin-auth-card {
+    background: linear-gradient(
+        to bottom right,
+        rgba(25, 25, 40, 0.95),
+        rgba(12, 12, 24, 0.95)
+    );
+    border-radius: 18px;
+    border: 1px solid var(--border-color);
+    padding: 32px 32px 28px 32px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+}
+
+.admin-auth-card h1 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.admin-auth-subtitle {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.admin-auth-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-auth-card label {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.admin-auth-card input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 11px 13px;
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.admin-auth-card input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.admin-primary-btn {
+    margin-top: 10px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 11px 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.25s ease,
+        box-shadow 0.25s ease;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+.admin-primary-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 0 26px rgba(139, 92, 246, 0.7);
+}
+
+.admin-error {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #f97373;
+}
+
+/* Dashboard */
+.admin-dashboard-header h1 {
+    font-size: 2rem;
+    margin-bottom: 6px;
+}
+
+.admin-dashboard-header p {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.admin-sections {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.admin-section {
+    background-color: var(--admin-section-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 18px 16px 16px 16px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.6);
+}
+
+.admin-section h2 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.admin-reservation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-reservation-card {
+    background-color: rgba(15, 15, 30, 0.98);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 12px 12px 10px 12px;
+}
+
+.admin-reservation-card h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.admin-reservation-meta {
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+.admin-reservation-customer {
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.admin-reservation-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.admin-btn {
+    flex: 1;
+    border-radius: 999px;
+    border: none;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.admin-btn.accept {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+.admin-btn.accept:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.6);
+}
+
+.admin-btn.reject {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #fecaca;
+    border: 1px solid rgba(248, 113, 113, 0.4);
+}
+
+.admin-btn.reject:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 960px) {
+    .admin-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
