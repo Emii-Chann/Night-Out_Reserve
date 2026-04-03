@@ -4,8 +4,8 @@ import com.nightout_reserve.backend.dto.UserLoginDTO;
 import com.nightout_reserve.backend.exceptions.UserIsDeletedExistsException;
 import com.nightout_reserve.backend.exceptions.UserNonExistsException;
 import com.nightout_reserve.backend.exceptions.UserWrongPasswordException;
-import com.nightout_reserve.backend.modules.UserProfiles;
-import com.nightout_reserve.backend.repositories.UserProfilesRepository;
+import com.nightout_reserve.backend.models.User;
+import com.nightout_reserve.backend.repositories.UserRepository;
 import com.nightout_reserve.backend.utils.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
-    private final UserProfilesRepository upRepo;
+    private final UserRepository upRepo;
     private final BCryptPasswordEncoder encoder;
     private final JwtUtil jwtUtil;
 
-    public AuthService(UserProfilesRepository upRepo, JwtUtil jwtUtil) {
+    public AuthService(UserRepository upRepo, JwtUtil jwtUtil) {
         this.upRepo = upRepo;
         this.encoder = new BCryptPasswordEncoder(12);
         this.jwtUtil = jwtUtil;
@@ -25,7 +25,7 @@ public class AuthService {
 
     @Transactional
     public String login(UserLoginDTO ulDTO) {
-        UserProfiles up = upRepo.login(ulDTO.getUsernameIn());
+        User up = upRepo.login(ulDTO.getUsernameIn());
 
         if (up == null) {
             throw new UserNonExistsException("A felhasználó nem létezik");

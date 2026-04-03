@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/login").permitAll() // example of non authenticated path
+                        .requestMatchers("/auth/login", "/users/**", "/**").permitAll() // example of non authenticated path
                         // TODO: every unauthet paths here
-                        .anyRequest().authenticated() // All other endpoints require authentication
+//                        .anyRequest().authenticated() // Temporary no-auth until end of development phase
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter
                 .build();

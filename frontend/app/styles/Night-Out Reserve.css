@@ -302,10 +302,13 @@ body::after {
     background-color: var(--card-bg);
     border-radius: 16px;
     border: 1px solid var(--border-color);
-    width: 350px;
+    width: 400px;
+    height: auto;
     overflow: hidden;
     transition: transform 0.3s ease;
     text-align: left;
+     display: flex;
+    gap: 10px;
 }
 
 .card:hover {
@@ -509,4 +512,67 @@ body::after {
 .navbar a .profil:hover,
 .navbar a .profil i:hover {
     color: #ffffff;
+}
+
+#auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.welcome-text {
+    color: white;
+    font-size: 14px;
+}
+
+.logout-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #cc0000;
+}
+
+
+#helyszinek-gridreel {
+    display: flex;
+    /* A kártyák minimum 250px szélesek, de ha van hely, egyenletesen elnyúlnak (1fr) */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.hely-kartya {
+    background: #2c2c2c;
+    color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.hely-kartya:hover {
+    transform: translateY(-5px);
+}
+
+.hely-info { padding: 15px; }
+.btn-foglalas {
+    background: #f39c12;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#asztal-helyszinek-lista{
+    display: flex;
+    height: 200px;
+
+
 }

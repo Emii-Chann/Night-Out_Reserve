@@ -28,23 +28,23 @@
         </div>
         
    
-    
-    <form method="GET" onsubmit="return validateForm()">
+<form id="loginForm" onsubmit="handleLogin(event)">
+    <h2>Bejelentkezés</h2>
 
-        <h2>Bejelentkezés</h2>
+    <input type="text" id="username" placeholder="Felhasználónév vagy Email">
+    <div class="error" id="userError"></div>
 
-        <input type="text" id="username" placeholder="Felhasználónév vagy Email">
-        <div class="error" id="userError"></div>
+    <input type="password" id="password" placeholder="Jelszó">
+    <div class="error" id="passError"></div>
 
-        <input type="password" id="password" placeholder="Jelszó">
-        <div class="error" id="passError"></div>
+    <a href="./jelszo-csere.html" class="forgot-password-link">Elfelejtettem a jelszavam?</a>
 
-        <a href="./jelszo-csere.html" class="forgot-password-link">Elfelejtettem a jelszavam?</a>
+    <button type="submit">Bejelentkezés</button>
 
-<button type="submit">Bejelentkezés</button>
+    <p class="success" id="successMsg"></p>
+</form>
 
-<p class="success" id="successMsg"></p>
-    </form>
-    <script src="./scripts/regll.js"></script>
+<script src="scripts/login.js"></script>
+
 </body>
 </html>

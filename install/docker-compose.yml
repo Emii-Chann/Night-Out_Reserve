@@ -1,7 +1,9 @@
 services:
   database:
     image: mysql:8.4
-    container_name: database
+    container_name: database1
+    networks:
+      - nightout-network
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DATABASENAME}
@@ -12,8 +14,12 @@ services:
       - ./sql-scripts:/docker-entrypoint-initdb.d
 
   backend:
-    image: ${BACKEND_DEV_DOCKERHUB}/${BACKEND_PROJECT_DOCKERHUB}:latest
-    container_name: backend
+    build:
+      context: ../backend           # Itt mondjuk meg, hol van a projekt gyökere
+      dockerfile: docker-build/Dockerfile.dev  # Itt pedig a fájl pontos helyét és nevét
+    container_name: backend1
+    networks:
+      - nightout-network
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
@@ -37,12 +43,16 @@ services:
       # App-specific
       APP_BASE_URL: ${APP_BASE_URL}
 
-  frontend:
-    image: ${FRONTEND_DEV_DOCKERHUB}/${FRONTEND_PROJECT_DOCKERHUB}:latest
-    container_name: frontend
+  frontend:  # <--- Ennek pontosan itt kell lennie!
+    image: nginx:alpine
+    container_name: nightout_frontend
+    networks:
+      - nightout-network
     ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-    environment:
-      BACKEND_BASE_URL: ${APP_BASE_URL}
-    depends_on:
-      - backend
+      - "3000:80"
+    volumes:
+      - ../frontend/app:/usr/share/nginx/html:ro
+
+networks:
+  nightout-network:
+    driver: bridge
