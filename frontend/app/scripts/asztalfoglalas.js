@@ -33,7 +33,7 @@ async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
         asztalok.forEach(asztal => {
             asztalSelect.innerHTML += `
                 <option value="${asztal.asztal_szam}" data-ferohely="${asztal.ferohely}">
-                    Table ${asztal.asztal_szam} (${asztal.ferohely} seats)
+                    Table ${asztal.asztalSzam} (${asztal.ferohely} seats)
                 </option>
             `;
         });

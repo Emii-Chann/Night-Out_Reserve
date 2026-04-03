@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.nightout_reserve.backend.models.Asztal;
 import com.nightout_reserve.backend.models.AsztalFoglalas;
-import com.nightout_reserve.backend.repositories.AsztalRepository;
 import com.nightout_reserve.backend.services.AsztalFoglalasService;
 
 @RestController
