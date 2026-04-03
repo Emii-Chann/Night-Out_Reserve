@@ -153,19 +153,21 @@ const vegeISO = formatum(vegeDatumObj);
 
     // 3. Küldés a Backendnek
     try {
-        const response = await fetch('http://localhost:8080/api/jatekok/foglalas', {
+        const response = await fetch('http://localhost:8080/api/jatekok/mentes', { // IDE A TE VÉGPONTOD KERÜLJÖN!
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(foglalasAdatok)
         });
 
         if (response.ok) {
             alert("Sikeres foglalás!");
             modalBezarasa();
+        } else if (response.status === 409) {
+            // Ha a Java "Conflict" hibát dob, kiírjuk a szövegét
+            const hibaSzoveg = await response.text();
+            alert(hibaSzoveg);
         } else {
-            alert("Valami hiba történt a mentés során.");
+            alert("Hiba történt a mentés során.");
         }
     } catch (hiba) {
         console.error(hiba);

@@ -1,21 +1,14 @@
 package com.nightout_reserve.backend.controllers;
 
-
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
+import com.nightout_reserve.backend.models.Asztal;
 import com.nightout_reserve.backend.models.AsztalFoglalas;
-import com.nightout_reserve.backend.repositories.AsztalFoglalasRepository;
-import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
+import com.nightout_reserve.backend.repositories.AsztalRepository;
+import com.nightout_reserve.backend.services.AsztalFoglalasService;
 
 @RestController
 @RequestMapping("/api/asztalok")
@@ -23,20 +16,23 @@ import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 public class AsztalFoglalasController {
 
     @Autowired
-    private AsztalFoglalasRepository asztalRepo;
-
-    @Autowired
-    private SzorakozohelyRepository szorakozoRepo;
-
-    @GetMapping("/{id}/list")
-    public List<Map<String, Object>> getAsztalok(@PathVariable Integer id) {
-        return szorakozoRepo.findAsztalokByHelyId(id);
+    private AsztalFoglalasService service;
+    
+    @GetMapping("/{helyId}/list")
+    public List<Asztal> getAsztalokListaja(@PathVariable Integer helyId) {
+        // A Controller csak átpasszolja a kérést a Service-nek!
+        return service.getAsztalokListaja(helyId); 
     }
 
     @PostMapping("/foglalas")
-    public String asztalFoglalasMentes(@RequestBody AsztalFoglalas ujFoglalas) {
-        ujFoglalas.setAllapot("FOGLALVA");
-        asztalRepo.save(ujFoglalas);
-        return "Sikeres asztalfoglalás!";
+    public ResponseEntity<String> mentes(@RequestBody AsztalFoglalas ujFoglalas) {
+        return service.mentes(ujFoglalas);
     }
+
+    @GetMapping("/felhasznalo/{id}")
+    public List<AsztalFoglalas> getFelhasznaloFoglalasai(@PathVariable Integer id) {
+        return service.getFelhasznaloFoglalasai(id);
+    }
+
+
 }

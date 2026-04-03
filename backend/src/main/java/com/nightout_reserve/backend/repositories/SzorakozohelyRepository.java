@@ -16,6 +16,7 @@ import java.util.Map;
 
 import java.util.List;
 
+import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.models.Szorakozohely;
 
 @Repository

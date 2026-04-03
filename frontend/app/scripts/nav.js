@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             authMenu.innerHTML = `
                 <div class="d-flex align-items-center gap-3">
                     <span class="welcome-text">Szia, <strong>${username}</strong>!</span>
+                    <a href="./profil.html" class="tab ">Profil</a>
                     <button onclick="handleLogout()" class="logout-btn btn btn-outline-light btn-sm">Kijelentkezés</button>
                 </div>
             `;

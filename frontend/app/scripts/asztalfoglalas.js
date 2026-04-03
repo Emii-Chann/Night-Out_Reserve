@@ -121,9 +121,8 @@ async function asztalFoglalasBekuldese() {
         vege: formatum(vegeDatumObj),
         allapot: 'FOGLALVA'
     };
-
     try {
-        const response = await fetch('http://localhost:8080/api/asztalok/foglalas', {
+        const response = await fetch('http://localhost:8080/api/asztalok/foglalas', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(foglalasAdatok)
@@ -132,6 +131,10 @@ async function asztalFoglalasBekuldese() {
         if (response.ok) {
             alert("Sikeres asztalfoglalás!");
             asztalModalBezarasa();
+        } else if (response.status === 409) {
+            // Ha az asztal foglalt, ezt az üzenetet kapjuk a Spring Boot-tól
+            const hibaSzoveg = await response.text();
+            alert(hibaSzoveg);
         } else {
             alert("Hiba történt a mentés során.");
         }
