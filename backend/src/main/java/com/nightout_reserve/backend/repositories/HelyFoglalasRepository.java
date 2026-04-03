@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.nightout_reserve.backend.models.HelyFoglalas;
-import com.nightout_reserve.backend.models.JatekFoglalas;
 
 public interface HelyFoglalasRepository extends JpaRepository<HelyFoglalas, Integer> {
 
