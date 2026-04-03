@@ -1359,3 +1359,10 @@ INSERT INTO NightoutReserve_DB.asztalok (szorakozohely_id, asztal_szam, ferohely
 (1, 11, 4),
 (1, 12, 6),
 (1, 13, 2);
+
+
+
+
+
+
+-- vége

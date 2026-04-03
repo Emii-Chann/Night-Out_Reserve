@@ -32,9 +32,13 @@ async function betoltFoglalasok(url, divId, tipus) {
                 <div class="foglalas-kartya">
                     <p><strong>Időpont:</strong> ${kezdet} - ${vege.split(' ')[1]}</p>
                     <p><strong>Állapot:</strong> ${f.allapot}</p>
-                    ${f.jatekId ? `<p>Játék ID: ${f.jatekId}</p>` : ''}
-                    ${f.asztalSzam ? `<p>Asztal: ${f.asztalSzam}. asztal</p>` : ''}
-                    ${f.letszam ? `<p>Létszám: ${f.letszam} fő</p>` : ''}
+                    
+                    ${f.szorakozohelyNev ? `<p><strong>Helyszín:</strong> ${f.szorakozohelyNev}</p>` : ''}
+                    
+                    ${f.jatekNev ? `<p><strong>Játék:</strong> ${f.jatekNev}</p>` : ''}
+                    
+                    ${f.asztalSzam ? `<p><strong>Asztal:</strong> ${f.asztalSzam}. asztal</p>` : ''}
+                    ${f.letszam ? `<p><strong>Létszám:</strong> ${f.letszam} fő</p>` : ''}
                     <hr>
                 </div>
             `;
