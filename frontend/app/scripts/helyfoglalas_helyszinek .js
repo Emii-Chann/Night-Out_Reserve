@@ -1,5 +1,5 @@
 // asztal_helyszinek.js
-const helyszinekDiv = document.getElementById('asztal-helyszinek-lista');
+const helyszinekDiv = document.getElementById('hely-helyszinek-lista');
 
 async function asztalHelyszinekBetoltese() {
     try {
@@ -10,13 +10,13 @@ async function asztalHelyszinekBetoltese() {
 
         helyszinek.forEach(hely => {
             helyszinekDiv.innerHTML += `
-                <div class="card">
+                <div class="helyszin-kartya">
                     <h3>${hely.nev}</h3>
                     <p>${hely.cim}</p>
                     <p>Nyitva: ${hely.nyitvatartas}</p>
                     
-                    <button onclick="asztalModalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">
-                        Asztal foglalás
+                    <button onclick="helyModalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">
+                        Hely foglalás
                     </button>
                 </div>
             `;

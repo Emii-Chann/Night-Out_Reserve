@@ -9,6 +9,17 @@ async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
     document.getElementById('modal-cim').innerText = `Book ${helyNev} (${nyitvatartas})`;
     document.getElementById('foglalas-szorakozohely-id').value = szorakozohelyId;
 
+    const idoSelect = document.getElementById('foglalas-ido');
+    idoSelect.innerHTML = ''; // Kiürítjük, ha volt benne valami
+    
+    // Végigmegyünk a 24 órán, és minden órához hozzáadunk egy :00 és egy :30 opciót
+    for (let i = 0; i < 24; i++) {
+        let ora = i < 10 ? '0' + i : i; // Hogy 08 legyen, ne csak 8
+        
+        idoSelect.innerHTML += `<option value="${ora}:00">${ora}:00</option>`;
+        idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
+    }
+
     const jatekSelect = document.getElementById('foglalas-jatek');
     jatekSelect.innerHTML = '<option>Betöltés...</option>';
 

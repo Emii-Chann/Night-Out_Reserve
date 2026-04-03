@@ -299,10 +299,13 @@ body::after {
     background-color: var(--card-bg);
     border-radius: 16px;
     border: 1px solid var(--border-color);
-    width: 350px;
+    width: 400px;
+    height: auto;
     overflow: hidden;
     transition: transform 0.3s ease;
     text-align: left;
+     display: flex;
+    gap: 10px;
 }
 
 .card:hover {
@@ -562,4 +565,11 @@ body::after {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+}
+
+#asztal-helyszinek-lista{
+    display: flex;
+    height: 200px;
+
+
 }
