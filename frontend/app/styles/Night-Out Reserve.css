@@ -380,18 +380,17 @@ body .hero-content h1 {
 .price strong { color: #a78bfa; font-size: 18px; }
 
 .book-btn {
-    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
 }
 .book-btn:hover {
-    background: linear-gradient(90deg, #9b6dff, #8b5cf6);
-    box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
+    background-color: var(--primary-hover);
 }
 
 
@@ -421,15 +420,9 @@ body .hero-content h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-    animation: fadeIn 0.3s;
     text-align: left;
     max-height: calc(100vh - 40px);
     overflow: auto;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 .close {
@@ -514,7 +507,6 @@ body .hero-content h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-    animation: fadeIn 0.3s;
     text-align: left;
     max-height: calc(100vh - 40px);
     overflow: auto;
@@ -660,6 +652,24 @@ body .hero-content h1 {
     gap: 15px;
 }
 
+.auth-menu-logged {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.nav-profile-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-profile-link:hover {
+    color: var(--primary-color);
+}
+
 .welcome-text {
     color: white;
     font-size: 14px;
@@ -701,12 +711,17 @@ body .hero-content h1 {
 
 .hely-info { padding: 15px; }
 .btn-foglalas {
-    background: #f39c12;
+    background-color: var(--primary-color);
+    color: #ffffff;
     border: none;
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s;
+}
+.btn-foglalas:hover {
+    background-color: var(--primary-hover);
 }
 
 #asztal-helyszinek-lista{

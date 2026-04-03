@@ -30,12 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const payload = JSON.parse(atob(token.split('.')[1]));
             const username = payload.sub; // A Spring Security általában a 'sub'-ba teszi a nevet
 
-            // Lecseréljük a profil ikont a névre és a Logout gombra
             authMenu.innerHTML = `
-                <div class="d-flex align-items-center gap-3">
-                    <span class="welcome-text">Szia, <strong>${username}</strong>!</span>
-                     <a href="./profil.html" class="tab ">Profil</a>
-                    <button onclick="handleLogout()" class="logout-btn btn btn-outline-light btn-sm">Logout</button>
+                <div class="auth-menu-logged">
+                    <span class="welcome-text">Hi, <strong>${username}</strong>!</span>
+                    <a href="./profil.html" class="nav-profile-link">Profile</a>
+                    <button type="button" onclick="handleLogout()" class="logout-btn">Logout</button>
                 </div>
             `;
         } catch (error) {
