@@ -167,11 +167,7 @@ const vegeISO = formatum(vegeDatumObj);
             const hibaSzoveg = await response.text();
             alert(hibaSzoveg);
         } else {
-<<<<<<< HEAD
             alert("An error occurred while saving.");
-=======
-            alert("Hiba történt a mentés során.");
->>>>>>> a9fdbbd1a28fe30717853b10a8ebfae12f888ba4
         }
     } catch (hiba) {
         console.error(hiba);
