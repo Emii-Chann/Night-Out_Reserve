@@ -47,53 +47,58 @@ if (adminLoginForm) {
     });
 }
 // Handle set-password page
+// Handle set-password page
 const setPasswordForm = document.getElementById("setPasswordForm");
 if (setPasswordForm) {
-    const currentEmail = getCurrentAdminEmail();
-    if (!currentEmail) {
+    // Ellenőrizzük, hogy be van-e lépve (van-e mentett ID)
+    const adminId = localStorage.getItem("nr_admin_id");
+    if (!adminId) {
         window.location.href = "./admin-login.html";
     }
 
-    setPasswordForm.addEventListener("submit", (e) => {
+    setPasswordForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const newPassInput = document.getElementById("newPassword");
-        const confirmPassInput = document.getElementById("confirmNewPassword");
+        const oldPass = document.getElementById("oldPassword").value;
+        const newPass = document.getElementById("newPassword").value;
+        const confirmPass = document.getElementById("confirmNewPassword").value;
         const errorEl = document.getElementById("setPasswordError");
 
-        const newPass = newPassInput.value;
-        const confirmPass = confirmPassInput.value;
-
-        if (newPass.length < 8) {
-            errorEl.textContent = "Password must be at least 8 characters long.";
+        // Alapvető ellenőrzések a frontenden
+        if (newPass.length < 6) {
+            errorEl.textContent = "A jelszónak legalább 6 karakternek kell lennie.";
             return;
         }
 
         if (newPass !== confirmPass) {
-            errorEl.textContent = "Passwords do not match.";
+            errorEl.textContent = "A két jelszó nem egyezik!";
             return;
         }
 
-        const admins = getAdmins();
-        const adminIndex = admins.findIndex(
-            (a) => a.email.toLowerCase() === currentEmail.toLowerCase()
-        );
+        try {
+            // HÍVÁS A BACKENDRE
+            const response = await fetch("http://localhost:8080/api/admin/jelszo-modositas", {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: adminId,
+                    regiJelszo: oldPass,
+                    ujJelszo: newPass
+                })
+            });
 
-        if (adminIndex === -1) {
-            errorEl.textContent = "An error occurred. Please log in again.";
-            localStorage.removeItem(CURRENT_ADMIN_KEY);
-            setTimeout(() => {
-                window.location.href = "./admin-login.html";
-            }, 1500);
-            return;
+            if (response.ok) {
+                // SIKER!
+                alert("Jelszó sikeresen módosítva!");
+                window.location.href = "./admin-dashboard.html";
+            } else {
+                // HIBA (Pl. rossz régi jelszó)
+                const hibaUzenet = await response.text();
+                errorEl.textContent = hibaUzenet;
+            }
+        } catch (error) {
+            errorEl.textContent = "Hiba a szerverkapcsolatban.";
+            console.error(error);
         }
-
-        admins[adminIndex].password = newPass;
-        admins[adminIndex].passwordSet = true;
-        admins[adminIndex].tempPassword = null;
-        saveAdmins(admins);
-
-        window.location.href = "./admin-dashboard.html";
     });
 }
-

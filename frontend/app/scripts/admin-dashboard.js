@@ -4,31 +4,47 @@ const CURRENT_ADMIN_KEY = "nr_current_admin";
 
 
 async function getReservations() {
+
+    console.log(">>> getReservations elindult...");
     try {
-        // Meghívjuk a te új Java végpontodat
-        const response = await fetch("http://localhost:8080/api/admin/foglalasok/asztalok");
+        // Most már a kombinált végpontot hívjuk!
+        const response = await fetch("http://localhost:8080/api/admin/foglalasok/osszes");
         if (!response.ok) throw new Error("Hiba a lekérdezéskor");
         
         const adatok = await response.json();
 
-        console.log("1. Ezt küldte a Java backend:", adatok);
-        // A Java adatokat (szorakozohelyId, kezdet, stb.) 
-        // "lefordítjuk" arra a formátumra, amit a frontendesed kártyái várnak
+
+
+        console.log("NYERS ADATOK A BACKENDTŐL:", adatok);
+
+
+
         return adatok.map(f => {
-        let angolStatus = "pending";
-        if (f.allapot === "FUGGO") angolStatus = "pending";
-        else if (f.allapot === "JOVAHAGYVA") angolStatus = "accepted";
-        else if (f.allapot === "LEMONDVA") angolStatus = "rejected";
+    let angolStatus = (f.allapot === "JOVAHAGYVA") ? "accepted" : 
+                      (f.allapot === "LEMONDVA") ? "rejected" : "pending";
+
+    // Típus meghatározása
+    let reszlet = "Helyszín bérlés";
+    let tipusKulcs = "helyszin";
+
+    if (f.jatekNev) {
+        reszlet = `Játék: ${f.jatekNev}`;
+        tipusKulcs = "jatek";
+    } else if (f.asztalSzam) {
+        reszlet = `Asztal: ${f.asztalSzam}.`;
+        tipusKulcs = "asztal";
+    }
 
     return {
-        id: f.id, 
-        customerName: "Vendég #" + f.felhasznaloId, 
-        date: new Date(f.kezdet).toLocaleDateString(),
-        time: new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        // ITT A LÉNYEG: f.letszam helyett f.asztalSzam-ot írj!
-        people: f.asztalSzam || 0, 
-        place: f.szorakozohelyNev || "The Purple Lounge", // Ha a Java még null-t küld, adjunk neki egy nevet
-        status: angolStatus
+        id: f.id || f.asztalFoglalasId || f.jatekFoglalasId || f.helyszinFoglalasId,
+        customerName: "Vendég #" + (f.felhasznaloId || "?"),
+        date: f.kezdet ? new Date(f.kezdet).toLocaleDateString() : "---",
+        time: f.kezdet ? new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "",
+        people: f.letszam || f.asztalSzam || "-", 
+        place: f.szorakozohelyNev || "Neon Bár",
+        typeInfo: reszlet,
+        status: angolStatus,
+        reservationType: tipusKulcs
     };
 });
     } catch (error) {
@@ -39,23 +55,17 @@ async function getReservations() {
 
 
 
+// A kártya generálása (hogy látszódjon, mi ez)
 function createReservationCard(reservation, withActions) {
     const card = document.createElement("div");
     card.className = "admin-reservation-card";
 
-    const title = document.createElement("h3");
-    title.textContent = reservation.place;
-    card.appendChild(title);
-
-    const meta = document.createElement("p");
-    meta.className = "admin-reservation-meta";
-    meta.textContent = `${reservation.date} • ${reservation.time} • ${reservation.people} people`;
-    card.appendChild(meta);
-
-    const customer = document.createElement("p");
-    customer.className = "admin-reservation-customer";
-    customer.textContent = `Customer: ${reservation.customerName}`;
-    card.appendChild(customer);
+    card.innerHTML = `
+        <h3>${reservation.place}</h3>
+        <p class="admin-reservation-type" style="color: #a29bfe; font-weight: bold;">${reservation.typeInfo}</p>
+        <p class="admin-reservation-meta">${reservation.date} • ${reservation.time} • ${reservation.people} fő</p>
+        <p class="admin-reservation-customer">Ügyfél: ${reservation.customerName}</p>
+    `;
 
     if (withActions) {
         const actions = document.createElement("div");
@@ -63,25 +73,47 @@ function createReservationCard(reservation, withActions) {
 
         const acceptBtn = document.createElement("button");
         acceptBtn.className = "admin-btn accept";
-        acceptBtn.textContent = "Accept";
-        acceptBtn.addEventListener("click", () =>
-            updateReservationStatus(reservation.id, "accepted")
-        );
+        acceptBtn.textContent = "Elfogad";
+        acceptBtn.onclick = () => updateReservationStatus(reservation.id, "accepted", reservation.reservationType);
 
         const rejectBtn = document.createElement("button");
         rejectBtn.className = "admin-btn reject";
-        rejectBtn.textContent = "Reject";
-        rejectBtn.addEventListener("click", () =>
-            updateReservationStatus(reservation.id, "rejected")
-        );
+        rejectBtn.textContent = "Elutasít";
+        rejectBtn.onclick = () => updateReservationStatus(reservation.id, "rejected", reservation.reservationType);
 
         actions.appendChild(acceptBtn);
         actions.appendChild(rejectBtn);
         card.appendChild(actions);
     }
-
     return card;
 }
+
+
+
+
+
+// Az állapot frissítése a backend felé
+async function updateReservationStatus(id, newStatus, tipus) {
+    let javaAllapot = (newStatus === "accepted") ? "JOVAHAGYVA" : "LEMONDVA";
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/frissit-allapot`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                id: id, 
+                allapot: javaAllapot,
+                tipus: tipus 
+            })
+        });
+
+        if (response.ok) await renderReservations();
+    } catch (error) {
+        console.error("Hiba:", error);
+    }
+}
+
+
 
 async function renderReservations() {
     const incomingContainer = document.getElementById("incomingReservations");
@@ -107,32 +139,41 @@ async function renderReservations() {
         }
     });
 }
-async function updateReservationStatus(id, newStatus) {
-    let javaAllapot = "";
-    if (newStatus === "accepted") javaAllapot = "JOVAHAGYVA";
-    else if (newStatus === "rejected") javaAllapot = "LEMONDVA";
 
-    try {
-        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/asztalok/${id}/allapot`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ allapot: javaAllapot })
-        });
-
-        if (response.ok) {
-            // SIKER! Frissítjük a kijelzőt, hogy a kártya átugorjon a helyére
-            await renderReservations();
-        }
-    } catch (error) {
-        console.error("Hiba az állapot módosításakor:", error);
-    }
-}
-// Initialize dashboard when present
 document.addEventListener("DOMContentLoaded", async () => {
-    const incomingContainer = document.getElementById("incomingReservations");
-    if (!incomingContainer) return;
-
-    requireAdmin();
-    await renderReservations(); // Ide is kell az await!
+    console.log("Oldal betöltve, indítom a rendert...");
+    await renderReservations(); 
 });
 
+
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutBtn = document.getElementById("logoutBtn");
+    const adminName = localStorage.getItem("nr_current_admin");
+    const adminDisplay = document.getElementById("adminNameDisplay");
+
+    // Megjelenítjük, ki van belépve
+    if (adminDisplay && adminName) {
+        adminDisplay.textContent = adminName;
+    }
+
+    // KIJELENTKEZÉS LOGIKA
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            // 1. Töröljük a belépési adatokat a böngészőből
+            localStorage.removeItem("nr_current_admin");
+            localStorage.removeItem("nr_admin_id");
+            localStorage.removeItem("nr_szorakozohely_id");
+
+            // 2. Opcionális: üzenet a júzernek
+            console.log("Kijelentkezés sikeres.");
+
+            // 3. Visszairányítás a login oldalra
+            window.location.href = "./admin-login.html";
+        });
+    }
+
+    // BIZTONSÁGI ÖR: Ha nincs ID, ne is engedjük látni a dashboardot
+    if (!localStorage.getItem("nr_admin_id")) {
+        window.location.href = "./admin-login.html";
+    }
+});

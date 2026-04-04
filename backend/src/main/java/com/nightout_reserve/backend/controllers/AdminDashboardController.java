@@ -1,5 +1,6 @@
 package com.nightout_reserve.backend.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,8 +15,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nightout_reserve.backend.models.AsztalFoglalas;
+import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.services.AsztalFoglalasService;
+import com.nightout_reserve.backend.services.HelyFoglalasService;
+import com.nightout_reserve.backend.services.JatekFoglalasService;
+
 
 import com.nightout_reserve.backend.models.Szorakozohely;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
@@ -27,27 +33,35 @@ public class AdminDashboardController {
 
     @Autowired
     private AsztalFoglalasService asztalService;
+
+    @Autowired
+    private JatekFoglalasService jatekService;
+    @Autowired
+    private HelyFoglalasService helyService;
     
-    // Később ide jöhet a többi service is (játék, helyszín)
 
-    @GetMapping("/asztalok")
-    public List<AsztalFoglalas> getAllAsztalFoglalas() {
-        return asztalService.getOsszesFoglalas();
-    }
 
-    @PutMapping("/asztalok/{id}/allapot")
-    public ResponseEntity<?> frissitAllapot(@PathVariable Integer id, @RequestBody Map<String, String> body) {
-    try {
-        String ujAllapot = body.get("allapot"); // Pl: "JOVAHAGYVA" vagy "LEMONDVA"
-        
-        // Itt hívd meg a Service-t, ami elvégzi a mentést
-        asztalService.statuszFrissites(id, ujAllapot);
-        
-        return ResponseEntity.ok().body("Állapot sikeresen frissítve!");
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hiba történt!");
-    }
+
+@GetMapping("/osszes")
+public List<Object> getAllFoglalasok() {
+    List<Object> minden = new ArrayList<>();
+    minden.addAll(asztalService.getOsszesFoglalas());
+    minden.addAll(jatekService.getOsszesJatekFoglalas());
+    minden.addAll(helyService.getOsszesHelyszinFoglalas()); // EZ AZ ÚJ
+    return minden;
+}
+
+@PutMapping("/frissit-allapot")
+public ResponseEntity<?> frissitAllapot(@RequestBody Map<String, String> body) {
+    Integer id = Integer.parseInt(body.get("id"));
+    String ujAllapot = body.get("allapot");
+    String tipus = body.get("tipus");
+
+    if ("asztal".equals(tipus)) asztalService.statuszFrissites(id, ujAllapot);
+    else if ("jatek".equals(tipus)) jatekService.jatekStatuszFrissites(id, ujAllapot);
+    else if ("helyszin".equals(tipus)) helyService.helyszinStatuszFrissites(id, ujAllapot); // EZ AZ ÚJ
+
+    return ResponseEntity.ok().body("Kész!");
 }
     
-    // Itt lesz majd a végpont az állapot módosításához is (Accept/Reject)
 }

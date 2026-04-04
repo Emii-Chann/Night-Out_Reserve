@@ -4,4 +4,7 @@ import com.nightout_reserve.backend.models.TulajBelepes;
 
 public interface TulajBelepesService {
     TulajBelepes login(String felhasznalonev, String jelszo);
+
+    void jelszoModositas(Integer id, String regiJelszo, String ujJelszo);
+
 }

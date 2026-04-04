@@ -17,10 +17,30 @@ public class HelyFoglalasService {
 
     @Autowired
     private HelyFoglalasRepository repo;
+    
 
 
     @Autowired
 private SzorakozohelyRepository szorakozohelyRepository; // (Vagy ahogy nálad hívják ezt a fájlt)
+
+public List<HelyFoglalas> getOsszesHelyszinFoglalas() {
+    List<HelyFoglalas> lista = repo.findAll();
+    
+    for (HelyFoglalas f : lista) {
+        if (f.getSzorakozohelyId() != null) {
+            szorakozohelyRepository.findById(f.getSzorakozohelyId())
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+        }
+    }
+    return lista;
+}
+
+// Ne felejtsd el az állapotfrissítőt sem ide!
+public void helyszinStatuszFrissites(Integer id, String ujStatusz) {
+    HelyFoglalas f = repo.findById(id).orElseThrow();
+    f.setAllapot(Allapot.valueOf(ujStatusz));
+    repo.save(f);
+}
     
 
    public List<HelyFoglalas> getFelhasznaloFoglalasai(Integer felhasznaloId) {

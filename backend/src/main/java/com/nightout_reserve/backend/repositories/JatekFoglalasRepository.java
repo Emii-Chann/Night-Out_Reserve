@@ -16,4 +16,6 @@ public interface JatekFoglalasRepository extends JpaRepository<JatekFoglalas, In
 
     @Query(value = "SELECT COUNT(*) FROM jatek_foglalasok WHERE szorakozohely_id = :helyId AND jatek_id = :jatekId AND kezdet < :ujVege AND vege > :ujKezdet AND allapot != 'TÖRÖLVE'", nativeQuery = true)
     int countUtkozesek(@Param("helyId") Integer helyId, @Param("jatekId") Integer jatekId, @Param("ujKezdet") LocalDateTime ujKezdet, @Param("ujVege") LocalDateTime ujVege);
+
+
 }

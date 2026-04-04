@@ -55,6 +55,7 @@ public class JatekFoglalas {
     @Transient
     private String jatekNev;
 
+
     @PrePersist
     protected void onCreate() {
     this.letrehozvaAt = LocalDateTime.now();

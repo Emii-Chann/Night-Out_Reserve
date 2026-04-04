@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.nightout_reserve.backend.models.Allapot;
+import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.models.JatekFoglalas;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
@@ -27,6 +28,50 @@ public class JatekFoglalasService {
 
     @Autowired
     private JatekRepository jatekRepo;
+
+
+    public List<JatekFoglalas> getOsszesJatekFoglalas() {
+    // 1. Lekérjük az összes játékfoglalást az adatbázisból
+    List<JatekFoglalas> lista = repo.findAll();
+    
+    // 2. Végigmegyünk rajtuk és feltöltjük a szórakozóhely nevét
+    for (JatekFoglalas f : lista) {
+        // 1. Szórakozóhely nevének lekérése (ezt már megcsináltuk)
+        if (f.getSzorakozohelyId() != null) {
+            szorakozohelyRepo.findById(f.getSzorakozohelyId())
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+        }
+
+        // 2. Játék nevének lekérése (EZ HIÁNYZOTT!)
+        if (f.getJatekId() != null) {
+            jatekRepo.findById(f.getJatekId())
+                .ifPresent(jatek -> f.setJatekNev(jatek.getNev())); 
+                // Ellenőrizd: a Jatek entitásodban 'nev' vagy 'megnevezes' a mező?
+        }
+    }
+    
+    
+    return lista;
+}
+
+    public void jatekStatuszFrissites(Integer id, String ujStatusz) {
+    // 1. Megkeressük a játékfoglalást (feltételezve, hogy a repo a JatekFoglalasRepository)
+    JatekFoglalas foglalas = repo.findById(id)
+            .orElseThrow(() -> new RuntimeException("A játékfoglalás nem található: " + id));
+
+    // 2. Beállítjuk az új állapotot (Enum használatával)
+    try {
+        Allapot statuszEnum = Allapot.valueOf(ujStatusz);
+        foglalas.setAllapot(statuszEnum);
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Érvénytelen állapot: " + ujStatusz);
+    }
+
+    // 3. Mentés
+    repo.save(foglalas);
+}
+
+
 
     public List<JatekFoglalas> getFelhasznaloFoglalasai(Integer felhasznaloId) {
         List<JatekFoglalas> foglalasok = repo.findByFelhasznaloId(felhasznaloId);
