@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name = "hely_foglalasok")
 @Getter
@@ -26,11 +27,16 @@ public class HelyFoglalas {
     private Integer letszam;
     private LocalDateTime kezdet;
     private LocalDateTime vege;
-    private String allapot;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "allapot")
+    private Allapot allapot;
     private String megjegyzes;
 
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;
+
+    @Transient
+    private String szorakozohelyNev ;
 
     @PrePersist
     protected void onCreate() {

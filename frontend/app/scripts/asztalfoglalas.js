@@ -32,7 +32,7 @@ async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
         
         asztalok.forEach(asztal => {
             asztalSelect.innerHTML += `
-                <option value="${asztal.asztal_szam}" data-ferohely="${asztal.ferohely}">
+                <option value="${asztal.asztalSzam}" data-ferohely="${asztal.ferohely}">
                     Table ${asztal.asztalSzam} (${asztal.ferohely} seats)
                 </option>
             `;
@@ -119,7 +119,6 @@ async function asztalFoglalasBekuldese() {
         felhasznaloId: 1, 
         kezdet: formatum(valasztottKezdet),
         vege: formatum(vegeDatumObj),
-        allapot: 'FOGLALVA'
     };
     try {
         const response = await fetch('http://localhost:8080/api/asztalok/foglalas', { 

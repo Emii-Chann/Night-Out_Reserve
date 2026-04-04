@@ -2,81 +2,50 @@
 const ADMINS_KEY = "nr_admins";
 const CURRENT_ADMIN_KEY = "nr_current_admin";
 
-function seedDefaultAdmin() {
-    const existing = localStorage.getItem(ADMINS_KEY);
-    if (existing) return;
 
-    const defaultAdmins = [
-        {
-            email: "tulajdonos@gmail.com",
-            tempPassword: "admin123",
-            password: null,
-            passwordSet: false,
-        },
-    ];
-
-    localStorage.setItem(ADMINS_KEY, JSON.stringify(defaultAdmins));
-}
-
-function getAdmins() {
-    seedDefaultAdmin();
-    try {
-        return JSON.parse(localStorage.getItem(ADMINS_KEY)) || [];
-    } catch {
-        return [];
-    }
-}
-
-function saveAdmins(admins) {
-    localStorage.setItem(ADMINS_KEY, JSON.stringify(admins));
-}
-
-function setCurrentAdmin(email) {
-    localStorage.setItem(CURRENT_ADMIN_KEY, email);
-}
-
-function getCurrentAdminEmail() {
-    return localStorage.getItem(CURRENT_ADMIN_KEY);
-}
 
 // Handle admin login page
 const adminLoginForm = document.getElementById("adminLoginForm");
 if (adminLoginForm) {
-    adminLoginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const emailInput = document.getElementById("adminEmail");
-        const passInput = document.getElementById("adminPassword");
+    adminLoginForm.addEventListener("submit", async (e) => {
+        e.preventDefault(); // Megakadályozzuk az oldal újratöltését
+        
+        const emailInput = document.getElementById("adminEmail").value.trim();
+        const passInput = document.getElementById("adminPassword").value;
         const errorEl = document.getElementById("adminLoginError");
 
-        const email = emailInput.value.trim().toLowerCase();
-        const password = passInput.value;
+        try {
+            // 1. Hívás a te Spring Boot végpontodra!
+            const response = await fetch("http://localhost:8080/api/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    email: emailInput, 
+                    password: passInput 
+                })
+            });
 
-        const admins = getAdmins();
-        const admin = admins.find((a) => a.email.toLowerCase() === email);
-
-        if (!admin) {
-            errorEl.textContent = "No admin account exists with this email address.";
-            return;
-        }
-
-        if (!admin.passwordSet) {
-            if (password !== admin.tempPassword) {
-                errorEl.textContent = "Invalid initial password.";
-                return;
+            if (response.ok) {
+                // 2. Sikeres belépés (200 OK jött vissza)
+                const adminData = await response.json();
+                
+                // Elmentjük a böngészőbe az admin azonosítóit (ez kell majd a Dashboardnak)
+                localStorage.setItem("nr_current_admin", adminData.felhasznalonev);
+                localStorage.setItem("nr_admin_id", adminData.tulajId);
+                
+                // Irány az admin felület!
+                window.location.href = "./admin-dashboard.html";
+            } else {
+                // 3. Sikertelen belépés (pl. 401 Unauthorized)
+                const hibaUzenet = await response.text();
+                errorEl.textContent = hibaUzenet;
             }
-            setCurrentAdmin(admin.email);
-            window.location.href = "./set-password.html";
-        } else {
-            if (password !== admin.password) {
-                errorEl.textContent = "Invalid password.";
-                return;
-            }
-            setCurrentAdmin(admin.email);
-            window.location.href = "./admin-dashboard.html";
+        } catch (error) {
+            errorEl.textContent = "Hiba történt a szerverhez való csatlakozáskor (fut a backend?).";
+            console.error("Fetch hiba:", error);
         }
     });
 }
-
 // Handle set-password page
 const setPasswordForm = document.getElementById("setPasswordForm");
 if (setPasswordForm) {

@@ -34,7 +34,7 @@ CREATE TABLE `asztal_foglalasok` (
   `letszam` int(11) NOT NULL,
   `kezdet` datetime NOT NULL,
   `vege` datetime NOT NULL,
-  `allapot` enum('FÜGGŐ','JÓVÁHAGYVA','LEMONDVA','TELJESÍTVE') NOT NULL DEFAULT 'FÜGGŐ',
+  `allapot` enum('FUGGO', 'JOVAHAGYVA', 'LEMONDVA', 'TELJESITVE') NOT NULL DEFAULT 'FUGGO',
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp(),
   `torolve_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -108,7 +108,7 @@ CREATE TABLE `hely_foglalasok` (
   `letszam` int(11) NOT NULL,
   `kezdet` datetime NOT NULL,
   `vege` datetime NOT NULL,
-  `allapot` enum('FÜGGŐ','JÓVÁHAGYVA','LEMONDVA','TELJESÍTVE') NOT NULL DEFAULT 'FÜGGŐ',
+  `allapot` enum('FUGGO', 'JOVAHAGYVA', 'LEMONDVA', 'TELJESITVE') NOT NULL DEFAULT 'FUGGO',
   `megjegyzes` text DEFAULT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp(),
   `torolve_at` datetime DEFAULT NULL
@@ -139,7 +139,7 @@ CREATE TABLE `jatek_foglalasok` (
   `jatek_id` int(11) NOT NULL,
   `kezdet` datetime NOT NULL,
   `vege` datetime NOT NULL,
-  `allapot` enum('FÜGGŐ','JÓVÁHAGYVA','LEMONDVA','TELJESÍTVE') NOT NULL DEFAULT 'FÜGGŐ',
+  `allapot` enum('FUGGO','JOVAHAGYVA','LEMONDVA','TELJESITVE') NOT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp(),
   `torolve_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1360,6 +1360,9 @@ INSERT INTO NightoutReserve_DB.asztalok (szorakozohely_id, asztal_szam, ferohely
 (1, 12, 6),
 (1, 13, 2);
 
+
+INSERT INTO tulajokbelepes (tulaj_id, felhasznalonev, jelszo, utolso_belepes) 
+VALUES (1, 'tulajdonos@gmail.com', 'admin123', NOW());
 
 
 

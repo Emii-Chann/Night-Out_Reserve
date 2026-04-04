@@ -7,6 +7,8 @@ import lombok.Setter;
 import jakarta.persistence.Table;
 
 
+
+
 @Entity
 @Table(name = "asztal_foglalasok")
 @Getter
@@ -30,7 +32,14 @@ public class AsztalFoglalas {
     private Integer letszam;
     private LocalDateTime kezdet;
     private LocalDateTime vege;
-    private String allapot;
+
+    @Transient
+    private String szorakozohelyNev;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "allapot")
+    private Allapot allapot;
 
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;

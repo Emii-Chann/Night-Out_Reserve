@@ -148,28 +148,30 @@ const vegeISO = formatum(vegeDatumObj);
         felhasznaloId: 1, // KÉSŐBB: Ezt a bejelentkezett user tokenjéből kell kiszedni!
         kezdet: kezdetISO, // Itt kezdetISO-t használunk
         vege: vegeISO,
-        allapot: 'FOGLALVA'
     };
 
     // 3. Küldés a Backendnek
-    try {
+   try {
         const response = await fetch('http://localhost:8080/api/jatekok/mentes', { // IDE A TE VÉGPONTOD KERÜLJÖN!
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+
+
             body: JSON.stringify(foglalasAdatok)
         });
 
         if (response.ok) {
-            alert("Booking successful!");
+            alert("Sikeres foglalás!");
             modalBezarasa();
         } else if (response.status === 409) {
             // Ha a Java "Conflict" hibát dob, kiírjuk a szövegét
             const hibaSzoveg = await response.text();
             alert(hibaSzoveg);
         } else {
-            alert("An error occurred while saving.");
+            alert("Hiba történt a mentés során.");
         }
     } catch (hiba) {
         console.error(hiba);
     }
 }
+

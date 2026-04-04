@@ -12,13 +12,12 @@ import jakarta.persistence.Table;
 @Setter
 public class Asztal {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    
 
     @Column(name = "szorakozohely_id")
     private Integer szorakozohelyId;
 
+    @Id
     @Column(name = "asztal_szam")
     private Integer asztalSzam;
 

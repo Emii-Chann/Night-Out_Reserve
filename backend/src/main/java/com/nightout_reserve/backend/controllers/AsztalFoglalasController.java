@@ -21,6 +21,8 @@ public class AsztalFoglalasController {
     public List<Asztal> getAsztalokListaja(@PathVariable Integer helyId) {
         // A Controller csak átpasszolja a kérést a Service-nek!
         return service.getAsztalokListaja(helyId); 
+
+
     }
 
     @PostMapping("/foglalas")
@@ -33,5 +35,8 @@ public class AsztalFoglalasController {
         return service.getFelhasznaloFoglalasai(id);
     }
 
+    
+
 
 }
+

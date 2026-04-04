@@ -68,7 +68,6 @@ async function helyFoglalasBekuldese() {
         letszam: parseInt(letszam),
         kezdet: formatum(valasztottKezdet),
         vege: formatum(vegeDatumObj),
-        allapot: 'FOGLALVA',
         megjegyzes: megjegyzes
     };
 

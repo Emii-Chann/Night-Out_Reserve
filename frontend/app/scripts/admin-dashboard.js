@@ -1,62 +1,43 @@
 const RESERVATIONS_KEY = "nr_reservations";
 const CURRENT_ADMIN_KEY = "nr_current_admin";
 
-function seedSampleReservations() {
-    const existing = localStorage.getItem(RESERVATIONS_KEY);
-    if (existing) return;
 
-    const sample = [
-        {
-            id: "r1",
-            customerName: "Nagy András",
-            date: "2026-03-20",
-            time: "20:00",
-            people: 10,
-            place: "The Purple Lounge",
-            status: "pending",
-        },
-        {
-            id: "r2",
-            customerName: "Kiss Dóra",
-            date: "2026-03-21",
-            time: "21:00",
-            people: 4,
-            place: "Midnight Club",
-            status: "pending",
-        },
-        {
-            id: "r3",
-            customerName: "Szabó Péter",
-            date: "2026-03-22",
-            time: "22:00",
-            people: 2,
-            place: "Neon Sky Bar",
-            status: "accepted",
-        },
-    ];
 
-    localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(sample));
-}
-
-function getReservations() {
-    seedSampleReservations();
+async function getReservations() {
     try {
-        return JSON.parse(localStorage.getItem(RESERVATIONS_KEY)) || [];
-    } catch {
+        // Meghívjuk a te új Java végpontodat
+        const response = await fetch("http://localhost:8080/api/admin/foglalasok/asztalok");
+        if (!response.ok) throw new Error("Hiba a lekérdezéskor");
+        
+        const adatok = await response.json();
+
+        console.log("1. Ezt küldte a Java backend:", adatok);
+        // A Java adatokat (szorakozohelyId, kezdet, stb.) 
+        // "lefordítjuk" arra a formátumra, amit a frontendesed kártyái várnak
+        return adatok.map(f => {
+        let angolStatus = "pending";
+        if (f.allapot === "FUGGO") angolStatus = "pending";
+        else if (f.allapot === "JOVAHAGYVA") angolStatus = "accepted";
+        else if (f.allapot === "LEMONDVA") angolStatus = "rejected";
+
+    return {
+        id: f.id, 
+        customerName: "Vendég #" + f.felhasznaloId, 
+        date: new Date(f.kezdet).toLocaleDateString(),
+        time: new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        // ITT A LÉNYEG: f.letszam helyett f.asztalSzam-ot írj!
+        people: f.asztalSzam || 0, 
+        place: f.szorakozohelyNev || "The Purple Lounge", // Ha a Java még null-t küld, adjunk neki egy nevet
+        status: angolStatus
+    };
+});
+    } catch (error) {
+        console.error("Dashboard hiba:", error);
         return [];
     }
 }
 
-function saveReservations(reservations) {
-    localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(reservations));
-}
 
-function requireAdmin() {
-    const current = localStorage.getItem(CURRENT_ADMIN_KEY);
-    if (!current) {
-        window.location.href = "./admin-login.html";
-    }
-}
 
 function createReservationCard(reservation, withActions) {
     const card = document.createElement("div");
@@ -102,14 +83,15 @@ function createReservationCard(reservation, withActions) {
     return card;
 }
 
-function renderReservations() {
+async function renderReservations() {
     const incomingContainer = document.getElementById("incomingReservations");
     const acceptedContainer = document.getElementById("acceptedReservations");
     const rejectedContainer = document.getElementById("rejectedReservations");
 
     if (!incomingContainer || !acceptedContainer || !rejectedContainer) return;
 
-    const reservations = getReservations();
+    // Ide bekerült az await szó! Megvárjuk, amíg megjön a szervertől a válasz.
+    const reservations = await getReservations();
 
     incomingContainer.innerHTML = "";
     acceptedContainer.innerHTML = "";
@@ -125,23 +107,32 @@ function renderReservations() {
         }
     });
 }
+async function updateReservationStatus(id, newStatus) {
+    let javaAllapot = "";
+    if (newStatus === "accepted") javaAllapot = "JOVAHAGYVA";
+    else if (newStatus === "rejected") javaAllapot = "LEMONDVA";
 
-function updateReservationStatus(id, newStatus) {
-    const reservations = getReservations();
-    const index = reservations.findIndex((r) => r.id === id);
-    if (index === -1) return;
+    try {
+        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/asztalok/${id}/allapot`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ allapot: javaAllapot })
+        });
 
-    reservations[index].status = newStatus;
-    saveReservations(reservations);
-    renderReservations();
+        if (response.ok) {
+            // SIKER! Frissítjük a kijelzőt, hogy a kártya átugorjon a helyére
+            await renderReservations();
+        }
+    } catch (error) {
+        console.error("Hiba az állapot módosításakor:", error);
+    }
 }
-
 // Initialize dashboard when present
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const incomingContainer = document.getElementById("incomingReservations");
     if (!incomingContainer) return;
 
     requireAdmin();
-    renderReservations();
+    await renderReservations(); // Ide is kell az await!
 });
 

@@ -37,7 +37,9 @@ async function betoltFoglalasok(url, divId, tipus) {
                     
                     ${f.jatekNev ? `<p><strong>Game:</strong> ${f.jatekNev}</p>` : ""}
                     
+                    
                     ${f.asztalSzam ? `<p><strong>Table:</strong> ${f.asztalSzam}</p>` : ""}
+                    
                     ${f.letszam ? `<p><strong>Guests:</strong> ${f.letszam}</p>` : ""}
                     <hr>
                 </div>

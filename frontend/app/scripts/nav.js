@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="auth-menu-logged">
                     <span class="welcome-text">Hi, <strong>${username}</strong>!</span>
                     <a href="./profil.html" class="nav-profile-link">Profile</a>
+                    <a href="./admin-dashboard.html" class="nav-profile-link">Admin</a>
                     <button type="button" onclick="handleLogout()" class="logout-btn">Logout</button>
                 </div>
             `;

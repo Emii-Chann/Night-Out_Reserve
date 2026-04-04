@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.nightout_reserve.backend.models.Allapot;
 import com.nightout_reserve.backend.models.JatekFoglalas;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
@@ -55,7 +56,7 @@ public class JatekFoglalasService {
         }
 
         if(ujFoglalas.getAllapot() == null) {
-            ujFoglalas.setAllapot("FOGLALVA");
+            ujFoglalas.setAllapot(Allapot.FUGGO); 
         }
         
         repo.save(ujFoglalas);

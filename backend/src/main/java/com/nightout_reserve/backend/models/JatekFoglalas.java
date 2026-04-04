@@ -3,6 +3,8 @@ package com.nightout_reserve.backend.models;
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,7 +39,9 @@ public class JatekFoglalas {
     
     private LocalDateTime vege;
     
-    private String allapot;
+    @Enumerated(EnumType.STRING) // <-- EZ A KULCS!
+    @Column(name = "allapot")
+    private Allapot allapot;
 
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;
@@ -54,5 +58,7 @@ public class JatekFoglalas {
     @PrePersist
     protected void onCreate() {
     this.letrehozvaAt = LocalDateTime.now();
+
+
 }
 }
