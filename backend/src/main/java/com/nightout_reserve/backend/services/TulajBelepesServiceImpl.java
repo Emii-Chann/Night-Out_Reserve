@@ -1,5 +1,6 @@
 package com.nightout_reserve.backend.services;
 
+import com.nightout_reserve.backend.models.Szorakozohely;
 import com.nightout_reserve.backend.models.TulajBelepes;
 import com.nightout_reserve.backend.repositories.TulajBelepesRepository;
 
@@ -36,7 +37,23 @@ public class TulajBelepesServiceImpl implements TulajBelepesService {
         admin.setUtolsoBelepes(LocalDateTime.now());
         repository.save(admin);
 
-        return admin;
+        System.out.println("---- TESZT: ----");
+System.out.println("Bejelentkezett admin: " + admin.getFelhasznalonev());
+if (admin.getSzorakozohelyek() != null) {
+    System.out.println("Helyek száma: " + admin.getSzorakozohelyek().size());
+    for (Szorakozohely sz : admin.getSzorakozohelyek()) {
+        System.out.println(" - " + sz.getNev());
+    }
+} else {
+    System.out.println("A lista NULL!");
+}
+System.out.println("----------------");
+
+return admin;
+
+
+
+        
     }
 
 
@@ -58,5 +75,8 @@ public void jelszoModositas(Integer id, String regiJelszo, String ujJelszo) {
     
     repository.save(admin);
 }
+
+
+
 
 }

@@ -23,6 +23,21 @@ public class HelyFoglalasService {
     @Autowired
 private SzorakozohelyRepository szorakozohelyRepository; // (Vagy ahogy nálad hívják ezt a fájlt)
 
+public List<HelyFoglalas> getHelyszinFoglalasokByHely(Integer szid) {
+    // Itt a findAll() helyett az új szűrős metódust hívjuk:
+    List<HelyFoglalas> lista = repo.findBySzorakozohelyId(szid);
+    
+    // A név kikereső rész marad a régi
+    for (HelyFoglalas f : lista) {
+        if (f.getSzorakozohelyId() != null) {
+            szorakozohelyRepository.findById(f.getSzorakozohelyId())
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+        }
+    }
+    return lista;
+}
+
+
 public List<HelyFoglalas> getOsszesHelyszinFoglalas() {
     List<HelyFoglalas> lista = repo.findAll();
     

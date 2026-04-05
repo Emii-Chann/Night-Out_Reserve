@@ -250,6 +250,7 @@ CREATE TABLE `tulajokadatai` (
   `email` varchar(150) NOT NULL,
   `telefon` varchar(30) DEFAULT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp()
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1362,7 +1363,15 @@ INSERT INTO NightoutReserve_DB.asztalok (szorakozohely_id, asztal_szam, ferohely
 
 
 INSERT INTO tulajokbelepes (tulaj_id, felhasznalonev, jelszo, utolso_belepes) 
-VALUES (1, 'tulajdonos@gmail.com', 'admin123', NOW());
+VALUES (1, 'tulajdonos@gmail.com', '$2a$12$m9rlaY65.eUtZUFyTaeTYeGK4cLSuZyyTSMh3Kky7T7KQa6HhBPMC', NOW());
+
+ALTER TABLE tulajokbelepes 
+ADD COLUMN szorakozohely_id INT,
+ADD CONSTRAINT fk_tulaj_hely 
+    FOREIGN KEY (szorakozohely_id) 
+    REFERENCES szorakozohelyek(id);
+
+UPDATE tulajokbelepes SET szorakozohely_id = 1 WHERE tulaj_id = 1;
 
 
 

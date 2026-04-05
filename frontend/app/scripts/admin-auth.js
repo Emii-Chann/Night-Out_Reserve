@@ -25,21 +25,26 @@ if (adminLoginForm) {
                 })
             });
 
-            if (response.ok) {
-                // 2. Sikeres belépés (200 OK jött vissza)
-                const adminData = await response.json();
-                
-                // Elmentjük a böngészőbe az admin azonosítóit (ez kell majd a Dashboardnak)
-                localStorage.setItem("nr_current_admin", adminData.felhasznalonev);
-                localStorage.setItem("nr_admin_id", adminData.tulajId);
-                
-                // Irány az admin felület!
-                window.location.href = "./admin-dashboard.html";
-            } else {
-                // 3. Sikertelen belépés (pl. 401 Unauthorized)
-                const hibaUzenet = await response.text();
-                errorEl.textContent = hibaUzenet;
-            }
+           if (response.ok) {
+    const adminData = await response.json();
+    
+    // Alapadatok mentése
+    localStorage.setItem("nr_current_admin", adminData.felhasznalonev);
+    localStorage.setItem("nr_admin_id", adminData.tulajId);
+    
+    // HA VANNAK HELYEI, mentsük el a listát, és válasszuk ki az elsőt alapértelmezettnek
+    if (adminData.szorakozohelyek && adminData.szorakozohelyek.length > 0) {
+        // A teljes listát eltesszük (később kell a dropdownhoz)
+        localStorage.setItem("nr_helyek_lista", JSON.stringify(adminData.szorakozohelyek));
+        
+        // Alapértelmezettként az első hely ID-ját állítjuk be aktívnak
+        localStorage.setItem("nr_szorakozohely_id", adminData.szorakozohelyek[0].id);
+    } else {
+        console.warn("Ennek a tulajnak még nincs egyetlen szórakozóhelye sem!");
+    }
+    
+    window.location.href = "./admin-dashboard.html";
+}
         } catch (error) {
             errorEl.textContent = "Hiba történt a szerverhez való csatlakozáskor (fut a backend?).";
             console.error("Fetch hiba:", error);

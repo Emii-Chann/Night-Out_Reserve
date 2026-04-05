@@ -25,7 +25,22 @@ public class AsztalFoglalasService {
 
     @Autowired
     private SzorakozohelyRepository szorakozohelyRepository;
-    // AsztalFoglalasServiceImpl.java-ban
+    
+
+
+    public List<AsztalFoglalas> getFoglalasokByHely(Integer szid) {
+    // Itt a findAll() helyett az új szűrős metódust hívjuk:
+    List<AsztalFoglalas> lista = repo.findBySzorakozohelyId(szid);
+    
+    // A név kikereső rész marad a régi
+    for (AsztalFoglalas f : lista) {
+        if (f.getSzorakozohelyId() != null) {
+            szorakozohelyRepository.findById(f.getSzorakozohelyId())
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+        }
+    }
+    return lista;
+}
 
 
     public List<AsztalFoglalas> getOsszesFoglalas() {

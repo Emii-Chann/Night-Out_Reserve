@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nightout_reserve.backend.models.AsztalFoglalas;
@@ -41,13 +42,15 @@ public class AdminDashboardController {
     
 
 
-
 @GetMapping("/osszes")
-public List<Object> getAllFoglalasok() {
+public List<Object> getAllFoglalasok(@RequestParam Integer szid) {
     List<Object> minden = new ArrayList<>();
-    minden.addAll(asztalService.getOsszesFoglalas());
-    minden.addAll(jatekService.getOsszesJatekFoglalas());
-    minden.addAll(helyService.getOsszesHelyszinFoglalas()); // EZ AZ ÚJ
+    
+    // Most már szűrve kérjük le az adatokat!
+    minden.addAll(asztalService.getFoglalasokByHely(szid));
+    minden.addAll(jatekService.getJatekFoglalasokByHely(szid));
+    minden.addAll(helyService.getHelyszinFoglalasokByHely(szid));
+    
     return minden;
 }
 

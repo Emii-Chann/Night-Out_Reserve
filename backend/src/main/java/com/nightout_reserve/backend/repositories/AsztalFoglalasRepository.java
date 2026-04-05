@@ -16,4 +16,7 @@ public interface AsztalFoglalasRepository extends JpaRepository<AsztalFoglalas, 
 
     // 2. A felhasználó saját foglalásainak lekérdezése a profil oldalhoz
     List<AsztalFoglalas> findByFelhasznaloId(Integer felhasznaloId);
+
+
+    List<AsztalFoglalas> findBySzorakozohelyId(Integer szorakozohelyId); 
 }

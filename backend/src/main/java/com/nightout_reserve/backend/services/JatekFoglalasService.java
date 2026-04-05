@@ -30,6 +30,22 @@ public class JatekFoglalasService {
     private JatekRepository jatekRepo;
 
 
+
+public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
+    // Itt a findAll() helyett az új szűrős metódust hívjuk:
+    List<JatekFoglalas> lista = repo.findBySzorakozohelyId(szid);
+    
+    for (JatekFoglalas f : lista) {
+        if (f.getSzorakozohelyId() != null) {
+            szorakozohelyRepo.findById(f.getSzorakozohelyId())
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+        }
+    }
+    return lista;
+}
+
+
+
     public List<JatekFoglalas> getOsszesJatekFoglalas() {
     // 1. Lekérjük az összes játékfoglalást az adatbázisból
     List<JatekFoglalas> lista = repo.findAll();

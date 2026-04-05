@@ -5,17 +5,32 @@ const CURRENT_ADMIN_KEY = "nr_current_admin";
 
 async function getReservations() {
 
-    console.log(">>> getReservations elindult...");
+// 1. Kiolvassuk a bejelentkezett tulajdonos szórakozóhelyének ID-ját
+    const szid = localStorage.getItem("nr_szorakozohely_id");
+
+    // Ha valamiért nincs ilyen ID (pl. régi munkamenet), dobjuk ki a loginra
+    if (!szid || szid === "undefined" || szid === "null") {
+        console.error("Nincs szórakozóhely ID, jelentkezz be újra!");
+        window.location.href = "./admin-login.html";
+        return [];
+    }
+
+
     try {
         // Most már a kombinált végpontot hívjuk!
-        const response = await fetch("http://localhost:8080/api/admin/foglalasok/osszes");
-        if (!response.ok) throw new Error("Hiba a lekérdezéskor");
+       const response = await fetch(`http://localhost:8080/api/admin/foglalasok/osszes?szid=${szid}`);
+        
+        console.log("Szerver válasz státusz:", response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error("Hiba a lekérdezéskor: " + errorText);
+        }
         
         const adatok = await response.json();
 
 
-
-        console.log("NYERS ADATOK A BACKENDTŐL:", adatok);
+    
 
 
 
@@ -155,6 +170,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if (adminDisplay && adminName) {
         adminDisplay.textContent = adminName;
     }
+
+    const venueSelector = document.getElementById("venueSelector");
+    const helyekListaJson = localStorage.getItem("nr_helyek_lista");
+    const aktivSzid = localStorage.getItem("nr_szorakozohely_id");
+
+    if (venueSelector && helyekListaJson) {
+        const helyek = JSON.parse(helyekListaJson);
+
+        // 1. Feltöltjük a legördülő menüt a tulajdonos helyeivel
+        helyek.forEach(hely => {
+            const option = document.createElement("option");
+            option.value = hely.id;
+            option.textContent = hely.nev;
+            
+            // Ha ez az épp kiválasztott hely, akkor legyen "selected"
+            if (hely.id.toString() === aktivSzid) {
+                option.selected = true;
+            }
+            
+            venueSelector.appendChild(option);
+        });
+
+        // 2. Ha a tulajdonos KIVÁLASZT egy másik helyet a menüből
+        venueSelector.addEventListener("change", (e) => {
+            const ujSzid = e.target.value;
+            
+            // Elmentjük az újat aktívként
+            localStorage.setItem("nr_szorakozohely_id", ujSzid);
+            
+            // Újratöltjük az oldalt (vagy újra meghívjuk a getReservations() függvényt)
+            window.location.reload(); 
+        });
+    }
+
+
+
 
     // KIJELENTKEZÉS LOGIKA
     if (logoutBtn) {
