@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.models.HelyFoglalas;
+import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.services.AsztalFoglalasService;
 import com.nightout_reserve.backend.services.HelyFoglalasService;
 import com.nightout_reserve.backend.services.JatekFoglalasService;
@@ -30,6 +31,7 @@ import com.nightout_reserve.backend.services.JatekService;
 
 
 import com.nightout_reserve.backend.models.Szorakozohely;
+import com.nightout_reserve.backend.repositories.JatekRepository;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 
 @RestController
@@ -42,6 +44,12 @@ public class AdminDashboardController {
 
      @Autowired
     private AsztalService asztlService;
+
+     @Autowired
+    private JatekService jatkService;
+
+    @Autowired
+    private JatekRepository jatekRepo;
 
     @Autowired
     private JatekFoglalasService jatekService;
@@ -106,14 +114,14 @@ public ResponseEntity<?> ujEszkoz(@RequestBody Map<String, String> body) {
 
     if ("asztal".equals(tipus)) {
         // Feltételezve, hogy van AsztalService-ed
-        asztalService.ujAsztalMentese(
+        asztlService.ujAsztalMentese(
             helyId, 
-            body.get("asztalSzam"), 
+            Integer.parseInt(body.get("asztalSzam")), 
             Integer.parseInt(body.get("ferohely"))
         );
     } else if ("jatek".equals(tipus)) {
         // Feltételezve, hogy van JatekService-ed
-        jatekService.ujJatekMentese(
+            jatkService.ujJatekMentese(
             helyId, 
             body.get("jatekNev"), 
             body.get("jatekTipus")
@@ -123,6 +131,38 @@ public ResponseEntity<?> ujEszkoz(@RequestBody Map<String, String> body) {
     return ResponseEntity.ok("Eszköz elmentve!");
 }
 
+@PostMapping("/eszkoz/uj-jatek")
+public ResponseEntity<?> ujJatekHelyszinre(@RequestBody Map<String, String> body) {
+    try {
+        Integer helyId = Integer.parseInt(body.get("szorakozohelyId"));
+        Integer jatekId = Integer.parseInt(body.get("jatekId"));
+        Integer darab = Integer.parseInt(body.get("darab"));
+        Integer ar = Integer.parseInt(body.get("ar_ora"));
+        Integer perc = Integer.parseInt(body.get("min_perc"));
+
+        // EZT CSERÉLD LE AZ ÚJ METÓDUSRA:
+        jatkService.mentesVagyFrissites(helyId, jatekId, darab, ar, perc);
+
+        return ResponseEntity.ok("Játék sikeresen mentve/frissítve!");
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("Hiba történt: " + e.getMessage());
+    }
+}
+
+
+
+// 1. Csak a játék mentése a globális táblába
+@PostMapping("/jatek/uj-global")
+public ResponseEntity<?> ujGlobalJatek(@RequestBody Jatek jatek) {
+    jatekRepo.save(jatek);
+    return ResponseEntity.ok("Kész");
+}
+
+// 2. Az összes játék lekérése a legördülő menühöz
+@GetMapping("/jatek/osszes")
+public List<Jatek> getOsszesJatek() {
+    return jatekRepo.findAll();
+}
 
 }
 

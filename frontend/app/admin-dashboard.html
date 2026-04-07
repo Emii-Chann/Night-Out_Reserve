@@ -73,17 +73,50 @@
         <input type="number" id="asztalFerohely" style="width: 100%; margin-bottom: 15px; padding: 8px; border-radius: 5px;" placeholder="Pl. 4">
     </div>
 
-    <div id="jatekMezok" style="display: none;">
-        <label style="color: #a29bfe; font-size: 14px;">Játék megnevezése:</label>
-        <input type="text" id="jatekNev" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px;" placeholder="Pl. Profi Biliárd 1">
-        
-        <label style="color: #a29bfe; font-size: 14px;">Típus:</label>
-        <input type="text" id="jatekTipus" style="width: 100%; margin-bottom: 15px; padding: 8px; border-radius: 5px;" placeholder="Pl. biliard">
-    </div>
-
+    
     <button onclick="mentesUjEszkoz()" class="admin-btn accept" style="width: 100%; margin-bottom: 10px;">Hozzáadás</button>
     <button onclick="document.getElementById('ujEszkozModal').style.display='none'" class="admin-btn reject" style="width: 100%;">Mégse</button>
 </div>
+
+
+
+
+<button onclick="document.getElementById('ujJatekGlobalModal').style.display='block'" class="admin-btn" style="background-color: #0984e3;">
+    <i class="fa-solid fa-gamepad"></i> 1. Új játék definiálása
+</button>
+
+<button onclick="nyitArazasModal()" class="admin-btn" style="background-color: #00b894;">
+    <i class="fa-solid fa-tags"></i> 2. Játék árazása helyszínhez
+</button>
+
+<div id="ujJatekGlobalModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, 0); background: #1e1e2f; padding: 20px; border-radius: 10px; border: 1px solid #0984e3; z-index: 1002; width: 300px;">
+    <h3 style="color: white;">Új játék a rendszerbe</h3>
+    <label style="color: #a29bfe;">Név:</label>
+    <input type="text" id="globalJatekNev" style="width: 100%; margin-bottom: 10px;">
+    <label style="color: #a29bfe;">Típus:</label>
+    <input type="text" id="globalJatekTipus" style="width: 100%; margin-bottom: 20px;">
+    <button onclick="mentesGlobalJatek()" class="admin-btn accept" style="width: 100%;">Mentés a listába</button>
+    <button onclick="document.getElementById('ujJatekGlobalModal').style.display='none'" class="admin-btn reject" style="width: 100%; margin-top: 5px;">Mégse</button>
+</div>
+
+<div id="arazasModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, 0); background: #1e1e2f; padding: 20px; border-radius: 10px; border: 1px solid #00b894; z-index: 1002; width: 300px;">
+    <h3 style="color: white;">Játék árazása</h3>
+    <label style="color: #a29bfe;">Melyik játékot?</label>
+    <select id="jatekValaszto" style="width: 100%; margin-bottom: 15px; padding: 5px;"></select>
+    
+    <label style="color: #a29bfe;">Hány darab van?</label>
+    <input type="number" id="arazasDarab" style="width: 100%; margin-bottom: 10px;" value="1">
+    
+    <label style="color: #a29bfe;">Ár / óra (Ft):</label>
+    <input type="number" id="arazasAr" style="width: 100%; margin-bottom: 10px;">
+
+    <button onclick="mentesArazas()" class="admin-btn accept" style="width: 100%;">Hozzárendelés</button>
+    <button onclick="document.getElementById('arazasModal').style.display='none'" class="admin-btn reject" style="width: 100%; margin-top: 5px;">Mégse</button>
+</div>
+
+
+
+
 
 
 

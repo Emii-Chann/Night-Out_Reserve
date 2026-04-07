@@ -3,7 +3,9 @@ package com.nightout_reserve.backend.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import jakarta.persistence.Table;
+
 
 
 @Entity
@@ -13,10 +15,21 @@ import jakarta.persistence.Table;
 public class Jatek {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer Id;
+
+    @Column(name = "szorakozohely_id")
+    private Integer szorakozohelyId;
+
+    @Column(name = "nev")
     private String nev;
 
+
+    @Column(name = "leiras")
     private String leiras;
+
+
+    
 }

@@ -1377,4 +1377,6 @@ UPDATE tulajokbelepes SET szorakozohely_id = 1 WHERE tulaj_id = 1;
 
 
 
+
+
 -- vége
