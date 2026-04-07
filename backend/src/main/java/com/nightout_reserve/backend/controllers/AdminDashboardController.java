@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,9 @@ import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.services.AsztalFoglalasService;
 import com.nightout_reserve.backend.services.HelyFoglalasService;
 import com.nightout_reserve.backend.services.JatekFoglalasService;
+import com.nightout_reserve.backend.services.AsztalService;
+import com.nightout_reserve.backend.services.JatekService;
+
 
 
 import com.nightout_reserve.backend.models.Szorakozohely;
@@ -34,6 +39,9 @@ public class AdminDashboardController {
 
     @Autowired
     private AsztalFoglalasService asztalService;
+
+     @Autowired
+    private AsztalService asztlService;
 
     @Autowired
     private JatekFoglalasService jatekService;
@@ -66,5 +74,55 @@ public ResponseEntity<?> frissitAllapot(@RequestBody Map<String, String> body) {
 
     return ResponseEntity.ok().body("Kész!");
 }
-    
+
+
+@DeleteMapping("/torles/{tipus}/{id}")
+public ResponseEntity<?> torles(@PathVariable String tipus, @PathVariable Integer id) {
+    try {
+        switch (tipus.toLowerCase()) {
+            case "asztal":
+                asztalService.deleteById(id); // Vagy ha a repót hívod közvetlenül: asztalRepo.deleteById(id);
+                break;
+            case "jatek":
+                jatekService.deleteById(id);
+                break;
+            case "helyszin":
+                helyService.deleteById(id);
+                break;
+            default:
+                return ResponseEntity.badRequest().body("Ismeretlen foglalástípus!");
+        }
+        return ResponseEntity.ok().body("Sikeres törlés!");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hiba a törléskor: " + e.getMessage());
+    }
 }
+
+
+@PostMapping("/eszkoz/uj")
+public ResponseEntity<?> ujEszkoz(@RequestBody Map<String, String> body) {
+    String tipus = body.get("tipus");
+    Integer helyId = Integer.parseInt(body.get("szorakozohelyId"));
+
+    if ("asztal".equals(tipus)) {
+        // Feltételezve, hogy van AsztalService-ed
+        asztalService.ujAsztalMentese(
+            helyId, 
+            body.get("asztalSzam"), 
+            Integer.parseInt(body.get("ferohely"))
+        );
+    } else if ("jatek".equals(tipus)) {
+        // Feltételezve, hogy van JatekService-ed
+        jatekService.ujJatekMentese(
+            helyId, 
+            body.get("jatekNev"), 
+            body.get("jatekTipus")
+        );
+    }
+
+    return ResponseEntity.ok("Eszköz elmentve!");
+}
+
+
+}
+

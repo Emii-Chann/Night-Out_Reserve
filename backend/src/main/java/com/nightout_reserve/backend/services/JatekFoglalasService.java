@@ -31,6 +31,12 @@ public class JatekFoglalasService {
 
 
 
+
+
+        public void deleteById(Integer id) {
+    repo.deleteById(id); // A repository beépítve tudja a törlést!
+}
+
 public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
     // Itt a findAll() helyett az új szűrős metódust hívjuk:
     List<JatekFoglalas> lista = repo.findBySzorakozohelyId(szid);

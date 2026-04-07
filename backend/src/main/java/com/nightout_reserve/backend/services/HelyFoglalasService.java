@@ -23,6 +23,12 @@ public class HelyFoglalasService {
     @Autowired
 private SzorakozohelyRepository szorakozohelyRepository; // (Vagy ahogy nálad hívják ezt a fájlt)
 
+
+    public void deleteById(Integer id) {
+    repo.deleteById(id); // A repository beépítve tudja a törlést!
+}
+
+
 public List<HelyFoglalas> getHelyszinFoglalasokByHely(Integer szid) {
     // Itt a findAll() helyett az új szűrős metódust hívjuk:
     List<HelyFoglalas> lista = repo.findBySzorakozohelyId(szid);

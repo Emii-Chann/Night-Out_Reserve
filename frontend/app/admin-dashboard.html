@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <link rel="stylesheet" href="./styles/admin.css">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">
@@ -15,16 +17,85 @@
                 <div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div>
             </a>
 
-            <select id="venueSelector" class="admin-venue-select" style="margin-right: 15px; padding: 5px; border-radius: 5px;">
+            <select id="venueSelector" class="admin-venue-select"
+                style="margin-right: 15px; padding: 5px; border-radius: 5px;">
             </select>
+
+           <button id="ujHelyGomb" onclick="document.getElementById('ujHelyModal').style.display='block'" class="admin-btn" style="background-color: #6c5ce7; color: white; margin-left: 15px;">
+    <i class="fa-solid fa-plus"></i> Új szórakozóhely
+</button>
+
+          <div id="ujHelyModal" style="display: none; position: fixed; top: 10%; left: 50%; transform: translate(-50%, 0); background: #1e1e2f; padding: 20px; border-radius: 10px; border: 1px solid #6c5ce7; z-index: 1000; width: 350px; max-height: 80vh; overflow-y: auto; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
+    <h3 style="color: white; margin-top: 0;">Új hely felvétele</h3>
+    
+    <label style="color: #a29bfe; font-size: 14px;">Szórakozóhely neve:</label>
+    <input type="text" id="ujHelyNev" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;" placeholder="Pl. Neon Bár">
+
+    <label style="color: #a29bfe; font-size: 14px;">Város:</label>
+    <input type="text" id="ujHelyVaros" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;" placeholder="Pl. Pécs">
+    
+    <label style="color: #a29bfe; font-size: 14px;">Pontos cím:</label>
+    <input type="text" id="ujHelyCim" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;" placeholder="Pl. Király utca 12.">
+
+    <label style="color: #a29bfe; font-size: 14px;">Leírás:</label>
+    <textarea id="ujHelyLeiras" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box; resize: vertical;" placeholder="Rövid leírás a helyről..."></textarea>
+
+    <label style="color: #a29bfe; font-size: 14px;">Nyitvatartás:</label>
+    <input type="text" id="ujHelyNyitva" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;" placeholder="Pl. 18:00 - 02:00">
+
+    <label style="color: #a29bfe; font-size: 14px;">Asztalok száma:</label>
+    <input type="number" id="ujHelyAsztalok" style="width: 100%; margin-bottom: 20px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;" placeholder="Pl. 15">
+    
+    <button onclick="mentesUjHely()" class="admin-btn accept" style="width: 100%; margin-bottom: 10px;">Mentés</button>
+    <button onclick="document.getElementById('ujHelyModal').style.display='none'" class="admin-btn reject" style="width: 100%;">Mégse</button>
+</div>
+
+
+<button id="ujEszkozGomb" onclick="nyitEszkozModal()" class="admin-btn" style="background-color: #00b894; color: white; margin-left: 10px;">
+    <i class="fa-solid fa-plus-circle"></i> Új eszköz (Asztal/Játék)
+</button>
+
+<div id="ujEszkozModal" style="display: none; position: fixed; top: 15%; left: 50%; transform: translate(-50%, 0); background: #1e1e2f; padding: 25px; border-radius: 10px; border: 1px solid #00b894; z-index: 1001; width: 320px; box-shadow: 0 0 25px rgba(0,0,0,0.9);">
+    <h3 style="color: white; margin-top: 0;">Eszköz hozzáadása</h3>
+    <p style="color: #636e72; font-size: 12px;">Helyszín: <span id="aktualisHelyNev" style="color: #00b894;"></span></p>
+
+    <label style="color: #a29bfe; font-size: 14px;">Típus:</label>
+    <select id="eszkozTipus" onchange="valtsEszkozMezoket()" style="width: 100%; margin-bottom: 15px; padding: 8px; border-radius: 5px;">
+        <option value="asztal">Asztal</option>
+        <option value="jatek">Játék (Biliárd, Darts, stb.)</option>
+    </select>
+
+    <div id="asztalMezok">
+        <label style="color: #a29bfe; font-size: 14px;">Asztal száma/neve:</label>
+        <input type="text" id="asztalSzam" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px;" placeholder="Pl. 5-ös asztal">
+        
+        <label style="color: #a29bfe; font-size: 14px;">Férőhely (fő):</label>
+        <input type="number" id="asztalFerohely" style="width: 100%; margin-bottom: 15px; padding: 8px; border-radius: 5px;" placeholder="Pl. 4">
+    </div>
+
+    <div id="jatekMezok" style="display: none;">
+        <label style="color: #a29bfe; font-size: 14px;">Játék megnevezése:</label>
+        <input type="text" id="jatekNev" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px;" placeholder="Pl. Profi Biliárd 1">
+        
+        <label style="color: #a29bfe; font-size: 14px;">Típus:</label>
+        <input type="text" id="jatekTipus" style="width: 100%; margin-bottom: 15px; padding: 8px; border-radius: 5px;" placeholder="Pl. biliard">
+    </div>
+
+    <button onclick="mentesUjEszkoz()" class="admin-btn accept" style="width: 100%; margin-bottom: 10px;">Hozzáadás</button>
+    <button onclick="document.getElementById('ujEszkozModal').style.display='none'" class="admin-btn reject" style="width: 100%;">Mégse</button>
+</div>
+
+
+
+
             <span>Night-Out Reserve Admin</span>
 
             <span id="adminNameDisplay" style="margin-right: 15px; color: #eee;"></span>
-             <a href="./set-password.html" class="nav-profile-link">Passwordchange</a>
+            <a href="./set-password.html" class="nav-profile-link">Passwordchange</a>
 
             <button id="logoutBtn" class="admin-logout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i> Logout
-        </button>
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
         </div>
     </nav>
 
@@ -54,5 +125,5 @@
 
     <script src="./scripts/admin-dashboard.js"></script>
 </body>
-</html>
 
+</html>

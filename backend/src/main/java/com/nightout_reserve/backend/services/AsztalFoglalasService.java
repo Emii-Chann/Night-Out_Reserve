@@ -28,6 +28,12 @@ public class AsztalFoglalasService {
     
 
 
+
+    public void deleteById(Integer id) {
+    repo.deleteById(id); // A repository beépítve tudja a törlést!
+}
+
+
     public List<AsztalFoglalas> getFoglalasokByHely(Integer szid) {
     // Itt a findAll() helyett az új szűrős metódust hívjuk:
     List<AsztalFoglalas> lista = repo.findBySzorakozohelyId(szid);

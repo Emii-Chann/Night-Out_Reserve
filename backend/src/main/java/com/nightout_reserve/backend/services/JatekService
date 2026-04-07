@@ -1,0 +1,28 @@
+package com.nightout_reserve.backend.services;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nightout_reserve.backend.models.Szorakozohely;
+import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
+
+
+
+@Service
+public class JatekService {
+
+    @Autowired
+    private JatekRepository jatekRepository;
+
+    public void ujJatekMentese(Integer szorakozohelyId, String jatekNev, String jatekTipus) {
+        // Létrehozzuk a modellt (használd a saját Jatek osztályodat)
+        Jatek ujJatek = new Jatek();
+        
+        ujJatek.setSzorakozohelyId(szorakozohelyId);
+        ujJatek.setNev(jatekNev);
+        ujJatek.setTipus(jatekTipus);
+
+        jatekRepository.save(ujJatek);
+    }
+}
