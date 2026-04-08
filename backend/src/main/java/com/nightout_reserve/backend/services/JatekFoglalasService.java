@@ -1,5 +1,6 @@
 package com.nightout_reserve.backend.services;
 
+import com.nightout_reserve.backend.exceptions.JatekMarFoglaltException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,23 +111,20 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
         return foglalasok;
     }
 
-    public ResponseEntity<String> mentes(JatekFoglalas ujFoglalas) {
+    public JatekFoglalas mentes(JatekFoglalas ujJatekFoglalas) throws JatekMarFoglaltException {
         int utkozesek = repo.countUtkozesek(
-            ujFoglalas.getSzorakozohelyId(), 
-            ujFoglalas.getJatekId(), 
-            ujFoglalas.getKezdet(), 
-            ujFoglalas.getVege()
+            ujJatekFoglalas.getSzorakozohelyId(),
+            ujJatekFoglalas.getJatekId(),
+            ujJatekFoglalas.getKezdet(),
+            ujJatekFoglalas.getVege()
         );
-
+        if(ujJatekFoglalas.getAllapot() == null) {
+            ujJatekFoglalas.setAllapot(Allapot.FUGGO);
+        }
         if (utkozesek > 0) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sajnos ez a játék ebben az időpontban már foglalt!");
+            throw new JatekMarFoglaltException("Sajnos ez a játék ebben az időpontban már foglalt!");
+        } else {
+            return repo.save(ujJatekFoglalas);
         }
-
-        if(ujFoglalas.getAllapot() == null) {
-            ujFoglalas.setAllapot(Allapot.FUGGO); 
-        }
-        
-        repo.save(ujFoglalas);
-        return ResponseEntity.ok("Sikeres foglalás!");
     }
 }

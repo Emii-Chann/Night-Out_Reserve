@@ -1,6 +1,7 @@
 package com.nightout_reserve.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -15,24 +16,29 @@ import com.nightout_reserve.backend.services.AsztalFoglalasService;
 public class AsztalFoglalasController {
 
     @Autowired
-    private AsztalFoglalasService service;
+    private AsztalFoglalasService asztalFoglalasService;
     
     @GetMapping("/{helyId}/list")
     public List<Asztal> getAsztalokListaja(@PathVariable Integer helyId) {
         // A Controller csak átpasszolja a kérést a Service-nek!
-        return service.getAsztalokListaja(helyId); 
+        return asztalFoglalasService.getAsztalokListaja(helyId);
 
 
     }
 
     @PostMapping("/foglalas")
     public ResponseEntity<String> mentes(@RequestBody AsztalFoglalas ujFoglalas) {
-        return service.mentes(ujFoglalas);
+        try{
+            asztalFoglalasService.mentes(ujFoglalas);
+            return new ResponseEntity<>("Sikeres foglalás!", HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/felhasznalo/{id}")
     public List<AsztalFoglalas> getFelhasznaloFoglalasai(@PathVariable Integer id) {
-        return service.getFelhasznaloFoglalasai(id);
+        return asztalFoglalasService.getFelhasznaloFoglalasai(id);
     }
 
     

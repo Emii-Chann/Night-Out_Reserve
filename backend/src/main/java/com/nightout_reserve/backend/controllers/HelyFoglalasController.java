@@ -1,6 +1,7 @@
 package com.nightout_reserve.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -18,7 +19,12 @@ public class HelyFoglalasController {
 
     @PostMapping("/mentes")
     public ResponseEntity<String> mentes(@RequestBody HelyFoglalas ujFoglalas) {
-        return service.mentes(ujFoglalas);
+        try{
+            service.mentes(ujFoglalas);
+            return new ResponseEntity<>("Sikeres foglalás!", HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/felhasznalo/{id}")
