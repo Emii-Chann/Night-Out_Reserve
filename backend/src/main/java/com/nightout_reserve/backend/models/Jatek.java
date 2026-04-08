@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.Table;
-
 
 
 @Entity
@@ -30,6 +28,14 @@ public class Jatek {
     @Column(name = "leiras")
     private String leiras;
 
+
+    private Integer darab;
+    
+    @Column(name = "ar_ora")
+    private Integer arOra;
+
+    @Column(name = "min_idotartam_perc")
+    private Integer minIdotartamPerc;
 
     
 }

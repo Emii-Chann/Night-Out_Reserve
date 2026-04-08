@@ -1,6 +1,6 @@
 let aktualisNyitvatartas = "";
 
-async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
+async function modalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
     aktualisNyitvatartas = nyitvatartas;
     const maiDatum = new Date().toISOString().split('T')[0];
     document.getElementById('foglalas-datum').setAttribute('min', maiDatum);
@@ -11,11 +11,11 @@ async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
 
     const idoSelect = document.getElementById('foglalas-ido');
     idoSelect.innerHTML = ''; // Kiürítjük, ha volt benne valami
-    
+
     // Végigmegyünk a 24 órán, és minden órához hozzáadunk egy :00 és egy :30 opciót
     for (let i = 0; i < 24; i++) {
         let ora = i < 10 ? '0' + i : i; // Hogy 08 legyen, ne csak 8
-        
+
         idoSelect.innerHTML += `<option value="${ora}:00">${ora}:00</option>`;
         idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
     }
@@ -25,16 +25,16 @@ async function modalMegnyitasa(szorakozohelyId, helyNev,nyitvatartas) {
 
     try {
         // Backend hívása (A 2. lépésben megírt API)
-        const response = await fetch(`http://localhost:8080/api/helyszinek/${szorakozohelyId}/jatekok`);
+        const response = await fetch(`http://localhost:8080/api/helyszinek/jatekok/${szorakozohelyId}`);
         const jatekok = await response.json();
 
         // Legördülő opciók generálása
         jatekSelect.innerHTML = '<option value="" disabled selected>Select a game</option>';
-        
+
         jatekok.forEach(jatek => {
-            // jatekId, nev, arOra - ahogy a Java lekérdezésben elneveztük (AS jatekId)
+            // MOST MÁR: jatek.id (mivel a sima Jatek entitást kapjuk a Javaból)
             jatekSelect.innerHTML += `
-                <option value="${jatek.jatekId}">
+                <option value="${jatek.id}">
                     ${jatek.nev} (${jatek.arOra} HUF/hour)
                 </option>
             `;
@@ -54,7 +54,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     let [zarOra, zarPerc] = zar.split(':').map(Number);
 
     const [vOra, vPerc] = valasztottIdo.split(':').map(Number);
-    
+
     let nyitPercekben = nyitOra * 60 + nyitPerc;
     let zarPercekben = zarOra * 60 + zarPerc;
     let kezdetPercekben = vOra * 60 + vPerc;
@@ -79,7 +79,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
         alert(`The venue is not open yet. Opening time: ${nyit}`);
         return false;
     }
-    
+
     if (vegPercekben > zarPercekben) {
         alert(`This booking exceeds closing time. Closing time: ${zar}`);
         return false;
@@ -100,30 +100,30 @@ async function foglalasBekuldese() {
 
 
 
-    if(!jatekId || !datum || !ido) {
+    if (!jatekId || !datum || !ido) {
         alert("Please fill all fields.");
         return;
     }
 
     // Dátum és idő összerakása ISO formátumba (pl. 2024-05-10T18:00:00) a Spring Boot-nak
     const kezdet = `${datum}T${ido}:00`;
-const kezdetDatumObj = new Date(kezdet);
+    const kezdetDatumObj = new Date(kezdet);
 
-// Vége időpont kiszámítása
-const vegeDatumObj = new Date(kezdetDatumObj);
-vegeDatumObj.setHours(vegeDatumObj.getHours() + parseInt(idotartamOra));
+    // Vége időpont kiszámítása
+    const vegeDatumObj = new Date(kezdetDatumObj);
+    vegeDatumObj.setHours(vegeDatumObj.getHours() + parseInt(idotartamOra));
 
-// Helyi idő formázása (YYYY-MM-DDTHH:mm:ss)
-const formatum = (date) => {
-    const pad = (n) => n < 10 ? '0' + n : n;
-    return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) +
-           'T' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
-};
+    // Helyi idő formázása (YYYY-MM-DDTHH:mm:ss)
+    const formatum = (date) => {
+        const pad = (n) => n < 10 ? '0' + n : n;
+        return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) +
+            'T' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+    };
 
-const kezdetISO = formatum(kezdetDatumObj);
-const vegeISO = formatum(vegeDatumObj);
+    const kezdetISO = formatum(kezdetDatumObj);
+    const vegeISO = formatum(vegeDatumObj);
 
-// --- ELLENŐRZÉSEK ---
+    // --- ELLENŐRZÉSEK ---
 
     // A: Múltbeli időpont ellenőrzése
     const most = new Date();
@@ -151,7 +151,7 @@ const vegeISO = formatum(vegeDatumObj);
     };
 
     // 3. Küldés a Backendnek
-   try {
+    try {
         const response = await fetch('http://localhost:8080/api/jatekok/mentes', { // IDE A TE VÉGPONTOD KERÜLJÖN!
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

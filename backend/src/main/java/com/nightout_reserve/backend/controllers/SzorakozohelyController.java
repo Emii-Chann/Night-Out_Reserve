@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.models.Szorakozohely;
+import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
+import com.nightout_reserve.backend.repositories.JatekRepository;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 import com.nightout_reserve.backend.services.SzorakozohelyService;
 
@@ -28,6 +31,8 @@ public class SzorakozohelyController {
 
     @Autowired
     private SzorakozohelyRepository repo;
+       
+
 
     @GetMapping("/list")
     public List<Szorakozohely> getHelyszinek() {
@@ -35,11 +40,9 @@ public class SzorakozohelyController {
         return repo.findByTorolveAtIsNull();
     }
 
+     @Autowired
+    private JatekFoglalasRepository jatekrepo;
     
- @GetMapping("/{id}/jatekok")  // Tettem egy / jelet a végére is
-public List<Map<String, Object>> getJatekokHelyszinen(@PathVariable("id") Integer id) { // Itt explicit megadtam az "id"-t
-    return repo.findJatekokByHelyId(id);
-}
 
 
 
@@ -74,6 +77,19 @@ public ResponseEntity<?> ujSzorakozohelyFelvetel(@RequestBody Map<String, String
         return ResponseEntity.ok().body("Sikeres mentés!");
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hiba: " + e.getMessage());
+    }
+}
+
+    @Autowired
+    private JatekRepository jatkrepo;
+    
+    @GetMapping("/jatekok/{helyId}")
+    public ResponseEntity<List<Jatek>> getJatekokHelyszinhez(@PathVariable Integer helyId) {
+    try {
+        List<Jatek> jatekok = jatkrepo.findBySzorakozohelyId(helyId);
+        return ResponseEntity.ok(jatekok);
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body(null);
     }
 }
 

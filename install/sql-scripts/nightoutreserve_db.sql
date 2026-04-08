@@ -1373,6 +1373,19 @@ ADD CONSTRAINT fk_tulaj_hely
 
 UPDATE tulajokbelepes SET szorakozohely_id = 1 WHERE tulaj_id = 1;
 
+-- -------------------------------------------------------
+
+ALTER TABLE jatek_foglalasok 
+DROP FOREIGN KEY fk_jatekfog_js_hely;
+-- 1. Dobjuk ki a felesleges kapcsolótáblát!
+DROP TABLE jatek_szorakozohelyhez;
+
+-- 2. Tegyük bele a hiányzó oszlopokat közvetlenül a jatekok táblába!
+ALTER TABLE jatekok
+ADD COLUMN szorakozohely_id int(11) NOT NULL
+ADD COLUMN darab INT DEFAULT 1,
+ADD COLUMN ar_ora INT,
+ADD COLUMN min_idotartam_perc INT DEFAULT 60;
 
 
 

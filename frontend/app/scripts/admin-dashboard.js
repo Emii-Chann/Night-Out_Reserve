@@ -291,7 +291,9 @@ async function mentesUjEszkoz() {
         adatok.ferohely = document.getElementById("asztalFerohely").value;
     } else {
         adatok.jatekNev = document.getElementById("jatekNev").value;
-        adatok.jatekTipus = document.getElementById("jatekTipus").value;
+    adatok.jatekLeiras = document.getElementById("jatekLeiras").value;
+        adatok.darab = document.getElementById("jatekDarab").value;
+        adatok.ar_ora = document.getElementById("jatekAr").value;
     }
 
     try {
@@ -308,79 +310,5 @@ async function mentesUjEszkoz() {
             alert("Hiba történt a mentés során.");
         }
     } catch (e) { console.error(e); }
-}
-// 1. FUNKCIÓ: Új globális játék mentése
-async function mentesGlobalJatek() {
-    const adat = {
-        nev: document.getElementById("globalJatekNev").value,
-        tipus: document.getElementById("globalJatekTipus").value
-    };
-
-    const res = await fetch('http://localhost:8080/api/admin/foglalasok/jatek/uj-global', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(adat)
-    });
-
-    if (res.ok) {
-        alert("Játék hozzáadva a globális listához!");
-        document.getElementById('ujJatekGlobalModal').style.display = 'none';
-    }
-}
-
-// 2. FUNKCIÓ: Árazás Modal megnyitása + Játékok betöltése
-async function nyitArazasModal() {
-    const res = await fetch('http://localhost:8080/api/admin/foglalasok/jatek/osszes');
-  const jatekok = await res.json();
-
-  console.log("Szervertől érkező játékok:", jatekok);
-    
-    const select = document.getElementById("jatekValaszto");
-    select.innerHTML = ""; 
-
-jatekok.forEach(j => {
-    // A képed alapján 'Id' (nagy I-vel) a kulcs!
-    const realId = j.Id; 
-    
-    if (realId !== undefined) {
-        select.innerHTML += `<option value="${realId}">${j.nev}</option>`;
-    } else {
-        console.error("Hiba: Nincs Id mező!", j);
-    }
-});
-
-    document.getElementById('arazasModal').style.display = 'block';
-}
-
-// 3. FUNKCIÓ: A kapcsolótábla mentése
-async function mentesArazas() {
-    const jatekLista = document.getElementById("jatekValaszto");
-    const kivalasztottJatekId = jatekLista.value; // Itt kapja meg az ID-t
-
-    console.log("Kiválasztott elem értéke:", kivalasztottJatekId);
-
-    if (!kivalasztottJatekId || kivalasztottJatekId === "undefined") {
-        alert("Hiba: Nincs kiválasztva érvényes játék!");
-        return;
-    }
-
-    const adat = {
-        szorakozohelyId: document.getElementById("venueSelector").value,
-        jatekId: kivalasztottJatekId, // Most már szám lesz, nem "undefined"
-        darab: document.getElementById("arazasDarab").value,
-        ar_ora: document.getElementById("arazasAr").value,
-        min_perc: 60
-    };
-
-    const res = await fetch('http://localhost:8080/api/admin/foglalasok/eszkoz/uj-jatek', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(adat)
-    });
-
-    if (res.ok) {
-        alert("Sikeresen beárazva a helyszínhez!");
-        document.getElementById('arazasModal').style.display = 'none';
-    }
 }
 

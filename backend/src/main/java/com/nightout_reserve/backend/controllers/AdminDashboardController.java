@@ -103,60 +103,39 @@ public ResponseEntity<?> torles(@PathVariable String tipus, @PathVariable Intege
 
 @PostMapping("/eszkoz/uj")
 public ResponseEntity<?> ujEszkoz(@RequestBody Map<String, String> body) {
-    String tipus = body.get("tipus");
-    Integer helyId = Integer.parseInt(body.get("szorakozohelyId"));
-
-    if ("asztal".equals(tipus)) {
-        // Feltételezve, hogy van AsztalService-ed
-        asztalService.ujAsztalMentese(
-            helyId, 
-            Integer.parseInt(body.get("asztalSzam")), 
-            Integer.parseInt(body.get("ferohely"))
-        );
-    } else if ("jatek".equals(tipus)) {
-        // Feltételezve, hogy van JatekService-ed
-            jatkService.ujJatekMentese(
-            helyId, 
-            body.get("jatekNev"), 
-            body.get("jatekTipus")
-        );
-    }
-
-    return ResponseEntity.ok("Eszköz elmentve!");
-}
-
-@PostMapping("/eszkoz/uj-jatek")
-public ResponseEntity<?> ujJatekHelyszinre(@RequestBody Map<String, String> body) {
     try {
+        String tipus = body.get("tipus");
         Integer helyId = Integer.parseInt(body.get("szorakozohelyId"));
-        Integer jatekId = Integer.parseInt(body.get("jatekId"));
-        Integer darab = Integer.parseInt(body.get("darab"));
-        Integer ar = Integer.parseInt(body.get("ar_ora"));
-        Integer perc = Integer.parseInt(body.get("min_perc"));
 
-        // EZT CSERÉLD LE AZ ÚJ METÓDUSRA:
-        jatkService.mentesVagyFrissites(helyId, jatekId, darab, ar, perc);
+        if ("asztal".equals(tipus)) {
+            asztalService.ujAsztalMentese(
+                helyId, 
+                Integer.parseInt(body.get("asztalSzam")),
+                Integer.parseInt(body.get("ferohely"))
+            );
+        } else if ("jatek".equals(tipus)) {
+            jatkService.ujJatekHelyszinhez( 
+                helyId, 
+                body.get("jatekNev"), 
+                body.get("jatekLeiras"),
+                Integer.parseInt(body.get("darab")),
+                Integer.parseInt(body.get("ar_ora"))
+            );
+        }
 
-        return ResponseEntity.ok("Játék sikeresen mentve/frissítve!");
+        return ResponseEntity.ok("Eszköz sikeresen elmentve!");
     } catch (Exception e) {
-        return ResponseEntity.status(500).body("Hiba történt: " + e.getMessage());
+        return ResponseEntity.status(500).body("Hiba történt a mentéskor: " + e.getMessage());
     }
 }
 
 
 
-// 1. Csak a játék mentése a globális táblába
-@PostMapping("/jatek/uj-global")
-public ResponseEntity<?> ujGlobalJatek(@RequestBody Jatek jatek) {
-    jatekRepo.save(jatek);
-    return ResponseEntity.ok("Kész");
-}
 
-// 2. Az összes játék lekérése a legördülő menühöz
-@GetMapping("/jatek/osszes")
-public List<Jatek> getOsszesJatek() {
-    return jatekRepo.findAll();
-}
 
 }
+
+
+
+
 

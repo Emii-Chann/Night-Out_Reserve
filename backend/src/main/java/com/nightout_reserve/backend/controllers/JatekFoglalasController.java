@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
+import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.models.JatekFoglalas;
+import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
+import com.nightout_reserve.backend.repositories.JatekRepository;
 import com.nightout_reserve.backend.services.JatekFoglalasService;
 
 @RestController
@@ -27,8 +31,16 @@ public class JatekFoglalasController {
         }
     }
 
+
+        
     @GetMapping("/felhasznalo/{id}")
     public List<JatekFoglalas> getFelhasznaloFoglalasai(@PathVariable Integer id) {
         return jatekFoglalasService.getFelhasznaloFoglalasai(id);
     }
+
+
+    
+
+
+
 }

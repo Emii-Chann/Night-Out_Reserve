@@ -26,6 +26,7 @@ public class HelyFoglalasController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
+    
 
     @GetMapping("/felhasznalo/{id}")
     public List<HelyFoglalas> getFelhasznaloFoglalasai(@PathVariable Integer id) {

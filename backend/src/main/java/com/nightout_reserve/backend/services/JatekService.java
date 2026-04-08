@@ -1,18 +1,13 @@
 package com.nightout_reserve.backend.services;
 
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nightout_reserve.backend.models.Jatek;
-import com.nightout_reserve.backend.models.JatekSzorakozohelyhez;
 import com.nightout_reserve.backend.models.Szorakozohely;
-import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
-import com.nightout_reserve.backend.repositories.JatekHelyszinRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
-
 
 
 
@@ -20,42 +15,18 @@ import com.nightout_reserve.backend.repositories.JatekRepository;
 public class JatekService {
 
     @Autowired
-    private JatekRepository jatekRepository;
+    private JatekRepository jatekRepository; // A sima Jatek repót használjuk!
 
-    public void ujJatekMentese(Integer szorakozohelyId, String nev, String leiras) {
-        // Létrehozzuk a modellt (használd a saját Jatek osztályodat)
+    public void ujJatekHelyszinhez(Integer helyId, String nev, String leiras, Integer darab, Integer ar) {
         Jatek ujJatek = new Jatek();
-        
-        ujJatek.setSzorakozohelyId(szorakozohelyId);
+        ujJatek.setSzorakozohelyId(helyId);
         ujJatek.setNev(nev);
-         ujJatek.setLeiras(leiras);
+        ujJatek.setDarab(darab);
+        ujJatek.setLeiras(leiras);
+        ujJatek.setArOra(ar);
+        ujJatek.setMinIdotartamPerc(60); // Legyen alapból 1 óra
 
-        jatekRepository.save(ujJatek);
+        jatekRepository.save(ujJatek); // Bumm, bent is van a táblában!
     }
-
-
-@Autowired
-    private JatekHelyszinRepository jatekHelyszinRepository; // Ez szünteti meg a hibát a 42. sorban
-
-    public void mentesVagyFrissites(Integer helyId, Integer jatekId, Integer darab, Integer ar, Integer perc) {
-    // 1. Megnézzük, van-e már ilyen sor
-    Optional<JatekSzorakozohelyhez> letezo = jatekHelyszinRepository.findBySzorakozohelyIdAndJatekId(helyId, jatekId);
-
-    JatekSzorakozohelyhez adat;
-    if (letezo.isPresent()) {
-        // Ha van, akkor frissítjük a régit
-        adat = letezo.get();
-    } else {
-        // Ha nincs, újat hozunk létre
-        adat = new JatekSzorakozohelyhez();
-        adat.setSzorakozohelyId(helyId);
-        adat.setJatekId(jatekId);
-    }
-
-    adat.setDarab(darab);
-    adat.setArOra(ar);
-    adat.setMinIdotartamPerc(perc);
-
-    jatekHelyszinRepository.save(adat);
 }
-}
+
