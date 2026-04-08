@@ -14,15 +14,15 @@ import com.nightout_reserve.backend.services.JatekFoglalasService;
 public class JatekFoglalasController {
 
     @Autowired
-    private JatekFoglalasService service;
+    private JatekFoglalasService jatekFoglalasService;
 
     @PostMapping("/mentes")
     public ResponseEntity<String> mentes(@RequestBody JatekFoglalas ujFoglalas) {
-        return service.mentes(ujFoglalas);
+        return jatekFoglalasService.mentes(ujFoglalas);
     }
 
     @GetMapping("/felhasznalo/{id}")
     public List<JatekFoglalas> getFelhasznaloFoglalasai(@PathVariable Integer id) {
-        return service.getFelhasznaloFoglalasai(id);
+        return jatekFoglalasService.getFelhasznaloFoglalasai(id);
     }
 }

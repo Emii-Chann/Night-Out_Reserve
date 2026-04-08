@@ -3,7 +3,6 @@ package com.nightout_reserve.backend.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nightout_reserve.backend.models.AsztalFoglalas;
-import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.services.AsztalFoglalasService;
 import com.nightout_reserve.backend.services.HelyFoglalasService;
@@ -29,10 +26,7 @@ import com.nightout_reserve.backend.services.AsztalService;
 import com.nightout_reserve.backend.services.JatekService;
 
 
-
-import com.nightout_reserve.backend.models.Szorakozohely;
 import com.nightout_reserve.backend.repositories.JatekRepository;
-import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 
 @RestController
 @RequestMapping("/api/admin/foglalasok")
@@ -40,10 +34,10 @@ import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 public class AdminDashboardController {
 
     @Autowired
-    private AsztalFoglalasService asztalService;
+    private AsztalFoglalasService asztalFoglalasService;
 
      @Autowired
-    private AsztalService asztlService;
+    private AsztalService asztalService;
 
      @Autowired
     private JatekService jatkService;
@@ -63,7 +57,7 @@ public List<Object> getAllFoglalasok(@RequestParam Integer szid) {
     List<Object> minden = new ArrayList<>();
     
     // Most már szűrve kérjük le az adatokat!
-    minden.addAll(asztalService.getFoglalasokByHely(szid));
+    minden.addAll(asztalFoglalasService.getFoglalasokByHely(szid));
     minden.addAll(jatekService.getJatekFoglalasokByHely(szid));
     minden.addAll(helyService.getHelyszinFoglalasokByHely(szid));
     
@@ -76,7 +70,7 @@ public ResponseEntity<?> frissitAllapot(@RequestBody Map<String, String> body) {
     String ujAllapot = body.get("allapot");
     String tipus = body.get("tipus");
 
-    if ("asztal".equals(tipus)) asztalService.statuszFrissites(id, ujAllapot);
+    if ("asztal".equals(tipus)) asztalFoglalasService.statuszFrissites(id, ujAllapot);
     else if ("jatek".equals(tipus)) jatekService.jatekStatuszFrissites(id, ujAllapot);
     else if ("helyszin".equals(tipus)) helyService.helyszinStatuszFrissites(id, ujAllapot); // EZ AZ ÚJ
 
@@ -89,7 +83,7 @@ public ResponseEntity<?> torles(@PathVariable String tipus, @PathVariable Intege
     try {
         switch (tipus.toLowerCase()) {
             case "asztal":
-                asztalService.deleteById(id); // Vagy ha a repót hívod közvetlenül: asztalRepo.deleteById(id);
+                asztalFoglalasService.deleteById(id); // Vagy ha a repót hívod közvetlenül: asztalRepo.deleteById(id);
                 break;
             case "jatek":
                 jatekService.deleteById(id);
@@ -114,7 +108,7 @@ public ResponseEntity<?> ujEszkoz(@RequestBody Map<String, String> body) {
 
     if ("asztal".equals(tipus)) {
         // Feltételezve, hogy van AsztalService-ed
-        asztlService.ujAsztalMentese(
+        asztalService.ujAsztalMentese(
             helyId, 
             Integer.parseInt(body.get("asztalSzam")), 
             Integer.parseInt(body.get("ferohely"))
