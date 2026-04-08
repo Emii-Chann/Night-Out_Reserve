@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import com.nightout_reserve.backend.models.Allapot;
+import com.nightout_reserve.backend.enums.Allapot;
 import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.models.JatekFoglalas;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;

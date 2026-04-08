@@ -1,6 +1,8 @@
 package com.nightout_reserve.backend.models;
 
 import java.time.LocalDateTime;
+
+import com.nightout_reserve.backend.enums.Allapot;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

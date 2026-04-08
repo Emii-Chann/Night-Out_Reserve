@@ -1,12 +1,12 @@
 package com.nightout_reserve.backend.services;
 
+import com.nightout_reserve.backend.enums.Allapot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-import com.nightout_reserve.backend.models.Allapot;
 import com.nightout_reserve.backend.models.Asztal;
 import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.repositories.AsztalFoglalasRepository;
