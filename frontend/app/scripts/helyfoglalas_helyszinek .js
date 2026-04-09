@@ -22,7 +22,7 @@ async function asztalHelyszinekBetoltese() {
                         <span><i class="fa-regular fa-clock"></i> ${hely.nyitvatartas || 'Not set'}</span>
                     </div>
                     
-                    <button onclick="helyModalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">
+                    <button onclick='helyModalMegnyitasa(${JSON.stringify(hely)})' class="btn-foglalas">
                         Venue booking
                     </button>
                     </div>

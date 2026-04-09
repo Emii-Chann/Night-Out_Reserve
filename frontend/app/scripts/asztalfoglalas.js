@@ -220,8 +220,8 @@ async function frissitFoglaltAsztalIdopontok() {
 // Eseményfigyelők az asztalos bemenetekre:
 document.addEventListener('DOMContentLoaded', () => {
     // Keresd meg ezeket a sorokat:
-    const asztalDatumMezo = document.getElementById('asztal-foglalas-datum');
-    const asztalValasztoMezo = document.getElementById('foglalas-asztal');
+    const asztalDatumMezo = document.getElementById('asztal-datum');
+    const asztalValasztoMezo = document.getElementById('asztal-szam-select');
 
     if (asztalDatumMezo) {
         asztalDatumMezo.addEventListener('change', frissitFoglaltAsztalIdopontok);

@@ -1,19 +1,49 @@
 let helyAktualisNyitvatartas = "";
 
-function helyModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
+function helyModalMegnyitasa(szorakozohely) {
+    // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
+    const szorakozohelyId = szorakozohely.id;
+    const helyNev = szorakozohely.nev;
+    const nyitvatartas = szorakozohely.nyitvatartas; // Ha nálad máshogy hívják a modellt, itt írd át!
+
     helyAktualisNyitvatartas = nyitvatartas;
-    document.getElementById('hely-foglalas-modal').style.display = 'flex';
-    document.getElementById('hely-modal-cim').innerText = `${helyNev} - Venue booking (${nyitvatartas})`;
+    document.getElementById('hely-foglalas-modal').style.display = 'flex'; // Nálad flex van, ez tökéletes
+    document.getElementById('hely-modal-cim').innerText = `${helyNev} - Venue booking (${nyitvatartas || '0-24'})`;
     document.getElementById('hely-szorakozohely-id').value = szorakozohelyId;
 
+    console.log("Ezt az objektumot kapta a JS:", szorakozohely);
+
+    // ---------------------------------------------------------
+    // 2. ÚJ RÉSZ: JOBB OLDALI PANEL KITÖLTÉSE
+    // ---------------------------------------------------------
+    document.getElementById('info-hely-nev').innerText = helyNev || "Nincs megadva";
+    document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Nincs megadva";
+    document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Nincs megadva";
+    document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "Általános";
+
+    // Tulajdonos adatai (ellenőrizzük, hogy létezik-e)
+  if (szorakozohely.tulajokAdatai) {
+        // ITT FIGYELJ A VALTOZÓNEVEKRE: teljesNev és telefon!
+        document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "Nincs adat";
+        document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "Nincs adat";
+        document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "Nincs adat";
+    } else {
+        document.getElementById('info-tulaj-nev').innerText = "Nincs adat";
+        document.getElementById('info-tulaj-email').innerText = "Nincs adat";
+        document.getElementById('info-tulaj-tel').innerText = "Nincs adat";
+    }
+    // ---------------------------------------------------------
+
+    // 3. Dátum beállítása (kiegészítettem azzal, hogy rögtön a mai napot adja meg értéknek)
     const maiDatum = new Date().toISOString().split('T')[0];
-    document.getElementById('hely-datum').setAttribute('min', maiDatum);
+    const datumMezo = document.getElementById('hely-datum');
+    datumMezo.setAttribute('min', maiDatum);
+    datumMezo.value = maiDatum; 
 
-
+    // 4. --- A TE OKOS IDŐPONT GENERÁLÓD (Változatlanul) ---
     const idoSelect = document.getElementById('hely-ido');
     idoSelect.innerHTML = ''; 
 
-    // Ha véletlenül nincs nyitvatartás, visszaállunk a 0-24-es alapértelmezésre
     if (!nyitvatartas || nyitvatartas === "Nincs megadva") {
         for (let i = 0; i < 24; i++) {
             let ora = i < 10 ? '0' + i : i;
@@ -21,24 +51,19 @@ function helyModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
             idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
         }
     } else {
-        // --- AZ OKOS IDŐPONT GENERÁLÓ ---
         const [nyit, zar] = nyitvatartas.split('-');
         const [nyitOra, nyitPerc] = nyit.split(':').map(Number);
         let [zarOra, zarPerc] = zar.split(':').map(Number);
 
-        // Mindent átváltunk percekbe a könnyebb számolásért
         let nyitPercekben = nyitOra * 60 + nyitPerc;
         let zarPercekben = zarOra * 60 + zarPerc;
 
-        // Az éjféli trükk: ha a záróra másnap van (pl. 18:00 - 02:00)
         if (zarPercekben <= nyitPercekben) {
             zarPercekben += 24 * 60;
         }
 
-        // 30 perces lépésekkel végigmegyünk a nyitvatartáson
         for (let i = nyitPercekben; i < zarPercekben; i += 30) {
-            // Visszaváltjuk a perceket óra:perc formátumra
-            let aktualisOra = Math.floor(i / 60) % 24; // A % 24 miatt a 25:00-ból 01:00 lesz!
+            let aktualisOra = Math.floor(i / 60) % 24;
             let aktualisPerc = i % 60;
 
             let oraStr = aktualisOra < 10 ? '0' + aktualisOra : aktualisOra;

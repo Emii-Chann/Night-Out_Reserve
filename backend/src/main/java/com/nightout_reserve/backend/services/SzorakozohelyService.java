@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nightout_reserve.backend.models.Szorakozohely;
+import com.nightout_reserve.backend.models.TulajokAdatai;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 
 @Service
@@ -22,11 +23,15 @@ public class SzorakozohelyService {
     ujHely.setLeiras(leiras);
     ujHely.setNyitvatartas(nyitvatartas);
     ujHely.setAsztalokSzama(asztalokSzama);
-    ujHely.setTulajId(tulajId);
+
+    // 1. Létrehozunk egy hivatkozást a tulajdonosra az ID alapján
+    TulajokAdatai tulaj = new TulajokAdatai();
+    tulaj.setId(tulajId); 
     
-    // A letrehozva_at részt a Java/DB automatikusan kezeli, ha be van állítva, 
-    // de ha kézzel kell, akkor: ujHely.setLetrehozvaAt(LocalDateTime.now());
-    
+    // 2. Ezt az objektumot adjuk át! (Figyelj a nagy 'T' betűre a setTulajokAdatai-ban)
+    ujHely.setTulajokAdatai(tulaj);
+
+    // A letrehozva_at részt a Java/DB automatikusan kezeli...
     szorakozohelyRepository.save(ujHely);
 }
 }

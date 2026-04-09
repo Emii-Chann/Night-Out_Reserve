@@ -1,6 +1,9 @@
 package com.nightout_reserve.backend.models;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Column;
@@ -8,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,8 +25,10 @@ public class Szorakozohely {
     private Integer id;
     
     // Hozzáadva a pontos oszlopnév
-    @Column(name = "tulaj_id")
-    private Integer tulajId;
+    @ManyToOne
+    @JoinColumn(name = "tulaj_id") // Ennek az oszlopnak lennie kell a 'szorakozohelyek' tábládban!
+    @JsonIgnoreProperties({"letrehozvaAt"}) // Ezeket nem küldjük ki feleslegesen a frontendnek
+    private TulajokAdatai tulajokAdatai;
     private String varos;
     private String nev;
     private String cim;
@@ -38,6 +45,8 @@ public class Szorakozohely {
     // Hozzáadva a pontos oszlopnév
     @Column(name = "torolve_at")
     private LocalDateTime torolveAt;
+
+    
 
 
 }
