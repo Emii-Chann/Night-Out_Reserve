@@ -27,11 +27,10 @@ public interface SzorakozohelyRepository extends JpaRepository<Szorakozohely, In
     // 2. Egyedi lekérdezés: Csak azokat adjuk vissza, amik nincsenek törölve
     List<Szorakozohely> findByTorolveAtIsNull();
 
-    @Query(value = "SELECT j.id AS jatekId, j.nev AS nev, jsz.ar_ora AS arOra " +
-               "FROM jatekok j " +
-               "JOIN jatek_szorakozohelyhez jsz ON j.id = jsz.jatek_id " +
-               "WHERE jsz.szorakozohely_id = :helyId", nativeQuery = true)
-            List<Map<String, Object>> findJatekokByHelyId(@Param("helyId") Integer helyId);
+@Query(value = "SELECT id AS jatekId, nev AS nev, ar_ora AS arOra " +
+                   "FROM jatekok " +
+                   "WHERE szorakozohely_id = :helyId", nativeQuery = true)
+    List<Map<String, Object>> findJatekokByHelyId(@Param("helyId") Integer helyId);
 
     @Query(value = "SELECT asztal_szam, ferohely FROM asztalok WHERE szorakozohely_id = :helyId", nativeQuery = true)
     List<Map<String, Object>> findAsztalokByHelyId(@Param("helyId") Integer helyId);

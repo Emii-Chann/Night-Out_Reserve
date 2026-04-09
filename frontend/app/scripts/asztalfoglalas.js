@@ -10,14 +10,42 @@ async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
     document.getElementById('asztal-datum').setAttribute('min', maiDatum);
 
     const idoSelect = document.getElementById('asztal-ido');
-    idoSelect.innerHTML = ''; // Kiürítjük, ha volt benne valami
-    
-    // Végigmegyünk a 24 órán, és minden órához hozzáadunk egy :00 és egy :30 opciót
-    for (let i = 0; i < 24; i++) {
-        let ora = i < 10 ? '0' + i : i; // Hogy 08 legyen, ne csak 8
-        
-        idoSelect.innerHTML += `<option value="${ora}:00">${ora}:00</option>`;
-        idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
+    idoSelect.innerHTML = ''; 
+
+    // Ha véletlenül nincs nyitvatartás, visszaállunk a 0-24-es alapértelmezésre
+    if (!nyitvatartas || nyitvatartas === "Nincs megadva") {
+        for (let i = 0; i < 24; i++) {
+            let ora = i < 10 ? '0' + i : i;
+            idoSelect.innerHTML += `<option value="${ora}:00">${ora}:00</option>`;
+            idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
+        }
+    } else {
+        // --- AZ OKOS IDŐPONT GENERÁLÓ ---
+        const [nyit, zar] = nyitvatartas.split('-');
+        const [nyitOra, nyitPerc] = nyit.split(':').map(Number);
+        let [zarOra, zarPerc] = zar.split(':').map(Number);
+
+        // Mindent átváltunk percekbe a könnyebb számolásért
+        let nyitPercekben = nyitOra * 60 + nyitPerc;
+        let zarPercekben = zarOra * 60 + zarPerc;
+
+        // Az éjféli trükk: ha a záróra másnap van (pl. 18:00 - 02:00)
+        if (zarPercekben <= nyitPercekben) {
+            zarPercekben += 24 * 60;
+        }
+
+        // 30 perces lépésekkel végigmegyünk a nyitvatartáson
+        for (let i = nyitPercekben; i < zarPercekben; i += 30) {
+            // Visszaváltjuk a perceket óra:perc formátumra
+            let aktualisOra = Math.floor(i / 60) % 24; // A % 24 miatt a 25:00-ból 01:00 lesz!
+            let aktualisPerc = i % 60;
+
+            let oraStr = aktualisOra < 10 ? '0' + aktualisOra : aktualisOra;
+            let percStr = aktualisPerc === 0 ? '00' : aktualisPerc;
+
+            let formatalva = `${oraStr}:${percStr}`;
+            idoSelect.innerHTML += `<option value="${formatalva}">${formatalva}</option>`;
+        }
     }
 
     const asztalSelect = document.getElementById('asztal-szam-select');
@@ -141,3 +169,64 @@ async function asztalFoglalasBekuldese() {
         console.error(hiba);
     }
 }
+
+
+async function frissitFoglaltAsztalIdopontok() {
+    // 1. Keresd meg a HTML-ben a rejtett inputot, ami tárolja a helyszín ID-t!
+    // Lehet, hogy nálad 'asztal-szorakozohely-id' vagy 'hely-szorakozohely-id' a neve.
+    const szorakozohelyId = document.getElementById('asztal-szorakozohely-id').value; 
+    const asztalSzam = document.getElementById('asztal-szam-select').value; 
+    const datum = document.getElementById('asztal-datum').value;
+
+    console.log("Küldöm az adatokat:", {szorakozohelyId, asztalSzam, datum}); // Ez segít a debugolásban!
+
+    if (!szorakozohelyId || !asztalSzam || !datum) return;
+    try {
+        // 2. Lekérdezés az új "asztalos" végpontra
+        // Fontos: Itt 'asztalSzam'-ot küldünk, mert a Java Controllerben is azt várjuk!
+        const url = `http://localhost:8080/api/asztalok/foglalt-asztal-idopontok?szorakozohelyId=${szorakozohelyId}&asztalSzam=${asztalSzam}&datum=${datum}`;
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            console.error("Hiba a szerveroldalon:", response.status);
+            return;
+        }
+
+        const foglaltIdopontok = await response.json(); // Pl: ["18:00", "18:30"]
+
+        // 3. Az időpontválasztó legördülő menü frissítése
+        const idoSelect = document.getElementById('asztal-ido');
+        const opciok = idoSelect.options;
+
+        for (let i = 0; i < opciok.length; i++) {
+            let opcio = opciok[i];
+            let alapErtek = opcio.value; // Az időpont, pl: "19:00"
+
+            if (foglaltIdopontok.includes(alapErtek)) {
+                opcio.disabled = true; 
+                opcio.text = alapErtek + " (Foglalt ❌)";
+                opcio.style.color = "red";
+            } else {
+                opcio.disabled = false; 
+                opcio.text = alapErtek;
+                opcio.style.color = ""; 
+            }
+        }
+    } catch (error) {
+        console.error("Hiba az asztal időpontok lekérésekor:", error);
+    }
+}
+// Eseményfigyelők az asztalos bemenetekre:
+document.addEventListener('DOMContentLoaded', () => {
+    // Keresd meg ezeket a sorokat:
+    const asztalDatumMezo = document.getElementById('asztal-foglalas-datum');
+    const asztalValasztoMezo = document.getElementById('foglalas-asztal');
+
+    if (asztalDatumMezo) {
+        asztalDatumMezo.addEventListener('change', frissitFoglaltAsztalIdopontok);
+    }
+    if (asztalValasztoMezo) {
+        asztalValasztoMezo.addEventListener('change', frissitFoglaltAsztalIdopontok);
+    }
+});

@@ -1382,10 +1382,78 @@ DROP TABLE jatek_szorakozohelyhez;
 
 -- 2. Tegyük bele a hiányzó oszlopokat közvetlenül a jatekok táblába!
 ALTER TABLE jatekok
-ADD COLUMN szorakozohely_id int(11) NOT NULL
+ADD COLUMN szorakozohely_id int(11) NOT NULL,
 ADD COLUMN darab INT DEFAULT 1,
-ADD COLUMN ar_ora INT,
+ADD COLUMN ar_ora INT
 ADD COLUMN min_idotartam_perc INT DEFAULT 60;
+
+DROP TRIGGER IF EXISTS trg_jatek_foglalas_ins;
+DROP TRIGGER IF EXISTS trg_jatek_foglalas_upd;
+
+DELIMITER //
+
+-- 1. Az új INSERT Trigger
+CREATE TRIGGER trg_jatek_foglalas_ins
+BEFORE INSERT ON jatek_foglalasok
+FOR EACH ROW
+BEGIN
+  DECLARE kapacitas INT;
+
+  -- ITT A JAVÍTÁS: Már a 'jatekok' táblát kérdezzük!
+  SELECT darab INTO kapacitas
+  FROM jatekok
+  WHERE id = NEW.jatek_id AND szorakozohely_id = NEW.szorakozohely_id;
+
+  IF kapacitas IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nincs ilyen jatek ehhez a szorakozohelyhez.';
+  END IF;
+
+  IF (
+    SELECT COUNT(*)
+    FROM jatek_foglalasok jf
+    WHERE jf.szorakozohely_id = NEW.szorakozohely_id
+      AND jf.jatek_id = NEW.jatek_id
+      AND jf.torolve_at IS NULL
+      AND jf.allapot IN ('FÜGGŐ','JÓVÁHAGYVA')
+      AND jf.kezdet < NEW.vege
+      AND jf.vege > NEW.kezdet
+  ) >= kapacitas THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Utkozes: nincs szabad jatekelem ebben az idopontban.';
+  END IF;
+END//
+
+-- 2. Az új UPDATE Trigger
+CREATE TRIGGER trg_jatek_foglalas_upd
+BEFORE UPDATE ON jatek_foglalasok
+FOR EACH ROW
+BEGIN
+  DECLARE kapacitas INT;
+
+  -- ITT A JAVÍTÁS: Már a 'jatekok' táblát kérdezzük!
+  SELECT darab INTO kapacitas
+  FROM jatekok
+  WHERE id = NEW.jatek_id AND szorakozohely_id = NEW.szorakozohely_id;
+
+  IF kapacitas IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nincs ilyen jatek ehhez a szorakozohelyhez.';
+  END IF;
+
+  IF (
+    SELECT COUNT(*)
+    FROM jatek_foglalasok jf
+    WHERE jf.jatek_foglalas_id <> NEW.jatek_foglalas_id
+      AND jf.szorakozohely_id = NEW.szorakozohely_id
+      AND jf.jatek_id = NEW.jatek_id
+      AND jf.torolve_at IS NULL
+      AND jf.allapot IN ('FÜGGŐ','JÓVÁHAGYVA')
+      AND jf.kezdet < NEW.vege
+      AND jf.vege > NEW.kezdet
+  ) >= kapacitas THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Utkozes: nincs szabad jatekelem ebben az idopontban.';
+  END IF;
+END//
+
+DELIMITER ;
 
 
 

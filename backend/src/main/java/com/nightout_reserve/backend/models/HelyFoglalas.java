@@ -6,7 +6,6 @@ import com.nightout_reserve.backend.enums.Allapot;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.Table;
 
 
 @Entity
@@ -29,6 +28,7 @@ public class HelyFoglalas {
     private Integer letszam;
     private LocalDateTime kezdet;
     private LocalDateTime vege;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "allapot")
     private Allapot allapot;
@@ -36,6 +36,9 @@ public class HelyFoglalas {
 
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;
+
+    @Column(name = "torolve_at")
+    private LocalDateTime torolveAt;
 
     @Transient
     private String szorakozohelyNev ;

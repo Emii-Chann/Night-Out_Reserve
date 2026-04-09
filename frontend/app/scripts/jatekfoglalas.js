@@ -10,15 +10,46 @@ async function modalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
     document.getElementById('foglalas-szorakozohely-id').value = szorakozohelyId;
 
     const idoSelect = document.getElementById('foglalas-ido');
-    idoSelect.innerHTML = ''; // Kiürítjük, ha volt benne valami
+    idoSelect.innerHTML = ''; 
 
-    // Végigmegyünk a 24 órán, és minden órához hozzáadunk egy :00 és egy :30 opciót
-    for (let i = 0; i < 24; i++) {
-        let ora = i < 10 ? '0' + i : i; // Hogy 08 legyen, ne csak 8
+    // Ha véletlenül nincs nyitvatartás, visszaállunk a 0-24-es alapértelmezésre
+    if (!nyitvatartas || nyitvatartas === "Nincs megadva") {
+        for (let i = 0; i < 24; i++) {
+            let ora = i < 10 ? '0' + i : i;
+            idoSelect.innerHTML += `<option value="${ora}:00">${ora}:00</option>`;
+            idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
+        }
+    } else {
+        // --- AZ OKOS IDŐPONT GENERÁLÓ ---
+        const [nyit, zar] = nyitvatartas.split('-');
+        const [nyitOra, nyitPerc] = nyit.split(':').map(Number);
+        let [zarOra, zarPerc] = zar.split(':').map(Number);
 
-        idoSelect.innerHTML += `<option value="${ora}:00">${ora}:00</option>`;
-        idoSelect.innerHTML += `<option value="${ora}:30">${ora}:30</option>`;
+        // Mindent átváltunk percekbe a könnyebb számolásért
+        let nyitPercekben = nyitOra * 60 + nyitPerc;
+        let zarPercekben = zarOra * 60 + zarPerc;
+
+        // Az éjféli trükk: ha a záróra másnap van (pl. 18:00 - 02:00)
+        if (zarPercekben <= nyitPercekben) {
+            zarPercekben += 24 * 60;
+        }
+
+        // 30 perces lépésekkel végigmegyünk a nyitvatartáson
+        for (let i = nyitPercekben; i < zarPercekben; i += 30) {
+            // Visszaváltjuk a perceket óra:perc formátumra
+            let aktualisOra = Math.floor(i / 60) % 24; // A % 24 miatt a 25:00-ból 01:00 lesz!
+            let aktualisPerc = i % 60;
+
+            let oraStr = aktualisOra < 10 ? '0' + aktualisOra : aktualisOra;
+            let percStr = aktualisPerc === 0 ? '00' : aktualisPerc;
+
+            let formatalva = `${oraStr}:${percStr}`;
+            idoSelect.innerHTML += `<option value="${formatalva}">${formatalva}</option>`;
+        }
     }
+
+
+
 
     const jatekSelect = document.getElementById('foglalas-jatek');
     jatekSelect.innerHTML = '<option>Loading...</option>';
@@ -150,6 +181,8 @@ async function foglalasBekuldese() {
         vege: vegeISO,
     };
 
+    console.log("Mielőtt elküldöm a Java-nak:", foglalasAdatok);
+
     // 3. Küldés a Backendnek
     try {
         const response = await fetch('http://localhost:8080/api/jatekok/mentes', { // IDE A TE VÉGPONTOD KERÜLJÖN!
@@ -175,3 +208,59 @@ async function foglalasBekuldese() {
     }
 }
 
+// Ezt a függvényt hívjuk meg, ha módosul a dátum vagy a játék
+async function frissitFoglaltIdopontok() {
+    // ITT A JAVÍTÁS: A rejtett mezőből olvassuk ki a szórakozóhely ID-t!
+   const szorakozohelyId = document.getElementById('foglalas-szorakozohely-id').value;
+    const jatekId = document.getElementById('foglalas-jatek').value;
+    const datum = document.getElementById('foglalas-datum').value;
+
+    if (!szorakozohelyId || !jatekId || !datum) return;
+
+    try {
+        // 2. A fetch-ben is szorakozohelyId-t használunk a ${ }-ben!
+        // De a kérdőjel után az kell, amit a JAVA vár (ha a Java 'helyId'-t vár, akkor helyId=...)
+        const response = await fetch(`http://localhost:8080/api/jatekok/foglalt-idopontok?helyId=${szorakozohelyId}&jatekId=${jatekId}&datum=${datum}`);
+        
+        if (!response.ok) {
+            console.error("Szerver hiba:", response.status);
+            return;
+        }
+
+        const foglaltIdopontok = await response.json();
+        const idoSelect = document.getElementById('foglalas-ido');
+        const opciok = idoSelect.options;
+
+        for (let i = 0; i < opciok.length; i++) {
+            let opcio = opciok[i];
+            
+            // Ha az opcióban már benne van a (Foglalt) szöveg, akkor az alapÉrtéket tisztítsuk meg róla
+            let alapErtek = opcio.value; 
+
+            if (foglaltIdopontok.includes(alapErtek)) {
+                opcio.disabled = true; 
+                opcio.text = alapErtek + " (Foglalt ❌)";
+                opcio.style.color = "red";
+            } else {
+                opcio.disabled = false; 
+                opcio.text = alapErtek;
+                opcio.style.color = ""; 
+            }
+        }
+    } catch (error) {
+        console.error("Hiba az időpontok lekérésekor:", error);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const datumMezo = document.getElementById('foglalas-datum');
+    const jatekMezo = document.getElementById('foglalas-jatek');
+
+    if (datumMezo) {
+        datumMezo.addEventListener('change', frissitFoglaltIdopontok);
+    }
+    if (jatekMezo) {
+        jatekMezo.addEventListener('change', frissitFoglaltIdopontok);
+    }
+});

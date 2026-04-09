@@ -19,7 +19,6 @@ async function betoltHelyszinek() {
                         <p class="hely-nyitva"><i class="fa-regular fa-clock"></i> Open: ${hely.nyitvatartas || 'Not set'}</p>
                         <p class="hely-leiras">${hely.leiras || 'A premium nightlife venue waiting for your event.'}</p>
                         <div class="hely-footer">
-                            <span><i class="fa-solid fa-chair"></i> Tables: ${hely.asztalokSzama}</span>
                             
                             <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">Game booking</button>
                         </div>

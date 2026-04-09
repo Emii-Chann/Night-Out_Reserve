@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
 </head>
+
 <body>
-<div id="navbar-container"></div>
+    <div id="navbar-container"></div>
 
     <header class="hero">
         <div class="hero-content">
@@ -31,69 +33,72 @@
 
     <div id="asztal-helyszinek-lista"></div>
 
-        <div id="asztal-foglalas-modal" style="display: none;" class="modal">
-    <div class="modal-tartalom">
-        <h2 id="asztal-modal-cim">Table booking</h2>
-        
-        <form id="asztal-foglalas-form">
-            <label>Date</label>
-            <input type="date" id="asztal-datum" required>
+    <div id="asztal-foglalas-modal" style="display: none;" class="modal">
+        <div class="modal-tartalom">
+            <h2 id="asztal-modal-cim">Table booking</h2>
 
-            <label>Time</label>
-<select id="asztal-ido" required>
-    </select>
-            <label>Guests</label>
-            <input type="number" id="asztal-letszam" value="2" min="1" required>
+            <form id="asztal-foglalas-form">
+                <label>Date</label>
+                <input type="date" id="asztal-datum" required>
 
-            <label>Available tables</label>
-            <select id="asztal-szam-select" required>
+
+                <label>Guests</label>
+                <input type="number" id="asztal-letszam" value="2" min="1" required>
+
+                <label>Available tables</label>
+                <select id="asztal-szam-select" required>
                 </select>
 
-            <input type="hidden" id="asztal-szorakozohely-id">
+                <label>Time</label>
+                <select id="asztal-ido" required>
+                </select>
 
-            <button type="button" onclick="asztalFoglalasBekuldese()">Confirm booking</button>
-            <button type="button" onclick="asztalModalBezarasa()">Cancel</button>
-        </form>
+                <input type="hidden" id="asztal-szorakozohely-id">
+
+                <button type="button" onclick="asztalFoglalasBekuldese()">Confirm booking</button>
+                <button type="button" onclick="asztalModalBezarasa()">Cancel</button>
+            </form>
+        </div>
     </div>
-</div>
-    
-    
-          <footer class="footer">
-    <div class="footer-container">
 
-        <div class="footer-column">
-            <h4>Night-Out Reserve</h4>
-            <p>Premium booking for nightlife and experiences.</p>
+
+    <footer class="footer">
+        <div class="footer-container">
+
+            <div class="footer-column">
+                <h4>Night-Out Reserve</h4>
+                <p>Premium booking for nightlife and experiences.</p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Pages</h4>
+                <a href="./index.html">Home</a>
+                <a href="./rolunk.html">About</a>
+                <a href="./kapcsolat.html">Contact</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>Services</h4>
+                <a href="#">For Partners</a>
+                <a href="#">System Status</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <a href="#">Gift Card</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms of Use</a>
+            </div>
+
         </div>
 
-        <div class="footer-column">
-            <h4>Pages</h4>
-            <a href="./index.html">Home</a>
-            <a href="./rolunk.html">About</a>
-            <a href="./kapcsolat.html">Contact</a>
         </div>
-
-        <div class="footer-column">
-            <h4>Services</h4>
-            <a href="#">For Partners</a>
-            <a href="#">System Status</a>
-        </div>
-
-        <div class="footer-column">
-            <h4>Legal</h4>
-            <a href="#">Gift Card</a>
-            <a href="#">Privacy</a>
-            <a href="#">Terms of Use</a>
-        </div>
-
-        </div>
-
-    </div>
-</footer>
+    </footer>
     <script src="./scripts/Night-Out Reserve.js"></script>
-    <script src="./scripts/nav.js"></script>       
+    <script src="./scripts/nav.js"></script>
     <script src="./scripts/asztal_helyszinek.js"></script>
     <script src="./scripts/asztalfoglalas.js"></script>
 
 </body>
+
 </html>

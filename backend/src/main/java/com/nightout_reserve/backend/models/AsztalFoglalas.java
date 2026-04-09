@@ -6,7 +6,6 @@ import com.nightout_reserve.backend.enums.Allapot;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.Table;
 
 
 
@@ -40,13 +39,15 @@ public class AsztalFoglalas {
 
 
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "allapot")
     private Allapot allapot;
 
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;
+
+    @Column(name = "torolve_at")
+    private LocalDateTime torolveAt;
 
     @PrePersist
     protected void onCreate() {

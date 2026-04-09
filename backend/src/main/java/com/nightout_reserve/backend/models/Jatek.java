@@ -16,7 +16,7 @@ public class Jatek {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "szorakozohely_id")
     private Integer szorakozohelyId;

@@ -3,6 +3,8 @@ package com.nightout_reserve.backend.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,4 +21,14 @@ public interface AsztalFoglalasRepository extends JpaRepository<AsztalFoglalas, 
 
 
     List<AsztalFoglalas> findBySzorakozohelyId(Integer szorakozohelyId); 
+
+@Query("SELECT af FROM AsztalFoglalas af WHERE af.szorakozohelyId = :helyId " +
+       "AND af.asztalSzam = :asztalSzam " +
+       "AND af.allapot IN (com.nightout_reserve.backend.enums.Allapot.FUGGO, com.nightout_reserve.backend.enums.Allapot.JOVAHAGYVA) " +
+       "AND CAST(af.kezdet AS date) = :datum")
+List<AsztalFoglalas> findFoglalasokAdottNapon(
+    @Param("helyId") Integer helyId, 
+    @Param("asztalSzam") Integer asztalSzam, 
+    @Param("datum") LocalDate datum
+);
 }
