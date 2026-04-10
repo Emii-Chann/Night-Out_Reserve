@@ -20,14 +20,7 @@ async function handleLogin(event) {
         if (response.ok) {
             const token = await response.text();
             localStorage.setItem("token", token);
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: "Login successful!",
-                background: '#1e1e2d',
-                color: '#fff',
-                confirmButtonColor: '#8b5cf6'
-            });
+            alert("Login successful!");
             window.location.href = "index.html";
         } else {
             const errorMsg = await response.text();

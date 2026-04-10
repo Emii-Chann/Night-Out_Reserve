@@ -134,14 +134,7 @@ async function asztalFoglalasBekuldese() {
 
     
     if(!asztalSzam || !datum || !ido || !letszam) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: "Please fill all fields.",
-            background: '#1e1e2d',
-            color: '#fff',
-            confirmButtonColor: '#ef4444'
-        });
+        alert("Please fill all fields.");
         return;
     }
 
@@ -150,14 +143,7 @@ async function asztalFoglalasBekuldese() {
     const maxFerohely = kivalasztottOption.getAttribute('data-ferohely');
 
     if (maxFerohely && parseInt(letszam) > parseInt(maxFerohely)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: `This table allows maximum ${maxFerohely} people. Please choose a larger table or reduce the guest count.`,
-            background: '#1e1e2d',
-            color: '#fff',
-            confirmButtonColor: '#ef4444'
-        });
+        alert(`This table allows maximum ${maxFerohely} people. Please choose a larger table or reduce the guest count.`);
         return; // Megállítjuk a küldést
     }
 
@@ -167,14 +153,7 @@ async function asztalFoglalasBekuldese() {
     // --- ELLENŐRZÉSEK (ugyanaz a logika, mint a játékoknál) ---
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < new Date()) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: "You cannot book in the past.",
-            background: '#1e1e2d',
-            color: '#fff',
-            confirmButtonColor: '#ef4444'
-        });
+        alert("You cannot book in the past.");
         return;
     }
 
@@ -209,35 +188,14 @@ async function asztalFoglalasBekuldese() {
         });
 
         if (response.ok) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: "Table booking successful!",
-                background: '#1e1e2d',
-                color: '#fff',
-                confirmButtonColor: '#8b5cf6'
-            });
+            alert("Table booking successful!");
             asztalModalBezarasa();
         } else if (response.status === 409) {
             // Ha az asztal foglalt, ezt az üzenetet kapjuk a Spring Boot-tól
             const hibaSzoveg = await response.text();
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: hibaSzoveg,
-                background: '#1e1e2d',
-                color: '#fff',
-                confirmButtonColor: '#ef4444'
-            });
+            alert(hibaSzoveg);
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "An error occurred while saving.",
-                background: '#1e1e2d',
-                color: '#fff',
-                confirmButtonColor: '#ef4444'
-            });
+            alert("An error occurred while saving.");
         }
     } catch (hiba) {
         console.error(hiba);
