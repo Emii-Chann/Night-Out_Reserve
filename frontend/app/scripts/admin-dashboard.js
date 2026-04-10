@@ -123,8 +123,19 @@ async function updateReservationStatus(id, newStatus, tipus) {
 }
 
 async function deleteReservation(id, tipus) {
-    if (!confirm("Biztosan végleg törölni szeretnéd ezt a foglalást?")) return;
+    const result = await Swal.fire({ // NEM MŰKÖDIK
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#8b5cf6',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        background: '#1e1e2d',
+        color: '#fff'
+    });
 
+    if (result.isConfirmed) {
     try {
         const response = await fetch(`http://localhost:8080/api/admin/foglalasok/torles/${tipus}/${id}`, {
             method: 'DELETE'
@@ -137,7 +148,7 @@ async function deleteReservation(id, tipus) {
     } catch (error) {
         console.error("Hiba a törléskor:", error);
     }
-}
+}}
 
 // --- 4. RENDERELÉS ÉS INICIALIZÁLÁS ---
 async function renderReservations() {
