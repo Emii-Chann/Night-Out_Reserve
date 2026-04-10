@@ -1,5 +1,20 @@
 let aktualisNyitvatartas = "";
 
+let felId = null;
+
+// Dinamikusan kiolvassuk az ID-t a tokenből
+const token = localStorage.getItem("token");
+if (token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        felId = payload.userId; 
+        
+    } catch (error) {
+        console.error("Hiba a token dekódolásakor:", error);
+    }
+}
 
 async function asztalModalMegnyitasa(szorakozohely) {
     // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
@@ -124,6 +139,13 @@ function asztalModalBezarasa() {
 }
 
 async function asztalFoglalasBekuldese() {
+
+    if (!felId) {
+        // (Ezt majd lecserélheted SweetAlert-re!)
+        alert("Kérlek, lépj be a foglaláshoz!"); 
+        window.location.href = "login.html";
+        return;
+    }
     const szorakozohelyId = document.getElementById('asztal-szorakozohely-id').value;
     const asztalSzam = document.getElementById('asztal-szam-select').value;
     const letszam = document.getElementById('asztal-letszam').value;

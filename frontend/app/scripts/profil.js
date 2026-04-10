@@ -1,12 +1,26 @@
-// profil.js — used only by profil.html
-const felhasznaloId = 1;
+
+let felId = null;
+
+// Dinamikusan kiolvassuk az ID-t a tokenből
+const token = localStorage.getItem("token");
+if (token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        felId = payload.userId; 
+        
+    } catch (error) {
+        console.error("Hiba a token dekódolásakor:", error);
+    }
+}
 
 async function profilAdatokBetoltese() {
-    betoltFoglalasok(`http://localhost:8080/api/jatekok/felhasznalo/${felhasznaloId}`, "jatek-lista", "game");
+    betoltFoglalasok(`http://localhost:8080/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
 
-    betoltFoglalasok(`http://localhost:8080/api/asztalok/felhasznalo/${felhasznaloId}`, "asztal-lista", "table");
+    betoltFoglalasok(`http://localhost:8080/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
 
-    betoltFoglalasok(`http://localhost:8080/api/helyfoglalas/felhasznalo/${felhasznaloId}`, "hely-lista", "venue");
+    betoltFoglalasok(`http://localhost:8080/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
 }
 
 async function betoltFoglalasok(url, divId, tipus) {
@@ -56,7 +70,7 @@ async function betoltFoglalasok(url, divId, tipus) {
 async function felhasznaloAdatBetoltese() {
     try {
         // Lekérjük a usert a backendről az ID alapján
-        const response = await fetch(`http://localhost:8080/users/${felhasznaloId}`);
+        const response = await fetch(`http://localhost:8080/users/${felId}`);
         if (response.ok) {
             const user = await response.json();
             
@@ -87,7 +101,7 @@ async function profilAdatokMentese() {
 
     // Ezt a formátumot várja majd a Java!
     const adatok = {
-        id: felhasznaloId,
+        id: felId,
         nev: nev, // Itt is figyelj, hogy egyezzen a Java User/DTO változónevével!
         email: email,
         telefon: telefon

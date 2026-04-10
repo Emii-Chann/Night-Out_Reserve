@@ -1,5 +1,21 @@
 let aktualisNyitvatartas = "";
 
+let felId = null;
+
+// Dinamikusan kiolvassuk az ID-t a tokenből
+const token = localStorage.getItem("token");
+if (token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+
+        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        felId = payload.userId;
+
+    } catch (error) {
+        console.error("Hiba a token dekódolásakor:", error);
+    }
+}
+
 async function modalMegnyitasa(szorakozohely) {
     // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
     const szorakozohelyId = szorakozohely.id;
@@ -22,7 +38,7 @@ async function modalMegnyitasa(szorakozohely) {
     document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "Általános";
 
     // Tulajdonos adatai (ellenőrizzük, hogy létezik-e)
-  if (szorakozohely.tulajokAdatai) {
+    if (szorakozohely.tulajokAdatai) {
         // ITT FIGYELJ A VALTOZÓNEVEKRE: teljesNev és telefon!
         document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "Nincs adat";
         document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "Nincs adat";
@@ -35,13 +51,13 @@ async function modalMegnyitasa(szorakozohely) {
     // ---------------------------------------------------------
 
 
-   const maiDatum = new Date().toISOString().split('T')[0];
+    const maiDatum = new Date().toISOString().split('T')[0];
     const datumMezo = document.getElementById('foglalas-datum');
     datumMezo.setAttribute('min', maiDatum);
     datumMezo.value = maiDatum;
 
     const idoSelect = document.getElementById('foglalas-ido');
-    idoSelect.innerHTML = ''; 
+    idoSelect.innerHTML = '';
 
     // Ha véletlenül nincs nyitvatartás, visszaállunk a 0-24-es alapértelmezésre
     if (!nyitvatartas || nyitvatartas === "Nincs megadva") {
@@ -153,6 +169,14 @@ function modalBezarasa() {
     document.getElementById('jatek-foglalas-modal').style.display = 'none';
 }
 async function foglalasBekuldese() {
+
+
+    if (!felId) {
+        // (Ezt majd lecserélheted SweetAlert-re!)
+        alert("Kérlek, lépj be a foglaláshoz!"); 
+        window.location.href = "login.html";
+        return;
+    }
     // 1. Adatok összeszedése a formból
     const szorakozohelyId = document.getElementById('foglalas-szorakozohely-id').value;
     const jatekId = document.getElementById('foglalas-jatek').value;
@@ -242,7 +266,7 @@ async function foglalasBekuldese() {
 // Ezt a függvényt hívjuk meg, ha módosul a dátum vagy a játék
 async function frissitFoglaltIdopontok() {
     // ITT A JAVÍTÁS: A rejtett mezőből olvassuk ki a szórakozóhely ID-t!
-   const szorakozohelyId = document.getElementById('foglalas-szorakozohely-id').value;
+    const szorakozohelyId = document.getElementById('foglalas-szorakozohely-id').value;
     const jatekId = document.getElementById('foglalas-jatek').value;
     const datum = document.getElementById('foglalas-datum').value;
 
@@ -252,7 +276,7 @@ async function frissitFoglaltIdopontok() {
         // 2. A fetch-ben is szorakozohelyId-t használunk a ${ }-ben!
         // De a kérdőjel után az kell, amit a JAVA vár (ha a Java 'helyId'-t vár, akkor helyId=...)
         const response = await fetch(`http://localhost:8080/api/jatekok/foglalt-idopontok?helyId=${szorakozohelyId}&jatekId=${jatekId}&datum=${datum}`);
-        
+
         if (!response.ok) {
             console.error("Szerver hiba:", response.status);
             return;
@@ -264,18 +288,18 @@ async function frissitFoglaltIdopontok() {
 
         for (let i = 0; i < opciok.length; i++) {
             let opcio = opciok[i];
-            
+
             // Ha az opcióban már benne van a (Foglalt) szöveg, akkor az alapÉrtéket tisztítsuk meg róla
-            let alapErtek = opcio.value; 
+            let alapErtek = opcio.value;
 
             if (foglaltIdopontok.includes(alapErtek)) {
-                opcio.disabled = true; 
+                opcio.disabled = true;
                 opcio.text = alapErtek + " (Foglalt ❌)";
                 opcio.style.color = "red";
             } else {
-                opcio.disabled = false; 
+                opcio.disabled = false;
                 opcio.text = alapErtek;
-                opcio.style.color = ""; 
+                opcio.style.color = "";
             }
         }
     } catch (error) {
