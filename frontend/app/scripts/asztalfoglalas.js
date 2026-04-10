@@ -1,13 +1,45 @@
 let aktualisNyitvatartas = "";
 
-async function asztalModalMegnyitasa(szorakozohelyId, helyNev, nyitvatartas) {
-    aktualisNyitvatartas = nyitvatartas;
-    document.getElementById('asztal-foglalas-modal').style.display = 'flex';
-    document.getElementById('asztal-modal-cim').innerText = `${helyNev} - Table booking (${nyitvatartas})`;
+
+async function asztalModalMegnyitasa(szorakozohely) {
+    // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
+    const szorakozohelyId = szorakozohely.id;
+    const helyNev = szorakozohely.nev;
+    const nyitvatartas = szorakozohely.nyitvatartas; // Ha nálad máshogy hívják a modellt, itt írd át!
+
+    helyAktualisNyitvatartas = nyitvatartas;
+    document.getElementById('asztal-foglalas-modal').style.display = 'flex'; // Nálad flex van, ez tökéletes
+    document.getElementById('hely-modal-cim').innerText = `${helyNev} - Venue booking (${nyitvatartas || '0-24'})`;
     document.getElementById('asztal-szorakozohely-id').value = szorakozohelyId;
 
-    const maiDatum = new Date().toISOString().split('T')[0];
-    document.getElementById('asztal-datum').setAttribute('min', maiDatum);
+    console.log("Ezt az objektumot kapta a JS:", szorakozohely);
+
+    // ---------------------------------------------------------
+    // 2. ÚJ RÉSZ: JOBB OLDALI PANEL KITÖLTÉSE
+    // ---------------------------------------------------------
+    document.getElementById('info-hely-nev').innerText = helyNev || "Nincs megadva";
+    document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Nincs megadva";
+    document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Nincs megadva";
+    document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "Általános";
+
+    // Tulajdonos adatai (ellenőrizzük, hogy létezik-e)
+  if (szorakozohely.tulajokAdatai) {
+        // ITT FIGYELJ A VALTOZÓNEVEKRE: teljesNev és telefon!
+        document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "Nincs adat";
+        document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "Nincs adat";
+        document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "Nincs adat";
+    } else {
+        document.getElementById('info-tulaj-nev').innerText = "Nincs adat";
+        document.getElementById('info-tulaj-email').innerText = "Nincs adat";
+        document.getElementById('info-tulaj-tel').innerText = "Nincs adat";
+    }
+    // ---------------------------------------------------------
+
+
+   const maiDatum = new Date().toISOString().split('T')[0];
+    const datumMezo = document.getElementById('asztal-datum');
+    datumMezo.setAttribute('min', maiDatum);
+    datumMezo.value = maiDatum;
 
     const idoSelect = document.getElementById('asztal-ido');
     idoSelect.innerHTML = ''; 

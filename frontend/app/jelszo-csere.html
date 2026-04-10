@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles/reg.css">
+
 </head>
 
 <body>
@@ -29,8 +31,67 @@
 
         <input type="password" id="confirmPassword" placeholder="Confirm new password">
 
-        <button type="submit">Update password</button>
+        <button type="button" onclick="updatePassword()" class="te-gomb-osztalyod">
+            Update password
+        </button>
     </form>
 </body>
-</html>
 
+<script>
+
+    async function updatePassword() {
+        // 1. Kiolvassuk az input mezők értékeit (Cseréld le az ID-kat a sajátjaidra!)
+        const email = document.getElementById('email').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        // 2. Ellenőrzések
+        if (!email || !newPassword || !confirmPassword) {
+            alert("Kérlek, tölts ki minden mezőt!");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("A megadott jelszavak nem egyeznek!");
+            return;
+        }
+
+        // Opcionális: Minimum hossz ellenőrzése
+        const jelszoSzabaly = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    
+         if (!jelszoSzabaly.test(newPassword)) {
+        alert("Helytelen jelszó! Tartalmaznia kell minimum 1 nagybetűt, 1 kisbetűt és 1 számot!");
+        return; // Itt megállítjuk, el sem küldjük a backendnek
+    }
+
+        // 3. Adatok küldése a backendnek
+        const adatok = {
+            email: email,
+            newPassword: newPassword
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/auth/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(adatok)
+            });
+
+            if (response.ok) {
+                alert("A jelszavadat sikeresen frissítettük!");
+                // Visszairányítjuk a bejelentkezés oldalra
+                window.location.href = "login.html";
+            } else {
+                const hibaSzoveg = await response.text();
+                alert("Hiba: " + hibaSzoveg);
+            }
+        } catch (hiba) {
+            console.error("Hiba történt a kommunikáció során:", hiba);
+            alert("Nem sikerült kapcsolódni a szerverhez.");
+        }
+    }
+</script>
+
+</html>

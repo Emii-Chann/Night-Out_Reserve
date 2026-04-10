@@ -312,3 +312,81 @@ async function mentesUjEszkoz() {
     } catch (e) { console.error(e); }
 }
 
+
+async function tulajAdatMentese() {
+    // Adatok kiolvasása az űrlapból
+    const id = document.getElementById('tulaj-id').value;
+    const nev = document.getElementById('tulaj-nev').value;
+    const email = document.getElementById('tulaj-email').value;
+    const telefon = document.getElementById('tulaj-tel').value;
+
+    // Ellenőrzés, hogy nincs-e üres mező
+    if (!nev || !email || !telefon) {
+        alert("Kérlek, tölts ki minden adatot!");
+        return;
+    }
+
+    // Összerakjuk a JSON objektumot a Java számára
+    const adatok = {
+        id: id ? parseInt(id) : null, // Ha van ID, átalakítjuk számmá
+        teljesNev: nev,
+        email: email,
+        telefon: telefon
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/api/tulajdonosok/mentes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(adatok)
+        });
+
+        if (response.ok) {
+            alert("Az adataidat sikeresen frissítettük!");
+        } else {
+            alert("Hiba történt a mentés során.");
+        }
+    } catch (hiba) {
+        console.error("Hálózati hiba:", hiba);
+        alert("Nem sikerült kapcsolódni a szerverhez.");
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    // 1. Olvassuk ki az ID-t a localStorage-ből (Ahogy eddig is)
+    const bejelentkezettId = localStorage.getItem('nr_admin_id'); 
+
+    if (bejelentkezettId) {
+        // Beírjuk a rejtett mezőbe a mentéshez
+        document.getElementById('tulaj-id').value = bejelentkezettId;
+
+        // 2. OKOS RÉSZ: Lekérjük a meglévő adatokat a Java backendről
+        try {
+            const response = await fetch(`http://localhost:8080/api/tulajdonosok/${bejelentkezettId}`);
+            
+            if (response.ok) {
+                // Ha a Java talált adatot, kibontjuk
+                const adatok = await response.json();
+                
+                // És automatikusan beírjuk az input mezőkbe!
+                document.getElementById('tulaj-nev').value = adatok.teljesNev || "";
+                document.getElementById('tulaj-email').value = adatok.email || "";
+                document.getElementById('tulaj-tel').value = adatok.telefon || "";
+            } else {
+                // Ha 404-et kapunk (még nem mentett el semmit a múltban),
+                // akkor simán üresen hagyjuk az űrlapot, hadd töltse ki először.
+                console.log("Még nincsenek elmentett adatok ehhez a profilhoz.");
+            }
+        } catch (error) {
+            console.error("Hálózati hiba az adatok betöltésekor:", error);
+        }
+
+    } else {
+        console.warn("Nincs bejelentkezett tulajdonos a localStorage-ben!");
+    }
+});
+

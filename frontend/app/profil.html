@@ -140,6 +140,32 @@
                 <div id="hely-lista" class="profil-list-placeholder" role="status">Loading…</div>
             </section>
         </div>
+
+
+        <div class="profil-container">
+            
+            <section class="profil-section-card">
+                <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
+                <form id="profil-szerkeszto-form">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Username</label>
+                        <input type="text" id="profil-nev" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;" required>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Email Address</label>
+                        <input type="email" id="profil-email" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;" required>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Phone Number</label>
+                        <input type="text" id="profil-tel" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;">
+                    </div>
+                    <button type="button" onclick="profilAdatokMentese()" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">
+                        Save Changes
+                    </button>
+                </form>
+            </section>
+            <section class="profil-section-card">
+                <h2><i class="fa-solid fa-dice"></i> Game bookings</h2>
     </main>
 
     <script src="./scripts/nav.js"></script>

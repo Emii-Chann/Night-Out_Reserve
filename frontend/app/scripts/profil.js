@@ -52,4 +52,75 @@ async function betoltFoglalasok(url, divId, tipus) {
     }
 }
 
+// --- ÚJ: PROFIL ADATOK BETÖLTÉSE ---
+async function felhasznaloAdatBetoltese() {
+    try {
+        // Lekérjük a usert a backendről az ID alapján
+        const response = await fetch(`http://localhost:8080/users/${felhasznaloId}`);
+        if (response.ok) {
+            const user = await response.json();
+            
+            // ⚠️ FIGYELEM: Ha a Java modelledben 'teljesNev' vagy 'telefonszam' van, itt írd át!
+            document.getElementById('profil-nev').value = user.nev || user.teljesNev || ""; 
+            document.getElementById('profil-email').value = user.email || "";
+            document.getElementById('profil-tel').value = user.telefon || user.telefonszam || "";
+        }
+    } catch (hiba) {
+        console.error("Hiba a profil adatok betöltésekor:", hiba);
+    }
+}
+
+// --- ÚJ: PROFIL ADATOK MENTÉSE ---
+async function profilAdatokMentese() {
+    const nev = document.getElementById('profil-nev').value;
+    const email = document.getElementById('profil-email').value;
+    const telefon = document.getElementById('profil-tel').value;
+
+    if (!nev || !email) {
+        alert("Please fill in your name and email!");
+        return;
+    }
+     if (nev.length < 6) {
+        alert("6 karakter hosszú elgyen a username");
+        return;
+    }
+
+    // Ezt a formátumot várja majd a Java!
+    const adatok = {
+        id: felhasznaloId,
+        nev: nev, // Itt is figyelj, hogy egyezzen a Java User/DTO változónevével!
+        email: email,
+        telefon: telefon
+    };
+
+    try {
+        // Ezt a végpontot még meg kell csinálnod Javaban, ha nincs!
+        const response = await fetch('http://localhost:8080/users/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(adatok)
+        });
+
+        if (response.ok) {
+            alert("Profile updated successfully! For security reasons, please log in again.");
+            
+            // Kitöröljük a régi (elavult) tokent
+            localStorage.removeItem("token");
+            
+            // Visszadobjuk a login oldalra
+            window.location.href = "login.html"; 
+            
+        } else {
+            alert("Failed to update profile.");
+        }
+    } catch (hiba) {
+        console.error("Hiba a mentésnél:", hiba);
+        alert("Network error.");
+    }
+}
+
+// Módosítsuk a legalsó sort, hogy a foglalások MELLETT a profil adatokat is töltse be induláskor!
 profilAdatokBetoltese();
+felhasznaloAdatBetoltese(); // Ezt a sort add hozzá legalulra!
+
+

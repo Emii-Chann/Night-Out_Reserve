@@ -20,7 +20,7 @@ async function betoltHelyszinek() {
                         <p class="hely-leiras">${hely.leiras || 'A premium nightlife venue waiting for your event.'}</p>
                         <div class="hely-footer">
                             
-                            <button onclick="modalMegnyitasa(${hely.id}, '${hely.nev}', '${hely.nyitvatartas}')" class="btn-foglalas">Game booking</button>
+                            <button onclick='modalMegnyitasa(${JSON.stringify(hely)})' class="btn-foglalas">Game booking</button>
                         </div>
                     </div>
                 </div>

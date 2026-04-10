@@ -33,32 +33,53 @@
 
     <div id="asztal-helyszinek-lista"></div>
 
-    <div id="asztal-foglalas-modal" style="display: none;" class="modal">
-        <div class="modal-tartalom">
-            <h2 id="asztal-modal-cim">Table booking</h2>
+  <div id="asztal-foglalas-modal" style="display: none;" class="modal">
+        <div class="modal-tartalom" style="max-width: 800px;">
+            <h2 id="hely-modal-cim" style="text-align: center; margin-bottom: 20px;">Table booking</h2>
+            
+            <div style="display: flex; gap: 30px; align-items: flex-start;">
+                
+                <div style="flex: 1;">
+                    <h4 style="color: #bb86fc; margin-bottom: 15px;">Booking Details</h4>
+                    
+                    <form id="asztal-foglalas-form">
+                        <label>Date</label>
+                        <input type="date" id="asztal-datum" required>
 
-            <form id="asztal-foglalas-form">
-                <label>Date</label>
-                <input type="date" id="asztal-datum" required>
+                        <label>Guests</label>
+                        <input type="number" id="asztal-letszam" value="2" min="1" required>
 
+                        <label>Available tables</label>
+                        <select id="asztal-szam-select" required></select>
 
-                <label>Guests</label>
-                <input type="number" id="asztal-letszam" value="2" min="1" required>
+                        <label>Time</label>
+                        <select id="asztal-ido" required></select>
 
-                <label>Available tables</label>
-                <select id="asztal-szam-select" required>
-                </select>
+                        <input type="hidden" id="asztal-szorakozohely-id">
 
-                <label>Time</label>
-                <select id="asztal-ido" required>
-                </select>
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button type="button" onclick="asztalFoglalasBekuldese()">Confirm booking</button>
+                            <button type="button" onclick="asztalModalBezarasa()">Cancel</button>
+                        </div>
+                    </form>
+                </div> <div style="flex: 1; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid #444;">
+                    <h4 style="color: #bb86fc; margin-top: 0;">Venue Information</h4>
+                    <div id="helyszin-info-display">
+                        <p style="margin: 8px 0;"><strong>Name:</strong> <span id="info-hely-nev" style="color: #eee;">-</span></p>
+                        <p style="margin: 8px 0;"><strong>City:</strong> <span id="info-hely-varos" style="color: #eee;">-</span></p>
+                        <p style="margin: 8px 0;"><strong>Address:</strong> <span id="info-hely-cim" style="color: #eee;">-</span></p>
+                        <p style="margin: 8px 0;"><strong>Type:</strong> <span id="info-hely-tipus" style="color: #eee;">-</span></p>
+                    </div>
 
-                <input type="hidden" id="asztal-szorakozohely-id">
+                    <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
 
-                <button type="button" onclick="asztalFoglalasBekuldese()">Confirm booking</button>
-                <button type="button" onclick="asztalModalBezarasa()">Cancel</button>
-            </form>
-        </div>
+                    <h4 style="color: #bb86fc;">Owner Contact</h4>
+                    <div id="tulaj-info-display">
+                        <p style="margin: 8px 0;"><strong>Contact Person:</strong> <span id="info-tulaj-nev" style="color: #eee;">-</span></p>
+                        <p style="margin: 8px 0;"><strong>Email:</strong> <span id="info-tulaj-email" style="color: #eee;">-</span></p>
+                        <p style="margin: 8px 0;"><strong>Phone:</strong> <span id="info-tulaj-tel" style="color: #eee;">-</span></p>
+                    </div>
+                </div> </div> </div>
     </div>
 
 
