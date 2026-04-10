@@ -1384,7 +1384,7 @@ DROP TABLE jatek_szorakozohelyhez;
 ALTER TABLE jatekok
 ADD COLUMN szorakozohely_id int(11) NOT NULL,
 ADD COLUMN darab INT DEFAULT 1,
-ADD COLUMN ar_ora INT
+ADD COLUMN ar_ora INT,
 ADD COLUMN min_idotartam_perc INT DEFAULT 60;
 
 DROP TRIGGER IF EXISTS trg_jatek_foglalas_ins;
