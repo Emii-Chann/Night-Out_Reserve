@@ -20,7 +20,14 @@ async function handleLogin(event) {
         if (response.ok) {
             const token = await response.text();
             localStorage.setItem("token", token);
-            alert("Login successful!");
+            Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Login successfull',
+            background: '#1e1e2d', // Sötét háttér
+            color: '#fff',
+            confirmButtonColor: '#8b5cf6' // A te lila színed
+            });
             window.location.href = "index.html";
         } else {
             const errorMsg = await response.text();
