@@ -88,14 +88,28 @@ async function helyFoglalasBekuldese() {
     const megjegyzes = document.getElementById('hely-megjegyzes').value;
 
     if(!datum || !ido || !letszam || !idotartam) {
-        alert("Please fill all required fields.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Please fill all required fields.",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
     // --- ELLENŐRZÉSEK ---
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < new Date()) {
-        alert("You cannot book in the past.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "You cannot book in the past.",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -132,15 +146,36 @@ async function helyFoglalasBekuldese() {
         });
 
         if (response.ok) {
-            alert("Venue booking successful!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Venue booking successful!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
             helyModalBezarasa();
             document.getElementById('hely-foglalas-form').reset();
         } else if (response.status === 409) {
             // Ha a Java "Conflict" hibát dobott, kiírjuk a szövegét
             const hibaSzoveg = await response.text();
-            alert(hibaSzoveg);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: hibaSzoveg,
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         } else {
-            alert("An error occurred while saving.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "An error occurred while saving.",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (hiba) {
         console.error("Network error:", hiba);
@@ -177,12 +212,26 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     // -----------------------
 
     if (kezdetPercekben < nyitPercekben) {
-        alert(`The venue is not open yet. Opening time: ${nyit}`);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `The venue is not open yet. Opening time: ${nyit}`,
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return false;
     }
     
     if (vegPercekben > zarPercekben) {
-        alert(`This booking exceeds closing time. Closing time: ${zar}`);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `This booking exceeds closing time. Closing time: ${zar}`,
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return false;
     }
 

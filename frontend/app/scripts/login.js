@@ -20,11 +20,25 @@ async function handleLogin(event) {
         if (response.ok) {
             const token = await response.text();
             localStorage.setItem("token", token);
-            alert("Login successful!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Login successful!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
             window.location.href = "index.html";
         } else {
             const errorMsg = await response.text();
-            alert("Error: " + errorMsg);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Error: " + errorMsg,
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (err) {
         console.error("An error occurred:", err);

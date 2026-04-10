@@ -64,15 +64,36 @@ async function handleRegistration(event) {
         });
 
         if (response.ok) {
-            alert("Registration successful 🎉");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Registration successful 🎉",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
             window.location.href = "login.html";
         } else {
             // Megpróbáljuk kiolvasni a hibaüzenetet a bckendtől
             const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
-            alert("Error: " + (errorData.message || "Registration failed"));
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Error: " + (errorData.message || "Registration failed"),
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (error) {
         console.error("Network error:", error);
-        alert("Could not reach the server. Is Docker running?");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Could not reach the server. Is Docker running?",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
     }
 }

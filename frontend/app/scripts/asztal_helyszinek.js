@@ -20,10 +20,13 @@ async function asztalHelyszinekBetoltese() {
                     <div class="details">
                         <span><i class="fa-regular fa-clock"></i> ${hely.nyitvatartas || 'Not set'}</span>
                     </div>
-                    
-                    <button onclick='asztalModalMegnyitasa(${JSON.stringify(hely)})' class="btn-foglalas">
-                        Table booking
-                    </button>
+
+                    <div class="card-footer">
+                        <div></div>
+                        <button onclick='asztalModalMegnyitasa(${JSON.stringify(hely)})' class="btn-foglalas">
+                            Table booking
+                        </button>
+                    </div>
                     </div>
                 </div>
             `;

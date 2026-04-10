@@ -345,14 +345,6 @@ body .hero-content h1 {
     border: 1px solid #d8b4fe;
 }
 
-.rating {
-    background: rgba(0,0,0,0.7);
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-}
-.rating i { color: #fbbf24; margin-right: 5px; }
 
 .card-content {
     padding: 20px;
@@ -696,20 +688,6 @@ body .hero-content h1 {
     gap: 20px;
     padding: 20px;
 }
-.hely-kartya {
-    background: #2c2c2c;
-    color: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s;
-}
-
-.hely-kartya:hover {
-    transform: translateY(-5px);
-}
-
-.hely-info { padding: 15px; }
 .btn-foglalas {
     background-color: var(--primary-color);
     color: #ffffff;

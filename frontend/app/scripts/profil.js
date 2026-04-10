@@ -77,11 +77,25 @@ async function profilAdatokMentese() {
     const telefon = document.getElementById('profil-tel').value;
 
     if (!nev || !email) {
-        alert("Please fill in your name and email!");
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: "Please fill in your name and email!",
+          background: '#1e1e2d',
+          color: '#fff',
+          confirmButtonColor: '#ef4444'
+        });
         return;
     }
      if (nev.length < 6) {
-        alert("6 karakter hosszú elgyen a username");
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: "6 karakter hosszú elgyen a username",
+          background: '#1e1e2d',
+          color: '#fff',
+          confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -102,7 +116,14 @@ async function profilAdatokMentese() {
         });
 
         if (response.ok) {
-            alert("Profile updated successfully! For security reasons, please log in again.");
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: "Profile updated successfully! For security reasons, please log in again.",
+              background: '#1e1e2d',
+              color: '#fff',
+              confirmButtonColor: '#8b5cf6'
+            });
             
             // Kitöröljük a régi (elavult) tokent
             localStorage.removeItem("token");
@@ -111,11 +132,25 @@ async function profilAdatokMentese() {
             window.location.href = "login.html"; 
             
         } else {
-            alert("Failed to update profile.");
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "Failed to update profile.",
+              background: '#1e1e2d',
+              color: '#fff',
+              confirmButtonColor: '#ef4444'
+            });
         }
     } catch (hiba) {
         console.error("Hiba a mentésnél:", hiba);
-        alert("Network error.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: "Network error.",
+          background: '#1e1e2d',
+          color: '#fff',
+          confirmButtonColor: '#ef4444'
+        });
     }
 }
 

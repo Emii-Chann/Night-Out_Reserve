@@ -132,7 +132,14 @@ async function deleteReservation(id, tipus) {
         if (response.ok) {
             await renderReservations();
         } else {
-            alert("Hiba a törlés során!");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Hiba a törlés során!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (error) {
         console.error("Hiba a törléskor:", error);
@@ -223,7 +230,14 @@ async function mentesUjHely() {
     const tulajId = localStorage.getItem("nr_admin_id") || localStorage.getItem("nr_felhasznalo_id");
 
     if (!nev || !varos || !cim || !tulajId) {
-        alert("A név, város, cím megadása kötelező, és be kell jelentkezned!");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "A név, város, cím megadása kötelező, és be kell jelentkezned!",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -245,12 +259,26 @@ async function mentesUjHely() {
     });
 
         if (response.ok) {
-            alert("Szórakozóhely sikeresen felvéve!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Szórakozóhely sikeresen felvéve!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
             document.getElementById('ujHelyModal').style.display='none';
             window.location.reload(); 
         } else {
             const errorText = await response.text();
-            alert("Hiba történt a mentés során: " + errorText);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Hiba történt a mentés során: " + errorText,
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (error) {
         console.error("Mentési hiba:", error);
@@ -263,7 +291,14 @@ function nyitEszkozModal() {
     const helyNev = selector.options[selector.selectedIndex].text;
 
     if (!helyId || helyId === "all") {
-        alert("Kérlek, válassz ki egy konkrét szórakozóhelyet a listából!");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Kérlek, válassz ki egy konkrét szórakozóhelyet a listából!",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -304,10 +339,24 @@ async function mentesUjEszkoz() {
         });
 
         if (response.ok) {
-            alert("Eszköz sikeresen hozzáadva!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Eszköz sikeresen hozzáadva!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
             document.getElementById("ujEszkozModal").style.display = "none";
         } else {
-            alert("Hiba történt a mentés során.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Hiba történt a mentés során.",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (e) { console.error(e); }
 }
@@ -322,7 +371,14 @@ async function tulajAdatMentese() {
 
     // Ellenőrzés, hogy nincs-e üres mező
     if (!nev || !email || !telefon) {
-        alert("Kérlek, tölts ki minden adatot!");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Kérlek, tölts ki minden adatot!",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -344,13 +400,34 @@ async function tulajAdatMentese() {
         });
 
         if (response.ok) {
-            alert("Az adataidat sikeresen frissítettük!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Az adataidat sikeresen frissítettük!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
         } else {
-            alert("Hiba történt a mentés során.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Hiba történt a mentés során.",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (hiba) {
         console.error("Hálózati hiba:", hiba);
-        alert("Nem sikerült kapcsolódni a szerverhez.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Nem sikerült kapcsolódni a szerverhez.",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
     }
 }
 

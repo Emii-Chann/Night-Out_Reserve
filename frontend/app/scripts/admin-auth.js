@@ -94,7 +94,14 @@ if (setPasswordForm) {
 
             if (response.ok) {
                 // SIKER!
-                alert("Jelszó sikeresen módosítva!");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "Jelszó sikeresen módosítva!",
+                    background: '#1e1e2d',
+                    color: '#fff',
+                    confirmButtonColor: '#8b5cf6'
+                });
                 window.location.href = "./admin-dashboard.html";
             } else {
                 // HIBA (Pl. rossz régi jelszó)

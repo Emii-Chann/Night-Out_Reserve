@@ -138,12 +138,26 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     // -----------------------
 
     if (kezdetPercekben < nyitPercekben) {
-        alert(`The venue is not open yet. Opening time: ${nyit}`);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `The venue is not open yet. Opening time: ${nyit}`,
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return false;
     }
 
     if (vegPercekben > zarPercekben) {
-        alert(`This booking exceeds closing time. Closing time: ${zar}`);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `This booking exceeds closing time. Closing time: ${zar}`,
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return false;
     }
 
@@ -163,7 +177,14 @@ async function foglalasBekuldese() {
 
 
     if (!jatekId || !datum || !ido) {
-        alert("Please fill all fields.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "Please fill all fields.",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -191,7 +212,14 @@ async function foglalasBekuldese() {
     const most = new Date();
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < most) {
-        alert("You cannot book in the past.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "You cannot book in the past.",
+            background: '#1e1e2d',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+        });
         return;
     }
 
@@ -225,14 +253,35 @@ async function foglalasBekuldese() {
         });
 
         if (response.ok) {
-            alert("Sikeres foglalás!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Sikeres foglalás!",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
             modalBezarasa();
         } else if (response.status === 409) {
             // Ha a Java "Conflict" hibát dob, kiírjuk a szövegét
             const hibaSzoveg = await response.text();
-            alert(hibaSzoveg);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: hibaSzoveg,
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         } else {
-            alert("Hiba történt a mentés során.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Hiba történt a mentés során.",
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (hiba) {
         console.error(hiba);

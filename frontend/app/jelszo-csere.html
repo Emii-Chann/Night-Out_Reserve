@@ -8,6 +8,7 @@
     <title>Password reset</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./styles/reg.css">
 
 </head>
@@ -47,12 +48,26 @@
 
         // 2. Ellenőrzések
         if (!email || !newPassword || !confirmPassword) {
-            alert("Kérlek, tölts ki minden mezőt!");
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "Kérlek, tölts ki minden mezőt!",
+              background: '#1e1e2d',
+              color: '#fff',
+              confirmButtonColor: '#ef4444'
+            });
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            alert("A megadott jelszavak nem egyeznek!");
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "A megadott jelszavak nem egyeznek!",
+              background: '#1e1e2d',
+              color: '#fff',
+              confirmButtonColor: '#ef4444'
+            });
             return;
         }
 
@@ -60,7 +75,14 @@
         const jelszoSzabaly = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
     
          if (!jelszoSzabaly.test(newPassword)) {
-        alert("Helytelen jelszó! Tartalmaznia kell minimum 1 nagybetűt, 1 kisbetűt és 1 számot!");
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: "Helytelen jelszó! Tartalmaznia kell minimum 1 nagybetűt, 1 kisbetűt és 1 számot!",
+          background: '#1e1e2d',
+          color: '#fff',
+          confirmButtonColor: '#ef4444'
+        });
         return; // Itt megállítjuk, el sem küldjük a backendnek
     }
 
@@ -80,16 +102,37 @@
             });
 
             if (response.ok) {
-                alert("A jelszavadat sikeresen frissítettük!");
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: "A jelszavadat sikeresen frissítettük!",
+                  background: '#1e1e2d',
+                  color: '#fff',
+                  confirmButtonColor: '#8b5cf6'
+                });
                 // Visszairányítjuk a bejelentkezés oldalra
                 window.location.href = "login.html";
             } else {
                 const hibaSzoveg = await response.text();
-                alert("Hiba: " + hibaSzoveg);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: "Hiba: " + hibaSzoveg,
+                  background: '#1e1e2d',
+                  color: '#fff',
+                  confirmButtonColor: '#ef4444'
+                });
             }
         } catch (hiba) {
             console.error("Hiba történt a kommunikáció során:", hiba);
-            alert("Nem sikerült kapcsolódni a szerverhez.");
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "Nem sikerült kapcsolódni a szerverhez.",
+              background: '#1e1e2d',
+              color: '#fff',
+              confirmButtonColor: '#ef4444'
+            });
         }
     }
 </script>
