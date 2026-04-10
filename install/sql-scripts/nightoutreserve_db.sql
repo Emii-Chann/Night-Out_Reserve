@@ -1455,6 +1455,8 @@ END//
 
 DELIMITER ;
 
+ALTER TABLE jatekok DROP INDEX nev;
+
 
 
 
