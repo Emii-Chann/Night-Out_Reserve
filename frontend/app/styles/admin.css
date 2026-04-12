@@ -316,3 +316,49 @@ body {
     margin-left: 260px; /* Pontosan akkora, mint a sidebar szélessége */
     width: calc(100% - 260px);
 }
+
+.eszkozok-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: calc(100vh - 100px);
+    margin-left: 20%;
+}
+
+.eszkoz-oszlop {
+    flex: 1;
+    width: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.eszkoz-kartya {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.eszkoz-kartya:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.subtitle {
+    color: #8b5cf6; /* A lila színed */
+    font-size: 1.5rem;
+    font-weight: 300;
+    
+    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+.header-section{
+
+    margin-left: 45%;
+}

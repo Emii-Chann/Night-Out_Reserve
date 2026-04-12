@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin reservation management</title>
+    <title>Admin - Helyszínek Kezelése</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <link rel="stylesheet" href="./styles/admin.css">
+
 </head>
 
 <body>
+
     <div class="sidebar">
         <div class="sidebar-logo">
             <div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div>
@@ -21,6 +24,7 @@
         </div>
 
         <nav class="sidebar-nav">
+
 
             <select id="venueSelector" class="admin-venue-select"
                 style="margin-right: 15px; padding: 5px; border-radius: 5px;">
@@ -38,7 +42,6 @@
             <a href="./admin-profil.html" class="nav-profile-link">
                 <i class="fa fa-gamepad" aria-hidden="true"></i> Profil</a>
 
-
             <span id="adminNameDisplay" style="margin-right: 15px; color: #eee;"></span>
         </nav>
         <div class="sidebar-footer">
@@ -47,40 +50,36 @@
             </button>
         </div>
     </div>
+    <div class="header-section">
+        <h1>Eszközök kezelése</h1>
+        <h2 id="aktualis-helyszin-neve" class="subtitle">Betöltés...</h2>
+    </div>
+
+    <main class="admin-container" style="padding: 120px 20px;">
+        <div class="admin-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
 
 
 
+            <div class="eszkozok-container">
+                <div class="eszkoz-oszlop" id="asztalok-lista">
+                    <h2><i class="fas fa-chair"></i> Asztalaim</h2>
+                    <div class="lista-tartalom" id="asztalok-grid">
+                    </div>
+                </div>
 
-
-    <main class="admin-dashboard">
-        <header class="admin-dashboard-header">
-            <h1>Manage reservations</h1>
-            <p>Review incoming bookings and track accepted or rejected requests.</p>
-        </header>
-
-        <section class="admin-sections">
-            <div class="admin-section">
-                <h2>Incoming reservations</h2>
-                <div id="incomingReservations" class="admin-reservation-list"></div>
+                <div class="eszkoz-oszlop" id="jatekok-lista">
+                    <h2><i class="fas fa-gamepad"></i> Játékaim</h2>
+                    <div class="lista-tartalom" id="jatekok-grid">
+                    </div>
+                </div>
             </div>
 
-            <div class="admin-section">
-                <h2>Accepted reservations</h2>
-                <div id="acceptedReservations" class="admin-reservation-list"></div>
-            </div>
 
-            <div class="admin-section">
-                <h2>Rejected reservations</h2>
-                <div id="rejectedReservations" class="admin-reservation-list"></div>
-            </div>
-        </section>
+        </div>
+        <script src="./scripts/admin-eszkozok.js"></script>
+        <script src="./scripts/admin-dashboard.js"></script>
 
-
-
-
-    </main>
-
-    <script src="./scripts/admin-dashboard.js"></script>
 </body>
 
 </html>
