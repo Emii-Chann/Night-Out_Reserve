@@ -2,11 +2,7 @@
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
 
-    if (!szid || szid === "undefined" || szid === "null") {
-        console.error("Nincs szórakozóhely ID, jelentkezz be újra!");
-        window.location.href = "./admin-login.html";
-        return [];
-    }
+   
 
     try {
         const response = await fetch(`http://localhost:8080/api/admin/foglalasok/osszes?szid=${szid}`);
@@ -477,4 +473,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn("Nincs bejelentkezett tulajdonos a localStorage-ben!");
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Aktuális fájlnév lekérése (pl. admin-helyszinek.html)
+    const path = window.location.pathname;
+    const page = path.split("/").pop();
+
+    if (page === "admin-dashboard.html") {
+        document.getElementById("nav-dashboard").classList.add("active");
+    } else if (page === "admin-helyszinek.html") {
+        document.getElementById("nav-helyszinek").classList.add("active");
+    }
+});
+
+function kijelentkezes() {
+    localStorage.removeItem("nr_admin_id");
+    localStorage.removeItem("nr_szorakozohely_id");
+    window.location.href = "admin-login.html";
+}
 

@@ -1,5 +1,9 @@
 package com.nightout_reserve.backend.controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,18 +12,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.models.Szorakozohely;
+import com.nightout_reserve.backend.models.TulajokAdatai;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
+import com.nightout_reserve.backend.repositories.TulajokAdataiRepository;
 import com.nightout_reserve.backend.services.SzorakozohelyService;
 
 
@@ -42,7 +52,8 @@ public class SzorakozohelyController {
 
      @Autowired
     private JatekFoglalasRepository jatekrepo;
-    
+    @Autowired
+    private TulajokAdataiRepository tulajokAdataiRepository;
 
 
 
@@ -51,34 +62,49 @@ public class SzorakozohelyController {
 private SzorakozohelyService szorakozohelyService;
 
 @CrossOrigin(origins = "*") // Tedd ezt az osztály fölé
-@PostMapping("/szorakozohelyek/uj")
-public ResponseEntity<?> ujSzorakozohelyFelvetel(@RequestBody Map<String, String> body) {
-    try {
-        String nev = body.get("nev");
-        String varos = body.get("varos");
-        String cim = body.get("cim");
-        String leiras = body.get("leiras");
-        String nyitvatartas = body.get("nyitvatartas");
-        
-        // Számok konvertálása
-        Integer asztalokSzama = body.get("asztalok_szama") != null && !body.get("asztalok_szama").isEmpty() 
-            ? Integer.parseInt(body.get("asztalok_szama")) : 0;
-            
-        Integer tulajId = body.get("tulaj_id") != null 
-            ? Integer.parseInt(body.get("tulaj_id")) : null;
 
-        if (tulajId == null) {
-            return ResponseEntity.badRequest().body("Hiányzó tulajdonos azonosító!");
-        }
 
-        // Service hívása
-        szorakozohelyService.ujHelyMentes(nev, cim, varos, leiras, nyitvatartas, asztalokSzama, tulajId); 
 
-        return ResponseEntity.ok().body("Sikeres mentés!");
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hiba: " + e.getMessage());
+
+@PostMapping("/uj-hely-form-data")
+public ResponseEntity<?> ujHelyFormData(
+        @RequestParam("nev") String nev,
+        @RequestParam("varos") String varos,
+        @RequestParam("cim") String cim,
+        @RequestParam("leiras") String leiras,
+        @RequestParam("nyitvatartas") String nyitvatartas,
+        @RequestParam("asztalokSzama") Integer asztalokSzama,
+        @RequestParam("tulajId") Integer tulajId, // Ezt kapjuk a JS-ből
+        @RequestParam(value = "kep", required = false) MultipartFile kep) throws IOException {
+
+    Szorakozohely ujHely = new Szorakozohely();
+    ujHely.setNev(nev);
+    ujHely.setVaros(varos);
+    ujHely.setCim(cim);
+    ujHely.setLeiras(leiras);
+    ujHely.setNyitvatartas(nyitvatartas);
+    ujHely.setAsztalokSzama(asztalokSzama);
+    
+    TulajokAdatai tulaj = tulajokAdataiRepository.findById(tulajId)
+            .orElseThrow(() -> new RuntimeException("Tulajdonos nem található!"));
+    
+    // Beállítjuk a teljes objektumot
+    ujHely.setTulajokAdatai(tulaj);
+
+    if (kep != null && !kep.isEmpty()) {
+        String fajlNev = System.currentTimeMillis() + "_" + kep.getOriginalFilename();
+        Path utvonal = Paths.get("uploads/" + fajlNev);
+        Files.write(utvonal, kep.getBytes());
+        ujHely.setKeputvonal("/uploads/" + fajlNev);
     }
+
+    repo.save(ujHely);
+    return ResponseEntity.ok("Sikeres mentés!");
 }
+
+
+
+
 
     @Autowired
     private JatekRepository jatkrepo;
@@ -92,6 +118,81 @@ public ResponseEntity<?> ujSzorakozohelyFelvetel(@RequestBody Map<String, String
         return ResponseEntity.status(500).body(null);
     }
 }
+
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteHelyszin(@PathVariable Integer id) {
+    repo.deleteById(id);
+    return ResponseEntity.ok().build();
+}
+
+@PutMapping("/{id}")
+public ResponseEntity<Szorakozohely> updateHelyszin(
+        @PathVariable Integer id,
+        @RequestParam("nev") String nev,
+        @RequestParam("varos") String varos,
+        @RequestParam("cim") String cim,
+        @RequestParam("leiras") String leiras,
+        @RequestParam("nyitvatartas") String nyitvatartas,
+        @RequestParam(value = "kep", required = false) MultipartFile kep) throws IOException {
+
+    Szorakozohely regi = repo.findById(id).orElseThrow();
+    
+    // Alapadatok frissítése
+    regi.setNev(nev);
+    regi.setVaros(varos);
+    regi.setCim(cim);
+    regi.setLeiras(leiras);
+    regi.setNyitvatartas(nyitvatartas);
+
+    // Kép mentése, ha érkezett új fájl
+    if (kep != null && !kep.isEmpty()) {
+        // Létrehozunk egy egyedi fájlnevet
+        String fajlNev = id + "_" + System.currentTimeMillis() + "_" + kep.getOriginalFilename();
+        
+        // Meghatározzuk hova mentsük (pl. az uploads mappába)
+        // Fontos: a mappának léteznie kell!
+        Path utvonal = Paths.get("uploads/" + fajlNev);
+        Files.write(utvonal, kep.getBytes());
+        
+        // Elmentjük az útvonalat az adatbázisba
+        regi.setKeputvonal("/uploads/" + fajlNev);
+    }
+
+    return ResponseEntity.ok(repo.save(regi));
+}
+
+
+@GetMapping("/{id}")
+public ResponseEntity<Szorakozohely> getHelyszinById(@PathVariable Integer id) {
+    return repo.findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
+@GetMapping("/list/{tulajId}")
+public List<Szorakozohely> getHelyszinek(@PathVariable Integer tulajId) {
+    // Most már csak a beküldött ID-hoz tartozó helyeket kérjük le
+return repo.findByTulajokAdataiIdAndTorolveAtIsNull(tulajId);}
+
+@PostMapping("/{id}/kep-feltoltes")
+public ResponseEntity<?> kepFeltoltes(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+    try {
+        // 1. Mentsd el a fájlt egy mappába (pl. "uploads/")
+        String fileName = id + "_" + file.getOriginalFilename();
+        Path path = Paths.get("uploads/" + fileName);
+        Files.write(path, file.getBytes());
+
+        // 2. Frissítsd a helyszín adatát az adatbázisban
+        Szorakozohely hely = repo.findById(id).get();
+        hely.setKeputvonal("/uploads/" + fileName);
+        repo.save(hely);
+
+        return ResponseEntity.ok("Kép sikeresen feltöltve!");
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("Hiba a feltöltés során.");
+    }
+}
+
 
 
 

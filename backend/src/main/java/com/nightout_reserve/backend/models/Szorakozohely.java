@@ -29,11 +29,13 @@ public class Szorakozohely {
     @JoinColumn(name = "tulaj_id") // Ennek az oszlopnak lennie kell a 'szorakozohelyek' tábládban!
     @JsonIgnoreProperties({"letrehozvaAt"}) // Ezeket nem küldjük ki feleslegesen a frontendnek
     private TulajokAdatai tulajokAdatai;
+    
     private String varos;
     private String nev;
     private String cim;
     private String leiras;
     private String nyitvatartas;
+    private String keputvonal;
     
     // Hozzáadva a pontos oszlopnév
     @Column(name = "asztalok_szama")

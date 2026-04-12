@@ -9,9 +9,11 @@ async function asztalHelyszinekBetoltese() {
         helyszinekDiv.innerHTML = ''; // Kiürítjük betöltés előtt
 
         helyszinek.forEach(hely => {
+
+            const kepUrl = `http://localhost:8080${hely.keputvonal}`;
             helyszinekDiv.innerHTML += `
                 <div class="card">
-                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop');">
+                    <div class="card-image" style="background-image: url('${kepUrl}');">
                         <span class="tag">Table</span>
                     </div>
                     <div class="card-content">

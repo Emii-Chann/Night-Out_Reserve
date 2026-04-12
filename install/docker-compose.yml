@@ -22,6 +22,9 @@ services:
       - nightout-network
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      # A bal oldal a Windows mappád, a jobb oldal a Docker WORKDIR-je (/app) + az uploads
+      - ./backend/uploads:/app/uploads
     depends_on:
       - database
     environment:

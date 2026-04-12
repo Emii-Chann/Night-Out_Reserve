@@ -211,6 +211,7 @@ async function asztalFoglalasBekuldese() {
 
         if (response.ok) {
             alert("Table booking successful!");
+            location.reload();
             asztalModalBezarasa();
         } else if (response.status === 409) {
             // Ha az asztal foglalt, ezt az üzenetet kapjuk a Spring Boot-tól

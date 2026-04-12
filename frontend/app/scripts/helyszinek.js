@@ -7,9 +7,11 @@ async function betoltHelyszinek() {
         kontener.innerHTML = ""; 
 
         adatok.forEach(hely => {
+
+            const kepUrl = `http://localhost:8080${hely.keputvonal}`;
             kontener.innerHTML += `
                 <div class="card">
-                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop');">
+                    <div class="card-image" style="background-image: url('${kepUrl}');">
                         <span class="tag">Games</span>
                     </div>
                     <div class="card-content">

@@ -1322,19 +1322,16 @@ END //
 DELIMITER ;
 
 
-
+INSERT INTO tulajokadatai (id, teljes_nev, email, telefon, letrehozva_at) 
+VALUES (1, 'Új Tulajdonos', 'tulajdonos@gmail.com', '', NOW());
 
 
 INSERT INTO tulajokbelepes (tulaj_id, felhasznalonev, jelszo, utolso_belepes) 
 VALUES (1, 'tulajdonos@gmail.com', '$2a$12$m9rlaY65.eUtZUFyTaeTYeGK4cLSuZyyTSMh3Kky7T7KQa6HhBPMC', NOW());
 
 ALTER TABLE tulajokbelepes 
-ADD COLUMN szorakozohely_id INT,
-ADD CONSTRAINT fk_tulaj_hely 
-    FOREIGN KEY (szorakozohely_id) 
-    REFERENCES szorakozohelyek(id);
+ADD COLUMN szorakozohely_id INT NULL;
 
-UPDATE tulajokbelepes SET szorakozohely_id = 1 WHERE tulaj_id = 1;
 
 -- -------------------------------------------------------
 
@@ -1350,6 +1347,7 @@ ADD COLUMN szorakozohely_id int(11) NOT NULL,
 ADD COLUMN darab INT DEFAULT 1,
 ADD COLUMN ar_ora INT,
 ADD COLUMN min_idotartam_perc INT DEFAULT 60;
+
 
 DROP TRIGGER IF EXISTS trg_jatek_foglalas_ins;
 DROP TRIGGER IF EXISTS trg_jatek_foglalas_upd;
@@ -1420,6 +1418,9 @@ END//
 DELIMITER ;
 
 ALTER TABLE jatekok DROP INDEX nev;
+
+ALTER TABLE szorakozohelyek
+ADD COLUMN keputvonal VARCHAR(255) NULL;
 
 
 
