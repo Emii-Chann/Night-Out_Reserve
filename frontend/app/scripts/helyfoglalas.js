@@ -1,5 +1,22 @@
 let helyAktualisNyitvatartas = "";
 
+let felId = null;
+
+// Dinamikusan kiolvassuk az ID-t a tokenből
+const token = localStorage.getItem("token");
+if (token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        felId = payload.userId; 
+        
+    } catch (error) {
+        console.error("Hiba a token dekódolásakor:", error);
+    }
+}
+
+
 function helyModalMegnyitasa(szorakozohely) {
     // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
     const szorakozohelyId = szorakozohely.id;
@@ -80,6 +97,16 @@ function helyModalBezarasa() {
 }
 
 async function helyFoglalasBekuldese() {
+
+
+    if (!felId) {
+        // (Ezt majd lecserélheted SweetAlert-re!)
+        alert("Kérlek, lépj be a foglaláshoz!"); 
+        window.location.href = "login.html";
+        return;
+    }
+
+
     const szorakozohelyId = document.getElementById('hely-szorakozohely-id').value;
     const datum = document.getElementById('hely-datum').value;
     const ido = document.getElementById('hely-ido').value;
@@ -131,7 +158,7 @@ async function helyFoglalasBekuldese() {
     // A JSON felépítése (pontosan egyezik a Java HelyFoglalas modellel)
     const foglalasAdatok = {
         szorakozohelyId: parseInt(szorakozohelyId),
-        felhasznaloId: 1, // Fix azonosító egyelőre
+        felhasznaloId: felId,
         letszam: parseInt(letszam),
         kezdet: formatum(valasztottKezdet),
         vege: formatum(vegeDatumObj),
@@ -242,7 +269,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
 async function frissitFoglaltHelyIdopontok() {
     // Kérlek, ezeket az ID-kat igazítsd a helyfoglalós HTML fájlodhoz!
     const helyId = document.getElementById('hely-szorakozohely-id').value; 
-    const datum = document.getElementById('hely-foglalas-datum').value;
+    const datum = document.getElementById('hely-datum').value;
 
     // Itt most csak 2 adatot ellenőrzünk
     if (!helyId || !datum) return;
@@ -253,7 +280,7 @@ async function frissitFoglaltHelyIdopontok() {
         if (!response.ok) return; 
         
         const foglaltIdopontok = await response.json(); 
-        const idoSelect = document.getElementById('hely-foglalas-ido'); // A helyfoglalós <select> ID-ja!
+        const idoSelect = document.getElementById('hely-ido'); // A helyfoglalós <select> ID-ja!
         const opciok = idoSelect.options;
 
         for (let i = 0; i < opciok.length; i++) {

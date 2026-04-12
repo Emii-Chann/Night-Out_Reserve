@@ -1380,6 +1380,7 @@ DROP FOREIGN KEY fk_jatekfog_js_hely;
 -- 1. Dobjuk ki a felesleges kapcsolótáblát!
 DROP TABLE jatek_szorakozohelyhez;
 
+
 -- 2. Tegyük bele a hiányzó oszlopokat közvetlenül a jatekok táblába!
 ALTER TABLE jatekok
 ADD COLUMN szorakozohely_id int(11) NOT NULL,
