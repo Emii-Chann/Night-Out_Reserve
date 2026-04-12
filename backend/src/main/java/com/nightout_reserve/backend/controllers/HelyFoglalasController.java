@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nightout_reserve.backend.enums.Allapot;
 import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.repositories.HelyFoglalasRepository;
 import com.nightout_reserve.backend.services.HelyFoglalasService;
@@ -65,5 +66,25 @@ public class HelyFoglalasController {
             }
         }
         return ResponseEntity.ok(foglaltPercek);
+    }
+
+
+    @PutMapping("/lemondas/{id}")
+    public ResponseEntity<String> lemondHelyFoglalas(@PathVariable Integer id) {
+        try {
+            // 1. Megkeressük a foglalást
+            HelyFoglalas foglalas = helyFoglalasRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
+
+            // 2. Átállítjuk a státuszt
+                foglalas.setAllapot(Allapot.LEMONDVA);           
+
+            // 3. Elmentjük
+            helyFoglalasRepository.save(foglalas);
+
+            return ResponseEntity.ok("Sikeres lemondás!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Hiba történt a lemondás során.");
+        }
     }
 }

@@ -1322,44 +1322,7 @@ END //
 DELIMITER ;
 
 
-INSERT INTO NightoutReserve_DB.tulajokadatai 
-    (teljes_nev, email, telefon,letrehozva_at)
-VALUES
-    ('Kovács Péter', 'kovacs.peter@peldamail.hu', '+36301234567', CURRENT_TIMESTAMP),
-    ('Nagy Anna', 'anna.nagy@peldamail.hu', '+36209876543',CURRENT_TIMESTAMP),
-    ('Szabó Gábor', 'szabo.gabor@peldamail.hu', '+36705554433', CURRENT_TIMESTAMP),
-    ('Tóth Zoltán', 'toth.zoltan@peldamail.hu', '+36301112233',CURRENT_TIMESTAMP);
 
-
-INSERT INTO NightoutReserve_DB.szorakozohelyek 
-    (tulaj_id, nev, cim, varos, leiras, nyitvatartas, asztalok_szama, letrehozva_at, torolve_at)
-VALUES
-    (1, 'Neon Bár', 'Király utca 12.', 'Pécs', 'Hangulatos koktélbár a belvárosban élőzenével.', '18:00 - 02:00', 15, CURRENT_TIMESTAMP, NULL),
-    (2, 'Club Horizon', 'Petőfi Sándor sugárút 44.', 'Pécs', 'A város legnagyobb elektronikus zenei klubja.', '22:00 - 05:00', 30, CURRENT_TIMESTAMP, NULL),
-    (3, 'Pince Borozó', 'Zsolnay Vilmos utca 8.', 'Pécs', 'Klasszikus borozó helyi borkülönlegességekkel.', '16:00 - 23:00', 10, CURRENT_TIMESTAMP, NULL),
-    (1, 'Skyline Rooftop', 'Váci út 1.', 'Pécs', 'Exkluzív tetőterasz csodás kilátással és prémium italokkal.', '17:00 - 01:00', 25, CURRENT_TIMESTAMP, NULL),
-    (4, 'Retro Kert', 'Kossuth Lajos tér 5.', 'Pécs', 'Szabadtéri szórakozóhely a 80-as és 90-es évek slágereivel.', '19:00 - 04:00', 40, CURRENT_TIMESTAMP, NULL);
-
-
--- 1. Játékok létrehozása
-INSERT INTO NightoutReserve_DB.jatekok (nev, leiras) VALUES 
-('Billiárd', 'Professzionális 9 lábas versenyasztal.'),
-('Csocsó', 'Garlando versenycsocsó.'),
-('Pingpong', 'Kiváló minőségű beltéri asztal.');
-
--- 2. Játékok hozzárendelése a szórakozóhelyhez (szorakozohely_id = 1)
--- Feltételezzük, hogy a játékok id-ja 1, 2, 3 lett.
-INSERT INTO NightoutReserve_DB.jatek_szorakozohelyhez 
-(szorakozohely_id, jatek_id, darab, ar_ora, min_idotartam_perc) VALUES 
-(1, 1, 3, 2500, 60), -- 3 db billiárd, 2500 Ft/óra, min 1 óra
-(1, 2, 2, 1500, 30), -- 2 db csocsó, 1500 Ft/óra, min 30 perc
-(1, 3, 1, 2000, 60); -- 1 db pingpong, 2000 Ft/óra, min 1 óra
-
-INSERT INTO NightoutReserve_DB.asztalok (szorakozohely_id, asztal_szam, ferohely) VALUES 
-(1, 10, 2),
-(1, 11, 4),
-(1, 12, 6),
-(1, 13, 2);
 
 
 INSERT INTO tulajokbelepes (tulaj_id, felhasznalonev, jelszo, utolso_belepes) 

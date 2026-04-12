@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nightout_reserve.backend.enums.Allapot;
 import com.nightout_reserve.backend.models.Asztal;
 import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.models.HelyFoglalas;
@@ -100,8 +101,28 @@ private void hozzaadIdoszeleteket(List<String> lista, LocalDateTime start, Local
     }
 }
 
+    @PutMapping("/lemondas/{id}")
+    public ResponseEntity<String> lemondAsztalFoglalas(@PathVariable Integer id) {
+        try {
+            // 1. Megkeressük a foglalást
+            AsztalFoglalas foglalas = asztalFoglalasRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
+
+            // 2. Átállítjuk a státuszt
+                foglalas.setAllapot(Allapot.LEMONDVA);           
+
+            // 3. Elmentjük
+            asztalFoglalasRepository.save(foglalas);
+
+            return ResponseEntity.ok("Sikeres lemondás!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Hiba történt a lemondás során.");
+        }
+    }
+}
+
     
 
 
-}
+
 

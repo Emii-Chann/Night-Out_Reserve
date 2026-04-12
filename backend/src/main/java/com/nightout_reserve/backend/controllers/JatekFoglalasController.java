@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nightout_reserve.backend.enums.Allapot;
 import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.models.JatekFoglalas;
@@ -101,5 +102,28 @@ public class JatekFoglalasController {
     }
 
 
+    
+        @PutMapping("/lemondas/{id}")
+        public ResponseEntity<String> lemondHelyFoglalas(@PathVariable Integer id) {
+            try {
+                // 1. Megkeressük a foglalást
+                JatekFoglalas foglalas = jatekFoglalasRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
+    
+                // 2. Átállítjuk a státuszt az ENUM használatával!
+                // Itt a "LEMONDVA" helyett az Enum pontos értékét adjuk meg:
+                foglalas.setAllapot(Allapot.LEMONDVA); 
+    
+                // 3. Elmentjük
+                jatekFoglalasRepository.save(foglalas);
+    
+                return ResponseEntity.ok("Sikeres lemondás!");
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Hiba történt a lemondás során.");
+            }
+    
 
+
+
+}
 }

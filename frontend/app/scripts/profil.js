@@ -43,17 +43,21 @@ async function betoltFoglalasok(url, divId, tipus) {
                 : "";
 
             listaDiv.innerHTML += `
-                <div class="profil-booking-card">
+                <div class="profil-booking-card" style="position: relative;">
+                    
+                    ${(f.allapot !== 'LEMONDVA' && f.allapot !== 'ELUTASITVA') ? 
+                        `<button onclick="foglalasLemondasa(${f.id}, '${tipus}')" 
+                                style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s;">
+                            <i class="fa-solid fa-xmark"></i> Cancel
+                        </button>` 
+                    : ""}
+
                     <p><strong>Time:</strong> ${kezdet}${vegeTime ? ` – ${vegeTime}` : ""}</p>
-                    <p><strong>Status:</strong> ${f.allapot}</p>
+                    <p><strong>Status:</strong> <span style="color: ${f.allapot === 'LEMONDVA' ? '#ef4444' : 'inherit'}">${f.allapot}</span></p>
                     
                     ${f.szorakozohelyNev ? `<p><strong>Venue:</strong> ${f.szorakozohelyNev}</p>` : ""}
-                    
                     ${f.jatekNev ? `<p><strong>Game:</strong> ${f.jatekNev}</p>` : ""}
-                    
-                    
                     ${f.asztalSzam ? `<p><strong>Table:</strong> ${f.asztalSzam}</p>` : ""}
-                    
                     ${f.letszam ? `<p><strong>Guests:</strong> ${f.letszam}</p>` : ""}
                     <hr>
                 </div>
@@ -71,14 +75,17 @@ async function felhasznaloAdatBetoltese() {
     try {
         // Lekérjük a usert a backendről az ID alapján
         const response = await fetch(`http://localhost:8080/users/${felId}`);
+
+        
         if (response.ok) {
             const user = await response.json();
             
+            console.log("Ezt a felhasználót küldte a Java:", user);
             // ⚠️ FIGYELEM: Ha a Java modelledben 'teljesNev' vagy 'telefonszam' van, itt írd át!
-            document.getElementById('profil-nev').value = user.nev || user.teljesNev || ""; 
+            document.getElementById('profil-nev').value = user.username || ""; 
             document.getElementById('profil-email').value = user.email || "";
-            document.getElementById('profil-tel').value = user.telefon || user.telefonszam || "";
-        }
+            document.getElementById('profil-tel').value = user.phone || "";
+                    }
     } catch (hiba) {
         console.error("Hiba a profil adatok betöltésekor:", hiba);
     }
@@ -168,8 +175,61 @@ async function profilAdatokMentese() {
     }
 }
 
-// Módosítsuk a legalsó sort, hogy a foglalások MELLETT a profil adatokat is töltse be induláskor!
-profilAdatokBetoltese();
-felhasznaloAdatBetoltese(); // Ezt a sort add hozzá legalulra!
+async function foglalasLemondasa(id, tipus) {
+    // 1. Biztosan le akarja mondani? Kérdezzünk rá!
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to cancel this booking?",
+        icon: 'warning',
+        showCancelButton: true,
+        background: '#1e1e2d',
+        color: '#fff',
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#4b5563',
+        confirmButtonText: 'Yes, cancel it!'
+    });
+
+    if (!result.isConfirmed) return; // Ha a 'Mégse'-re nyom, kilépünk
+
+    // 2. Melyik Java végpontot kell hívnunk?
+    let vegpont = "";
+    if (tipus === "venue") vegpont = "helyfoglalas";
+    else if (tipus === "table") vegpont = "asztalok"; // vagy ahogy nálad van
+    else if (tipus === "game") vegpont = "jatekok";   // vagy ahogy nálad van
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/${vegpont}/lemondas/${id}`, {
+            method: 'PUT', // Frissítjük az adatot
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}` // Biztonság kedvéért küldjük a tokent!
+            }
+        });
+
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Cancelled!',
+                text: 'Your booking has been cancelled.',
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6'
+            });
+            
+            // Frissítjük a listákat, hogy azonnal eltűnjön a gomb és átíródjon a státusz!
+            profilAdatokBetoltese(); 
+        } else {
+            Swal.fire({ icon: 'error', title: 'Oops...', text: 'Something went wrong.' });
+        }
+    } catch (error) {
+        console.error("Hiba a lemondásnál:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (felId) { // Csak akkor töltünk be bármit, ha van érvényes ID
+        profilAdatokBetoltese();
+        felhasznaloAdatBetoltese(); 
+    }
+});
 
 

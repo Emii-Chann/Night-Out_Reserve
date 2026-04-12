@@ -89,6 +89,8 @@ function helyModalMegnyitasa(szorakozohely) {
             let formatalva = `${oraStr}:${percStr}`;
             idoSelect.innerHTML += `<option value="${formatalva}">${formatalva}</option>`;
         }
+
+        frissitFoglaltHelyIdopontok();
     }
 }
 
@@ -267,27 +269,30 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
 
 
 async function frissitFoglaltHelyIdopontok() {
-    // Kérlek, ezeket az ID-kat igazítsd a helyfoglalós HTML fájlodhoz!
     const helyId = document.getElementById('hely-szorakozohely-id').value; 
     const datum = document.getElementById('hely-datum').value;
 
-    // Itt most csak 2 adatot ellenőrzünk
     if (!helyId || !datum) return;
 
     try {
-        // Hívjuk az egyszerűsített URL-t:
-        const response = await fetch(`http://localhost:8080/api/foglalt-hely-idopontok?szorakozohelyId=${helyId}&datum=${datum}`);
+        const response = await fetch(`http://localhost:8080/api/helyfoglalas/foglalt-hely-idopontok?szorakozohelyId=${helyId}&datum=${datum}`);
         if (!response.ok) return; 
         
-        const foglaltIdopontok = await response.json(); 
-        const idoSelect = document.getElementById('hely-ido'); // A helyfoglalós <select> ID-ja!
+        const foglaltIdopontokBackend = await response.json(); 
+        
+        // --- EZ A VARÁZSLAT HIÁNYZOTT! ---
+        // Átalakítjuk a "18:30:00"-kat "18:30"-ra, hogy passzoljon a HTML-hez
+        const tisztaFoglaltIdopontok = foglaltIdopontokBackend.map(ido => ido.substring(0, 5));
+
+        const idoSelect = document.getElementById('hely-ido'); 
         const opciok = idoSelect.options;
 
         for (let i = 0; i < opciok.length; i++) {
             let opcio = opciok[i];
             let alapErtek = opcio.value; 
 
-            if (foglaltIdopontok.includes(alapErtek)) {
+            // ITT MOST MÁR A TISZTÍTOTT TÖMBÖT NÉZZÜK!
+            if (tisztaFoglaltIdopontok.includes(alapErtek)) {
                 opcio.disabled = true; 
                 opcio.text = alapErtek + " (Foglalt ❌)";
                 opcio.style.color = "red";

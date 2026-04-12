@@ -198,7 +198,7 @@ async function asztalFoglalasBekuldese() {
         szorakozohelyId: parseInt(szorakozohelyId),
         asztalSzam: parseInt(asztalSzam),
         letszam: parseInt(letszam),
-        felhasznaloId: 1, 
+        felhasznaloId: felId, 
         kezdet: formatum(valasztottKezdet),
         vege: formatum(vegeDatumObj),
     };

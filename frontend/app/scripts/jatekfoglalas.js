@@ -259,7 +259,7 @@ async function foglalasBekuldese() {
     const foglalasAdatok = {
         szorakozohelyId: parseInt(szorakozohelyId),
         jatekId: parseInt(jatekId),
-        felhasznaloId: 1, // KÉSŐBB: Ezt a bejelentkezett user tokenjéből kell kiszedni!
+        felhasznaloId: felId, // KÉSŐBB: Ezt a bejelentkezett user tokenjéből kell kiszedni!
         kezdet: kezdetISO, // Itt kezdetISO-t használunk
         vege: vegeISO,
     };
