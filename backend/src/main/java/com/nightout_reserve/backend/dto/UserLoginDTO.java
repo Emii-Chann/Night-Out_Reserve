@@ -13,7 +13,7 @@ public class UserLoginDTO {
     private String usernameIn;
 
     @NotNull
-    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]+$", message="Helytelen jelszó (minimum 1 nagy-kisbetű és 1 szám)")
+   @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$", message = "Helytelen jelszó (minimum 1 nagy-kisbetű és 1 szám)")
     @Size(min = 8, message = "A jelszavad legyen legalább 8 karakter")
     @Getter @Setter
     private String passwordIn;

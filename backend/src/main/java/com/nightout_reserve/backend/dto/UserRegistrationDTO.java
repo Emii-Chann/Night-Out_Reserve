@@ -26,7 +26,6 @@ public class UserRegistrationDTO {
 
     @NotBlank(message = "A jelszó nem lehet üres")
     @Size(min = 8, message = "A jelszónak legalább 8 karakternek kell lennie")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", 
-             message = "A jelszónak tartalmaznia kell kisbetűt, nagybetűt és számot")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$", message = "Helytelen jelszó (minimum 1 nagy-kisbetű és 1 szám)")
     private String password;
 }

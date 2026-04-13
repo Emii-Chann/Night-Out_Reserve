@@ -183,17 +183,33 @@ async function renderReservations() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Felhasználónév kiírása
+    // 1. Felhasználónév kiírása
     const adminName = localStorage.getItem("nr_current_admin");
     const adminDisplay = document.getElementById("adminNameDisplay");
     if (adminDisplay && adminName) adminDisplay.textContent = adminName;
 
-    // 2. Legördülő menü (Dropdown) logikája
+    // 2. Alapadatok kiolvasása (CSAK EGYSZER deklaráljuk őket!)
     const venueSelector = document.getElementById("venueSelector");
     const helyekListaJson = localStorage.getItem("nr_helyek_lista");
     const aktivSzid = localStorage.getItem("nr_szorakozohely_id");
+    const helyszinDisplay = document.getElementById("aktualis-helyszin-neve");
 
+    // --- DINAMIKUS NÉVKIÍRÁS (A lista alapján) ---
+    if (helyszinDisplay && helyekListaJson && aktivSzid) {
+        const helyek = JSON.parse(helyekListaJson);
+        const aktualisHely = helyek.find(h => h.id.toString() === aktivSzid);
+        
+        if (aktualisHely) {
+            helyszinDisplay.textContent = aktualisHely.nev;
+            localStorage.setItem("nr_szorakozohely_nev", aktualisHely.nev);
+        }
+    }
+
+    // --- LEGERDÜLŐ MENÜ FELTÖLTÉSE ---
     if (venueSelector && helyekListaJson) {
         const helyek = JSON.parse(helyekListaJson);
+        venueSelector.innerHTML = ""; // Alaphelyzetbe állítás
+        
         helyek.forEach(hely => {
             const option = document.createElement("option");
             option.value = hely.id;
@@ -203,10 +219,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         venueSelector.addEventListener("change", (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
             localStorage.setItem("nr_szorakozohely_id", e.target.value);
+            localStorage.setItem("nr_szorakozohely_nev", selectedOption.text);
             window.location.reload(); 
         });
     }
+
 
     // 3. Kijelentkezés logikája
     const logoutBtn = document.getElementById("logoutBtn");
@@ -220,6 +239,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 4. Foglalások betöltése
     await renderReservations();
 });
+
 
 
 
@@ -266,6 +286,29 @@ async function mentesUjHely() {
     });
 
         if (response.ok) {
+
+                try {
+                // 1. Kinyerjük a backendtől kapott új helyszín adatait (ebben már benne van a generált ID!)
+                const ujHelyVisszajon = await response.json();
+                
+                // 2. Lekérjük az eddigi listát a memóriából
+                let eddigiHelyek = JSON.parse(localStorage.getItem("nr_helyek_lista")) || [];
+                
+                // 3. Belerakjuk az új helyet a listába
+                eddigiHelyek.push(ujHelyVisszajon);
+                
+                // 4. Visszamentjük a memóriába
+                localStorage.setItem("nr_helyek_lista", JSON.stringify(eddigiHelyek));
+
+                // 5. Opcionális: Legyen rögtön az új hely az aktív kiválasztott hely!
+                localStorage.setItem("nr_szorakozohely_id", ujHelyVisszajon.id);
+                localStorage.setItem("nr_szorakozohely_nev", ujHelyVisszajon.nev);
+
+            } catch (storageError) {
+                console.warn("Nem sikerült a listát frissíteni, lehet nem JSON-t küld a backend:", storageError);
+            }
+            // --- ÚJ RÉSZ VÉGE ---
+            
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',

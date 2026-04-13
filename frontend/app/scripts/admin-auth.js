@@ -39,6 +39,7 @@ if (adminLoginForm) {
         
         // Alapértelmezettként az első hely ID-ját állítjuk be aktívnak
         localStorage.setItem("nr_szorakozohely_id", adminData.szorakozohelyek[0].id);
+        
     } else {
         console.warn("Ennek a tulajnak még nincs egyetlen szórakozóhelye sem!");
     }
