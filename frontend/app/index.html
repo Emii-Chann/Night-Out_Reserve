@@ -16,7 +16,7 @@
 
 async function betoltHelyszinekreel() {
     try {
-        const response = await fetch('http://localhost:8080/api/helyszinek/list');
+        const response = await fetch('http://104.248.22.60:8080/api/helyszinek/list');
         const adatok = await response.json();
 
         const kontener = document.getElementById('helyszinek-gridreel');

@@ -75,10 +75,34 @@
                     <div class="lista-tartalom" id="jatekok-grid">
                     </div>
                 </div>
-            </div>
-
-
+            </div>  
         </div>
+
+
+
+        <div id="szerkesztEszkozModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('szerkesztEszkozModal').style.display='none'">&times;</span>
+        <h2>Eszköz szerkesztése</h2>
+        <input type="hidden" id="edit-id"> <input type="hidden" id="edit-tipus"> <div id="edit-asztalMezok">
+            <label>Asztal száma:</label>
+            <input type="number" id="edit-asztalSzam">
+            <label>Férőhely:</label>
+            <input type="number" id="edit-asztalFerohely">
+        </div>
+
+        <div id="edit-jatekMezok" style="display:none;">
+            <label>Játék neve:</label>
+            <input type="text" id="edit-jatekNev">
+            <label>Darabszám:</label>
+            <input type="number" id="edit-jatekDarab">
+            <label>Ár/óra (Ft):</label>
+            <input type="number" id="edit-jatekAr">
+        </div>
+
+        <button onclick="mentesSzerkesztes()" class="save-btn">Módosítások mentése</button>
+    </div>
+</div>
         <script src="./scripts/admin-eszkozok.js"></script>
         <script src="./scripts/admin-dashboard.js"></script>
 

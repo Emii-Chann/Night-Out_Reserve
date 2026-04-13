@@ -16,11 +16,11 @@ if (token) {
 }
 
 async function profilAdatokBetoltese() {
-    betoltFoglalasok(`http://localhost:8080/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
+    betoltFoglalasok(`http://104.248.22.60:8080/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
 
-    betoltFoglalasok(`http://localhost:8080/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
+    betoltFoglalasok(`http://104.248.22.60:8080/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
 
-    betoltFoglalasok(`http://localhost:8080/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
+    betoltFoglalasok(`http://104.248.22.60:8080/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
 }
 
 async function betoltFoglalasok(url, divId, tipus) {
@@ -74,7 +74,7 @@ async function betoltFoglalasok(url, divId, tipus) {
 async function felhasznaloAdatBetoltese() {
     try {
         // Lekérjük a usert a backendről az ID alapján
-        const response = await fetch(`http://localhost:8080/users/${felId}`);
+        const response = await fetch(`http://104.248.22.60:8080/users/${felId}`);
 
         
         if (response.ok) {
@@ -130,7 +130,7 @@ async function profilAdatokMentese() {
 
     try {
         // Ezt a végpontot még meg kell csinálnod Javaban, ha nincs!
-        const response = await fetch('http://localhost:8080/users/update', {
+        const response = await fetch('http://104.248.22.60:8080/users/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(adatok)
@@ -198,7 +198,7 @@ async function foglalasLemondasa(id, tipus) {
     else if (tipus === "game") vegpont = "jatekok";   // vagy ahogy nálad van
 
     try {
-        const response = await fetch(`http://localhost:8080/api/${vegpont}/lemondas/${id}`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/${vegpont}/lemondas/${id}`, {
             method: 'PUT', // Frissítjük az adatot
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}` // Biztonság kedvéért küldjük a tokent!

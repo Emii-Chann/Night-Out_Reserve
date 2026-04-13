@@ -4,6 +4,8 @@ import com.nightout_reserve.backend.models.Asztal;
 import com.nightout_reserve.backend.models.Jatek;
 import com.nightout_reserve.backend.repositories.AsztalRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
+import com.nightout_reserve.backend.services.AsztalService;
+import com.nightout_reserve.backend.services.JatekService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,4 +65,62 @@ public class EszkozController {
         asztalRepo.save(asztal);
         return ResponseEntity.ok("Asztal frissítve");
     }
+
+    @RestController
+@RequestMapping("/api/admin/eszkoz")
+@CrossOrigin(origins = "*") // Fejlesztés alatt engedélyezzük a frontendet
+public class AdminEszkozController {
+
+    @Autowired
+    private AsztalService asztalService;
+
+    @Autowired
+    private JatekService jatekService;
+
+    // 1. ADATOK LEKÉRÉSE SZERKESZTÉSHEZ (GET)
+    @GetMapping("/{tipus}/{id}")
+    public ResponseEntity<?> getEszkozForEdit(@PathVariable String tipus, @PathVariable Integer id) {
+        if ("asztal".equalsIgnoreCase(tipus)) {
+            return asztalService.findById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } else if ("jatek".equalsIgnoreCase(tipus)) {
+            return jatekService.findById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        return ResponseEntity.badRequest().body("Ismeretlen eszköztípus!");
+    }
+
+    // 2. MÓDOSÍTÁS MENTÉSE (PUT)
+    @PutMapping("/modosit/{tipus}/{id}")
+    public ResponseEntity<?> updateEszkoz(
+            @PathVariable String tipus,
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> adatok) {
+
+        try {
+            if ("asztal".equalsIgnoreCase(tipus)) {
+                // Adatok kinyerése a JSON-ből
+                Integer ujFerohely = Integer.parseInt(adatok.get("ferohely").toString());
+                // Az asztalnál az ID maga az asztalSzam a te rendszeredben
+                Asztal frissitett = asztalService.updateAsztal(id, ujFerohely);
+                return ResponseEntity.ok(frissitett);
+
+            } else if ("jatek".equalsIgnoreCase(tipus)) {
+                String nev = (String) adatok.get("jatekNev");
+                Integer darab = Integer.parseInt(adatok.get("darab").toString());
+                Integer ar = Integer.parseInt(adatok.get("ar_ora").toString());
+
+                Jatek frissitett = jatekService.updateJatek(id, nev, darab, ar);
+                return ResponseEntity.ok(frissitett);
+            }
+            
+            return ResponseEntity.badRequest().body("Hiba: Ismeretlen típus!");
+            
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Hiba a mentés során: " + e.getMessage());
+        }
+    }
+}
 }
