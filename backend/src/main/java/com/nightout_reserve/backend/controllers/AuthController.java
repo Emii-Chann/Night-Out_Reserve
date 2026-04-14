@@ -3,6 +3,7 @@ package com.nightout_reserve.backend.controllers;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import com.nightout_reserve.backend.models.User;
 import com.nightout_reserve.backend.repositories.PasswordResetTokenRepository;
 import com.nightout_reserve.backend.repositories.UserRepository;
 import com.nightout_reserve.backend.services.AuthService;
+import com.nightout_reserve.backend.services.EmailService;
 
 import jakarta.validation.Valid;
 @CrossOrigin(origins = "http://localhost:3000")
@@ -111,5 +113,48 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
     return ResponseEntity.ok("Sikeres jelszócsere!");
 }
 
+
+
+@Autowired
+private EmailService emailService;
+
+
+
+
+@PostMapping("/auth/forgot-password")
+public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
+    String email = body.get("email");
+
+    // Mivel a te repository-d sima User-t ad vissza (nem Optional-t):
+    User felhasznalo = userRepository.findByEmail(email);
+    
+    // Így az ellenőrzés is változik:
+    if (felhasznalo == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nincs ilyen e-mail címmel regisztrált felhasználó!");
+    }
+
+    // 2. Generálunk egy egyedi tokent
+    String token = UUID.randomUUID().toString();
+
+    // 3. Elmentjük a tokent
+    PasswordResetToken resetToken = new PasswordResetToken();
+    resetToken.setToken(token);
+    resetToken.setFelhasznalo(felhasznalo); // Itt figyelj: a PasswordResetToken osztályban is Felhasznalo vagy User a mező neve?
+    resetToken.setLejarat(LocalDateTime.now().plusHours(1));
+
+    passwordResetTokenRepository.save(resetToken);
+
+    // 4. Link összeállítása
+    String resetLink = "https://nigth-out-reserve.org/jelszo-csere.html?token=" + token;
+
+    // 5. E-mail küldése
+    try {
+      emailService.sendResetEmail(felhasznalo.getEmail(), token);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hiba az e-mail küldésekor!");
+    }
+
+    return ResponseEntity.ok("E-mail elküldve!");
+}
     
 }
