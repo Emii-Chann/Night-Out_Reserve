@@ -1,8 +1,11 @@
 package com.nightout_reserve.backend.controllers;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nightout_reserve.backend.dto.UserLoginDTO;
 import com.nightout_reserve.backend.models.PasswordResetRequest;
+import com.nightout_reserve.backend.models.PasswordResetToken;
 import com.nightout_reserve.backend.models.User;
+import com.nightout_reserve.backend.repositories.PasswordResetTokenRepository;
 import com.nightout_reserve.backend.repositories.UserRepository;
 import com.nightout_reserve.backend.services.AuthService;
 
@@ -61,25 +66,43 @@ public class AuthController {
         
         return ResponseEntity.ok("Sikeres jelszóváltoztatás!");
     }
-
-    @PostMapping("/auth/forgot-password")
-public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
-    String email = body.get("email");
-    // 1. Megkeresed a tulajt az email alapján
-    // 2. Generálsz egy tokent: String token = UUID.randomUUID().toString();
-    // 3. Elmented a PasswordResetTokenRepository-val
-    // 4. emailService.sendResetEmail(email, token);
-    return ResponseEntity.ok("Email elküldve!");
-}
-
+@Autowired
+private PasswordResetTokenRepository passwordResetTokenRepository;
 @PostMapping("/auth/reset-password")
 public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
     String token = body.get("token");
     String ujJelszo = body.get("newPassword");
-    // 1. Megkeresed a tokent a repository-ban
-    // 2. Ellenőrzöd, hogy nem járt-e le
-    // 3. Ha jó, BCrypt-tel kódolod az új jelszót és elmented a tulajdonosnál
-    // 4. Törlöd a tokent az adatbázisból
+
+    if (token == null || ujJelszo == null) {
+        return ResponseEntity.badRequest().body("Hiányzó adatok!");
+    }
+
+    // 1. Megkeressük a tokent az adatbázisban
+    Optional<PasswordResetToken> resetTokenOpt = passwordResetTokenRepository.findByToken(token);
+    
+    if (resetTokenOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Érvénytelen vagy nem létező token!");
+    }
+
+    PasswordResetToken resetToken = resetTokenOpt.get();
+
+    // 2. Ellenőrizzük, hogy nem járt-e le (ha van lejárati időd)
+    if (resetToken.getLejarat().isBefore(LocalDateTime.now())) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("A jelszó-visszaállító link lejárt!");
+    }
+
+    // 3. Megkeressük a tulajdonost és frissítjük a jelszavát
+    User felhasznalo = resetToken.getFelhasznalo(); // <--- ITT
+    
+    // BCrypt-tel kódoljuk az új jelszót!
+    felhasznalo.setPassword(passwordEncoder.encode(ujJelszo));
+    
+    // Mentsük el az új jelszót a te repository-ddal (pl. felhasznalokRepository)
+    userRepository.save(felhasznalo); // <--- ITT
+
+    // 4. Töröljük a felhasznált tokent
+    passwordResetTokenRepository.delete(resetToken);
+
     return ResponseEntity.ok("Sikeres jelszócsere!");
 }
 
