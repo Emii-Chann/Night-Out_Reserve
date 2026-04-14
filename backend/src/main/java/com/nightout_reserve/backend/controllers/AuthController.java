@@ -26,6 +26,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+
     
     @Autowired
     private AuthService authService;
@@ -66,6 +68,9 @@ public class AuthController {
         
         return ResponseEntity.ok("Sikeres jelszóváltoztatás!");
     }
+
+
+
 @Autowired
 private PasswordResetTokenRepository passwordResetTokenRepository;
 @PostMapping("/auth/reset-password")
