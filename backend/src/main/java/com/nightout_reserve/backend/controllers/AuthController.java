@@ -1,17 +1,22 @@
 package com.nightout_reserve.backend.controllers;
 
-import com.nightout_reserve.backend.dto.UserLoginDTO;
-import com.nightout_reserve.backend.models.PasswordResetRequest;
-import com.nightout_reserve.backend.services.AuthService;
-
-import jakarta.validation.Valid;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.nightout_reserve.backend.dto.UserLoginDTO;
+import com.nightout_reserve.backend.models.PasswordResetRequest;
 import com.nightout_reserve.backend.models.User;
 import com.nightout_reserve.backend.repositories.UserRepository;
+import com.nightout_reserve.backend.services.AuthService;
+
+import jakarta.validation.Valid;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/auth")
@@ -56,6 +61,27 @@ public class AuthController {
         
         return ResponseEntity.ok("Sikeres jelszóváltoztatás!");
     }
+
+    @PostMapping("/auth/forgot-password")
+public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
+    String email = body.get("email");
+    // 1. Megkeresed a tulajt az email alapján
+    // 2. Generálsz egy tokent: String token = UUID.randomUUID().toString();
+    // 3. Elmented a PasswordResetTokenRepository-val
+    // 4. emailService.sendResetEmail(email, token);
+    return ResponseEntity.ok("Email elküldve!");
+}
+
+@PostMapping("/auth/reset-password")
+public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+    String token = body.get("token");
+    String ujJelszo = body.get("newPassword");
+    // 1. Megkeresed a tokent a repository-ban
+    // 2. Ellenőrzöd, hogy nem járt-e le
+    // 3. Ha jó, BCrypt-tel kódolod az új jelszót és elmented a tulajdonosnál
+    // 4. Törlöd a tokent az adatbázisból
+    return ResponseEntity.ok("Sikeres jelszócsere!");
+}
 
     
 }
