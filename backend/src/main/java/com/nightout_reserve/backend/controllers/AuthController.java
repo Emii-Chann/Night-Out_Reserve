@@ -76,7 +76,7 @@ public class AuthController {
 
 @Autowired
 private PasswordResetTokenRepository passwordResetTokenRepository;
-@PostMapping("/auth/reset-password")
+@PostMapping("/reset-password")
 public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
     String token = body.get("token");
     String ujJelszo = body.get("newPassword");
@@ -122,7 +122,7 @@ private EmailService emailService;
 
 
 
-@PostMapping("/auth/forgot-password")
+@PostMapping("/forgot-password")
 public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
     String email = body.get("email");
 
