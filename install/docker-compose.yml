@@ -28,8 +28,12 @@ services:
     depends_on:
       - database
     environment:
+
+      
       # Application
       SPRING_APPLICATION_NAME: backend
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      
 
       # Datasource
       SPRING_DATASOURCE_URL: jdbc:mysql://database:${DATABASE_PORT}/${DATABASENAME}?serverTimezone=UTC
