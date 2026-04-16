@@ -103,7 +103,7 @@ async function modalMegnyitasa(szorakozohely) {
 
     try {
         // Backend hívása (A 2. lépésben megírt API)
-        const response = await fetch(`http://localhost:8080/api/helyszinek/jatekok/${szorakozohelyId}`);
+        const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/jatekok/${szorakozohelyId}`);
         const jatekok = await response.json();
 
         // Legördülő opciók generálása
@@ -268,7 +268,7 @@ async function foglalasBekuldese() {
 
     // 3. Küldés a Backendnek
     try {
-        const response = await fetch('http://localhost:8080/api/jatekok/mentes', { // IDE A TE VÉGPONTOD KERÜLJÖN!
+        const response = await fetch('http://104.248.22.60:8080/api/jatekok/mentes', { // IDE A TE VÉGPONTOD KERÜLJÖN!
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
 
@@ -324,7 +324,7 @@ async function frissitFoglaltIdopontok() {
     try {
         // 2. A fetch-ben is szorakozohelyId-t használunk a ${ }-ben!
         // De a kérdőjel után az kell, amit a JAVA vár (ha a Java 'helyId'-t vár, akkor helyId=...)
-        const response = await fetch(`http://localhost:8080/api/jatekok/foglalt-idopontok?helyId=${szorakozohelyId}&jatekId=${jatekId}&datum=${datum}`);
+        const response = await fetch(`http://104.248.22.60:8080/api/jatekok/foglalt-idopontok?helyId=${szorakozohelyId}&jatekId=${jatekId}&datum=${datum}`);
 
         if (!response.ok) {
             console.error("Szerver hiba:", response.status);

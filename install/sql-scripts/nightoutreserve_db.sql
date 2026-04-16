@@ -1422,7 +1422,13 @@ ALTER TABLE jatekok DROP INDEX nev;
 ALTER TABLE szorakozohelyek
 ADD COLUMN keputvonal VARCHAR(255) NULL;
 
-
+CREATE TABLE PasswordResetToken (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    felhasznalo_id INT NOT NULL,
+    lejarat DATETIME NOT NULL,
+    FOREIGN KEY (felhasznalo_id) REFERENCES felhasznalok(id)
+);
 
 
 

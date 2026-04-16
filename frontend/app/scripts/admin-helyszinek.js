@@ -5,14 +5,14 @@ async function betoltAdminHelyszinek() {
     if (!adminId) return;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/helyszinek/list/${adminId}`);
+        const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/list/${adminId}`);
         const adatok = await response.json();
 
         const kontener = document.getElementById('admin-helyszin-grid');
         kontener.innerHTML = ""; 
 
         adatok.forEach(hely => {
-          const kepUrl = `http://localhost:8080${hely.keputvonal}`;
+          const kepUrl = `http://104.248.22.60:8080${hely.keputvonal}`;
 
             // JSON biztonságos formázása a gombokhoz
             const helyJson = JSON.stringify(hely).replace(/'/g, "&#39;");
@@ -75,7 +75,7 @@ async function helyszinTorles(id) {
 
     if (result.isConfirmed) {
         try {
-            const response = await fetch(`http://localhost:8080/api/helyszinek/${id}`, { method: 'DELETE' });
+            const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/${id}`, { method: 'DELETE' });
             if (response.ok) {
                 Swal.fire('Törölve!', 'A helyszín sikeresen eltávolítva.', 'success');
                 betoltAdminHelyszinek();
@@ -112,7 +112,7 @@ async function mentesUjHely() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/helyszinek/uj-hely-form-data`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/uj-hely-form-data`, {
             method: 'POST', // Új helynél POST-ot használunk
             body: formData 
             // Content-Type-ot itt SEM szabad megadni kézzel!
@@ -172,7 +172,7 @@ async function mentesUjEszkoz() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/eszkoz/uj`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/admin/foglalasok/eszkoz/uj`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json' // Jelezzük a szervernek, hogy JSON-t küldünk
@@ -210,7 +210,7 @@ async function helyszinSzerkesztes(id) {
     if (modal) modal.style.display = 'block';
 
     try {
-        const response = await fetch(`http://localhost:8080/api/helyszinek/${id}`);
+        const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/${id}`);
         const hely = await response.json();
         console.log("Beérkező adatok:", hely);
 
@@ -259,7 +259,7 @@ async function mentesModositas() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/helyszinek/${id}`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/${id}`, {
             method: 'PUT',
             // FONTOS: FormData használatakor NEM szabad beállítani a Content-Type headert manuálisan!
             // A böngésző automatikusan beállítja 'multipart/form-data'-ra a megfelelő boundary-val.

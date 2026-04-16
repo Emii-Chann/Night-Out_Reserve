@@ -1,11 +1,14 @@
 // --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
+
+
+
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
 
    
 
     try {
-        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/osszes?szid=${szid}`);
+        const response = await fetch(`http://104.248.22.60:8080/api/admin/foglalasok/osszes?szid=${szid}`);
         if (!response.ok) throw new Error("Hiba a lekérdezéskor!");
         
         const adatok = await response.json();
@@ -107,7 +110,7 @@ async function updateReservationStatus(id, newStatus, tipus) {
                       (newStatus === "completed") ? "TELJESITVE" : "FUGGOBEN";
 
     try {
-        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/frissit-allapot`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/admin/foglalasok/frissit-allapot`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id, allapot: javaAllapot, tipus: tipus })
@@ -133,7 +136,7 @@ async function deleteReservation(id, tipus) {
 
     if (result.isConfirmed) {
     try {
-        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/torles/${tipus}/${id}`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/admin/foglalasok/torles/${tipus}/${id}`, {
             method: 'DELETE'
         });
         if (response.ok) {
@@ -279,7 +282,7 @@ async function mentesUjHely() {
     };
 
     try {
-       const response = await fetch(`http://localhost:8080/api/helyszinek/szorakozohelyek/uj`, {
+       const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/szorakozohelyek/uj`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ujAdat)
@@ -382,7 +385,7 @@ async function mentesUjEszkoz() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/api/admin/foglalasok/eszkoz/uj`, {
+        const response = await fetch(`http://104.248.22.60:8080/api/admin/foglalasok/eszkoz/uj`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(adatok)
@@ -441,7 +444,7 @@ async function tulajAdatMentese() {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/api/tulajdonosok/mentes', {
+        const response = await fetch('http://104.248.22.60:8080/api/tulajdonosok/mentes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -493,7 +496,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 2. OKOS RÉSZ: Lekérjük a meglévő adatokat a Java backendről
         try {
-            const response = await fetch(`http://localhost:8080/api/tulajdonosok/${bejelentkezettId}`);
+            const response = await fetch(`http://104.248.22.60:8080/api/tulajdonosok/${bejelentkezettId}`);
             
             if (response.ok) {
                 // Ha a Java talált adatot, kibontjuk
