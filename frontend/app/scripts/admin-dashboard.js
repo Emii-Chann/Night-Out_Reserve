@@ -1,4 +1,7 @@
 // --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
+
+
+
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
 
