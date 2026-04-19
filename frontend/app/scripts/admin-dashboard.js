@@ -1,8 +1,5 @@
+
 // --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
-const adminId = localStorage.getItem("nr_admin_id");
-    if (!adminId) {
-        window.location.href = "./admin-login.html";
-    }
 
 
 async function getReservations() {
@@ -520,6 +517,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } else {
         console.warn("Nincs bejelentkezett tulajdonos a localStorage-ben!");
+        window.location.href = "./admin-login.html";
+
     }
 });
 
