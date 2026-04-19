@@ -11,9 +11,6 @@ import com.nightout_reserve.backend.exceptions.UserWrongPasswordException;
 import com.nightout_reserve.backend.models.User;
 import com.nightout_reserve.backend.repositories.UserRepository;
 import com.nightout_reserve.backend.utils.JwtUtil;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
