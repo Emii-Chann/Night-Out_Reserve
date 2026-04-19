@@ -18,15 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nightout_reserve.backend.models.Jatek;
+import com.nightout_reserve.backend.repositories.JatekRepository;
 import com.nightout_reserve.backend.services.AsztalFoglalasService;
+import com.nightout_reserve.backend.services.AsztalService;
 import com.nightout_reserve.backend.services.HelyFoglalasService;
 import com.nightout_reserve.backend.services.JatekFoglalasService;
-import com.nightout_reserve.backend.services.AsztalService;
 import com.nightout_reserve.backend.services.JatekService;
-
-
-import com.nightout_reserve.backend.repositories.JatekRepository;
 
 @RestController
 @RequestMapping("/api/admin/foglalasok")

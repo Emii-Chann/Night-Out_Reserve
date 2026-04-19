@@ -13,7 +13,7 @@ public class EmailService {
 
     public void sendResetEmail(String to, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("nightoutreserve@gmail.com");
+        message.setFrom("noreply@nigth-out-reserve.org");
         message.setTo(to);
         message.setSubject("Jelszó visszaállítás - Night-Out Reserve");
         message.setText("A jelszavad visszaállításához kattints az alábbi linkre:\n" +

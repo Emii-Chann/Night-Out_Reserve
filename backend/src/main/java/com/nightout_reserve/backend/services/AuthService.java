@@ -1,5 +1,9 @@
 package com.nightout_reserve.backend.services;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nightout_reserve.backend.dto.UserLoginDTO;
 import com.nightout_reserve.backend.exceptions.UserIsDeletedExistsException;
 import com.nightout_reserve.backend.exceptions.UserNonExistsException;
@@ -41,5 +45,4 @@ public class AuthService {
         return jwtUtil.generateToken(up.getUsername(), up.getId());
     }
 
-    // TODO: other auth related services here
 }
