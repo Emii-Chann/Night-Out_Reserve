@@ -1,16 +1,16 @@
 package com.nightout_reserve.backend.repositories;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-
-import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.models.JatekFoglalas;
+
+import jakarta.transaction.Transactional;
 
 public interface JatekFoglalasRepository extends JpaRepository<JatekFoglalas, Integer> {
 
@@ -24,6 +24,11 @@ public interface JatekFoglalasRepository extends JpaRepository<JatekFoglalas, In
 
     @Query("SELECT jf FROM JatekFoglalas jf WHERE jf.szorakozohelyId = :helyId AND jf.jatekId = :jatekId AND jf.torolveAt IS NULL AND jf.allapot IN ('FUGGO', 'JOVAHAGYVA') AND DATE(jf.kezdet) = :datum")
     List<JatekFoglalas> findFoglalasokAdottNapon(@Param("helyId") Integer helyId, @Param("jatekId") Integer jatekId, @Param("datum") LocalDate datum);
+   
+    
+    @Transactional
+    void deleteByFelhasznaloId(Integer felhasznaloId);
+    
 
-
+    
 }

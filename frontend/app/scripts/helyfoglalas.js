@@ -167,7 +167,7 @@ async function helyFoglalasBekuldese() {
     };
 
     try {
-        const response = await fetch('http://104.248.22.60:8080/api/helyfoglalas/mentes', {
+        const response = await fetch('https://nigth-out-reserve.org/api/helyfoglalas/mentes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(foglalasAdatok)
@@ -270,7 +270,7 @@ async function frissitFoglaltHelyIdopontok() {
     if (!helyId || !datum) return;
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/helyfoglalas/foglalt-hely-idopontok?szorakozohelyId=${helyId}&datum=${datum}`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/helyfoglalas/foglalt-hely-idopontok?szorakozohelyId=${helyId}&datum=${datum}`);
         if (!response.ok) return; 
         
         const foglaltIdopontokBackend = await response.json(); 

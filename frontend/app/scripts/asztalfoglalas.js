@@ -100,7 +100,7 @@ async function asztalModalMegnyitasa(szorakozohely) {
 
     try {
         // Backend hívása az asztalokért
-        const response = await fetch(`http://104.248.22.60:8080/api/asztalok/${szorakozohelyId}/list`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/asztalok/${szorakozohelyId}/list`);
         const asztalok = await response.json();
 
         asztalSelect.innerHTML = '<option value="" disabled selected>Select a table</option>';
@@ -202,7 +202,7 @@ async function asztalFoglalasBekuldese() {
         vege: formatum(vegeDatumObj),
     };
     try {
-        const response = await fetch('http://104.248.22.60:8080/api/asztalok/foglalas', { 
+        const response = await fetch('https://nigth-out-reserve.org/api/asztalok/foglalas', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(foglalasAdatok)
@@ -234,7 +234,7 @@ async function frissitFoglaltAsztalIdopontok() {
 
     if (!szorakozohelyId || !asztalSzam || !datum) return;
     try {
-        const url = `http://104.248.22.60:8080/api/asztalok/foglalt-asztal-idopontok?szorakozohelyId=${szorakozohelyId}&asztalSzam=${asztalSzam}&datum=${datum}`;
+        const url = `https://nigth-out-reserve.org/api/asztalok/foglalt-asztal-idopontok?szorakozohelyId=${szorakozohelyId}&asztalSzam=${asztalSzam}&datum=${datum}`;
         
         const response = await fetch(url);
         

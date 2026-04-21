@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="icon" type="image/png" href="images/logo1.png">
     <meta charset="UTF-8">
@@ -117,6 +118,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="navbar-container"></div>
 
@@ -145,31 +147,55 @@
         </div>
 
         <div class="profil-container">
-            
+
             <section class="profil-section-card">
                 <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
                 <form id="profil-szerkeszto-form">
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Username</label>
-                        <input type="text" id="profil-nev" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;" required>
+                        <label
+                            style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Username</label>
+                        <input type="text" id="profil-nev"
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;"
+                            required>
                     </div>
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Email Address</label>
-                        <input type="email" id="profil-email" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;" required>
+                        <label
+                            style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Email
+                            Address</label>
+                        <input type="email" id="profil-email"
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;"
+                            required>
                     </div>
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Phone Number</label>
-                        <input type="text" id="profil-tel" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;">
+                        <label
+                            style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Phone
+                            Number</label>
+                        <input type="text" id="profil-tel"
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;">
                     </div>
-                    <button type="button" onclick="profilAdatokMentese()" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">
+                    <button type="button" onclick="profilAdatokMentese()"
+                        style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">
                         Save Changes
                     </button>
+                    <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(239, 68, 68, 0.3);">
+                        <h3 style="color: #ef4444; font-size: 1.1rem;">Danger Zone</h3>
+                        <p style="color: #a0a0b0; font-size: 0.85rem; margin-bottom: 15px;">
+                            Once you delete your account, there is no going back. All your bookings and personal data
+                            will be permanently removed.
+                        </p>
+               
+                    </div>
                 </form>
+                <button onclick="fiokTorlese()"
+                            style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s;">
+                            <i class="fa-solid fa-trash-can"></i> Delete My Account
+                        </button>
             </section>
- 
+
     </main>
 
     <script src="./scripts/nav.js"></script>
     <script src="./scripts/profil.js"></script>
 </body>
+
 </html>

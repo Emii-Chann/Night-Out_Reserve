@@ -13,9 +13,9 @@ if (token) {
 }
 
 async function profilAdatokBetoltese() {
-    betoltFoglalasok(`http://104.248.22.60:8080/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
-    betoltFoglalasok(`http://104.248.22.60:8080/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
-    betoltFoglalasok(`http://104.248.22.60:8080/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
+    betoltFoglalasok(`https://nigth-out-reserve.org/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
+    betoltFoglalasok(`https://nigth-out-reserve.org/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
+    betoltFoglalasok(`https://nigth-out-reserve.org/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
 }
 
 async function betoltFoglalasok(url, divId, tipus) {
@@ -65,7 +65,7 @@ async function betoltFoglalasok(url, divId, tipus) {
 // --- ÚJ: PROFIL ADATOK BETÖLTÉSE ---
 async function felhasznaloAdatBetoltese() {
     try {
-        const response = await fetch(`http://104.248.22.60:8080/users/${felId}`);
+        const response = await fetch(`https://nigth-out-reserve.org/users/${felId}`);
         if (response.ok) {
             const user = await response.json();
             document.getElementById('profil-nev').value = user.username || ""; 
@@ -114,7 +114,7 @@ async function profilAdatokMentese() {
     };
 
     try {
-        const response = await fetch('http://104.248.22.60:8080/users/update', {
+        const response = await fetch('https://nigth-out-reserve.org/users/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(adatok)
@@ -178,7 +178,7 @@ async function foglalasLemondasa(id, tipus) {
     else if (tipus === "game") vegpont = "jatekok";
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/${vegpont}/lemondas/${id}`, {
+        const response = await fetch(`https://nigth-out-reserve.org/api/${vegpont}/lemondas/${id}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}` 
@@ -209,3 +209,64 @@ document.addEventListener("DOMContentLoaded", () => {
         felhasznaloAdatBetoltese(); 
     }
 });
+
+
+// --- ÚJ: FIÓK TELJES TÖRLÉSE (GDPR) ---
+async function fiokTorlese() {
+    const result = await Swal.fire({
+        title: 'Are you absolutely sure?',
+        text: "This will permanently delete your account and all your bookings. This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        background: '#1e1e2d',
+        color: '#fff',
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#4b5563',
+        confirmButtonText: 'Yes, delete everything!',
+        cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+        try {
+            // Itt a backend DELETE végpontját hívjuk meg
+            const response = await fetch(`https://nigth-out-reserve.org/users/hardDelete/${felId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (response.ok) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Account Deleted',
+                    text: 'Your data has been successfully removed from our system. Goodbye!',
+                    background: '#1e1e2d',
+                    color: '#fff',
+                    confirmButtonColor: '#8b5cf6'
+                });
+
+                // Kijelentkeztetés és takarítás
+                localStorage.removeItem("token");
+                window.location.href = "index.html";
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Could not delete account. Please try again later.',
+                    background: '#1e1e2d',
+                    color: '#fff'
+                });
+            }
+        } catch (error) {
+            console.error("Hiba a törlés során:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'Failed to reach the server.',
+                background: '#1e1e2d',
+                color: '#fff'
+            });
+        }
+    }
+}

@@ -88,7 +88,7 @@ async function modalMegnyitasa(szorakozohely) {
     jatekSelect.innerHTML = '<option>Loading...</option>';
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/helyszinek/jatekok/${szorakozohelyId}`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/helyszinek/jatekok/${szorakozohelyId}`);
         const jatekok = await response.json();
 
         jatekSelect.innerHTML = '<option value="" disabled selected>Select a game</option>';
@@ -228,7 +228,7 @@ async function foglalasBekuldese() {
     };
 
     try {
-        const response = await fetch('http://104.248.22.60:8080/api/jatekok/mentes', { 
+        const response = await fetch('https://nigth-out-reserve.org/api/jatekok/mentes', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(foglalasAdatok)
@@ -277,7 +277,7 @@ async function frissitFoglaltIdopontok() {
     if (!szorakozohelyId || !jatekId || !datum) return;
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/jatekok/foglalt-idopontok?helyId=${szorakozohelyId}&jatekId=${jatekId}&datum=${datum}`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/jatekok/foglalt-idopontok?helyId=${szorakozohelyId}&jatekId=${jatekId}&datum=${datum}`);
 
         if (!response.ok) {
             console.error("Server error:", response.status);

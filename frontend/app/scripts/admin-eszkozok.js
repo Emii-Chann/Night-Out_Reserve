@@ -12,14 +12,14 @@ async function betoltEszkozok() {
 
     try {
         // 1. LÉPÉS: A szórakozóhely nevének lekérése
-        const helyResponse = await fetch(`http://104.248.22.60:8080/api/helyszinek/${helyszinId}`);
+        const helyResponse = await fetch(`https://nigth-out-reserve.org/api/helyszinek/${helyszinId}`);
         if (helyResponse.ok) {
             const helyAdat = await helyResponse.json();
             document.getElementById("aktualis-helyszin-neve").innerText = helyAdat.nev;
         }
 
         // 2. LÉPÉS: Az eszközök lekérése (amit már megírtunk)
-        const response = await fetch(`http://104.248.22.60:8080/api/admin/eszkozok/${helyszinId}`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/admin/eszkozok/${helyszinId}`);
         const data = await response.json();
 
         const asztalGrid = document.getElementById("asztalok-grid");
@@ -82,7 +82,7 @@ async function torolEszkoz(id, tipus) {
 
     if (result.isConfirmed) {
         try {
-            const res = await fetch(`http://104.248.22.60:8080/api/admin/eszkozok/${tipus}/${id}`, {
+            const res = await fetch(`https://nigth-out-reserve.org/api/admin/eszkozok/${tipus}/${id}`, {
                 method: 'DELETE'
             });
 
@@ -102,7 +102,7 @@ async function szerkesztEszkoz(id, tipus) {
     document.getElementById("edit-tipus").value = tipus;
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/admin/eszkoz/${tipus}/${id}`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/admin/eszkoz/${tipus}/${id}`);
         const adat = await response.json();
 
         if (tipus === 'asztal') {
@@ -145,7 +145,7 @@ async function mentesSzerkesztes() {
     }
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/admin/eszkoz/modosit/${tipus}/${id}`, {
+        const response = await fetch(`https://nigth-out-reserve.org/api/admin/eszkoz/modosit/${tipus}/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(adatok)

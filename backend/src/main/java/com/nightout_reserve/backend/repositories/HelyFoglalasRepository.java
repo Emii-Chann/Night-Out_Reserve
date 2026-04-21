@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.models.HelyFoglalas;
 
 public interface HelyFoglalasRepository extends JpaRepository<HelyFoglalas, Integer> {
@@ -27,4 +27,6 @@ public interface HelyFoglalasRepository extends JpaRepository<HelyFoglalas, Inte
 
     @Query("SELECT hf FROM HelyFoglalas hf WHERE hf.szorakozohelyId = :helyId AND hf.torolveAt IS NULL AND hf.allapot IN ('FUGGO', 'JOVAHAGYVA') AND DATE(hf.kezdet) = :datum")
     List<HelyFoglalas> findFoglalasokAdottNapon(@Param("helyId") Integer helyId, @Param("datum") LocalDate datum);
+    @Transactional
+    void deleteByFelhasznaloId(Integer felhasznaloId);
 }
