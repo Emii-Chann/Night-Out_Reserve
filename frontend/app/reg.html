@@ -47,6 +47,16 @@
 
         <input type="text" id="phone" placeholder="Phone number (06 30 123 4567)">
         <div class="error" id="phoneError"></div>
+
+        <div class="reg-gdpr-container" style="margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+    <input type="checkbox" id="gdpr-agree" style="margin-top: 5px; cursor: pointer;">
+    <label for="gdpr-agree" style="font-size: 0.85rem; color: #d1d5db; cursor: pointer; line-height: 1.4;">
+        I have read and agree to the 
+        <a href="privacy-policy.html" target="_blank" style="color: #8b5cf6; text-decoration: underline;">Privacy Policy</a>.
+    </label>
+</div>
+<div id="gdprError" class="error" style="margin-bottom: 10px;"></div>
+
  <a href="./login.html" class="forgot-password-link">Already have an account</a>
 <button type="submit" class="submit-btn">Register</button>
 <p class="success" id="successMsg"></p>
