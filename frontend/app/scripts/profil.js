@@ -13,9 +13,9 @@ if (token) {
 }
 
 async function profilAdatokBetoltese() {
-    betoltFoglalasok(`http://104.248.22.60:8080/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
-    betoltFoglalasok(`http://104.248.22.60:8080/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
-    betoltFoglalasok(`http://104.248.22.60:8080/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
+    betoltFoglalasok(`https://nigth-out-reserve.org/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
+    betoltFoglalasok(`https://nigth-out-reserve.org/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
+    betoltFoglalasok(`https://nigth-out-reserve.org/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
 }
 
 async function betoltFoglalasok(url, divId, tipus) {
@@ -65,7 +65,7 @@ async function betoltFoglalasok(url, divId, tipus) {
 // --- ÚJ: PROFIL ADATOK BETÖLTÉSE ---
 async function felhasznaloAdatBetoltese() {
     try {
-        const response = await fetch(`http://104.248.22.60:8080/users/${felId}`);
+        const response = await fetch(`https://nigth-out-reserve.org/users/${felId}`);
         if (response.ok) {
             const user = await response.json();
             document.getElementById('profil-nev').value = user.username || ""; 
@@ -114,7 +114,7 @@ async function profilAdatokMentese() {
     };
 
     try {
-        const response = await fetch('http://104.248.22.60:8080/users/update', {
+        const response = await fetch('https://nigth-out-reserve.org/users/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(adatok)
@@ -178,7 +178,7 @@ async function foglalasLemondasa(id, tipus) {
     else if (tipus === "game") vegpont = "jatekok";
 
     try {
-        const response = await fetch(`http://104.248.22.60:8080/api/${vegpont}/lemondas/${id}`, {
+        const response = await fetch(`https://nigth-out-reserve.org/api/${vegpont}/lemondas/${id}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}` 
@@ -229,7 +229,7 @@ async function fiokTorlese() {
     if (result.isConfirmed) {
         try {
             // Itt a backend DELETE végpontját hívjuk meg
-            const response = await fetch(`http://104.248.22.60:8080/users/hardDelete/${felId}`, {
+            const response = await fetch(`https://nigth-out-reserve.org/users/hardDelete/${felId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`

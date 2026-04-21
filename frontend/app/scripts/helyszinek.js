@@ -1,13 +1,13 @@
 async function betoltHelyszinek() {
     try {
-        const response = await fetch('http://104.248.22.60:8080/api/helyszinek/list');
+        const response = await fetch('https://nigth-out-reserve.org/api/helyszinek/list');
         const adatok = await response.json();
 
         const kontener = document.getElementById('helyszinek-grid');
         kontener.innerHTML = ""; 
 
         adatok.forEach(hely => {
-            const kepUrl = `http://104.248.22.60:8080${hely.keputvonal}`;
+            const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
             kontener.innerHTML += `
                 <div class="card">
                     <div class="card-image" style="background-image: url('${kepUrl}');">
