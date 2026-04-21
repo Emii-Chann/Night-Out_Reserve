@@ -16,13 +16,14 @@
 
 <body>
 
-    <div class="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div>
-            <h2>Night-Out</h2>
-
-            <span>Admin Panel</span>
+     <div class="sidebar">
+    <div class="sidebar-logo" style="display: flex; align-items: center; gap: 10px;">
+        <div class="logo-icon">
+            <i class="fa-regular fa-calendar-check"></i>
         </div>
+        <h2 style="margin: 0;">Night-Out Reserve</h2>
+        
+    </div>
 
                <nav class="sidebar-nav">
 
@@ -40,7 +41,7 @@
                 <i class="fa fa-repeat" aria-hidden="true"></i> Change Password
             </a>
             <a href="./admin-eszkozok.html" class="nav-profile-link">
-                <i class="fa fa-gamepad" aria-hidden="true"></i> Tools
+                <i class="fa fa-gamepad" aria-hidden="true"></i> Tables & Games
             </a>
             <a href="./admin-profil.html" class="nav-profile-link">
                 <i class="fa fa-user" aria-hidden="true"></i> Profile
@@ -63,33 +64,34 @@
 
 
             <div class="admin-panel-kartya"
-            style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; max-width: 500px;">
-            <h3 style="color: #bb86fc; margin-top: 0;">Saját kapcsoltati adatok</h3>
-            <p style="font-size: 14px; color: #ccc;">Ezek az adatok fognak megjelenni a vendégeknek a foglalás során.
+                style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; max-width: 500px; margin: 0 auto;">
+            <h3 style="color: #bb86fc; margin-top: 0;">My Contact Information</h3>
+            <p style="font-size: 14px; color: #ccc;">These details will be displayed to guests during the booking process.
+            
             </p>
 
             <form id="tulaj-adat-form">
                 <input type="hidden" id="tulaj-id" value="1">
 
-                <label style="display: block; margin-top: 10px;">Contact Person (Név)</label>
-                <input type="text" id="tulaj-nev" placeholder="Pl: Kovács Péter"
+                <label style="display: block; margin-top: 10px;">Contact Person</label>
+                <input type="text" id="tulaj-nev" placeholder="E.g. John Doe"
                     style="width: 100%; padding: 8px; border-radius: 4px;" required>
 
                 <label style="display: block; margin-top: 10px;">Email</label>
-                <input type="email" id="tulaj-email" placeholder="email@pelda.hu"
+                <input type="email" id="tulaj-email" placeholder="email@example.com"
                     style="width: 100%; padding: 8px; border-radius: 4px;" required>
 
-                <label style="display: block; margin-top: 10px;">Phone (Telefonszám)</label>
+                <label style="display: block; margin-top: 10px;">Phone Number</label>
                 <input type="text" id="tulaj-tel" placeholder="+36 30 123 4567"
                     style="width: 100%; padding: 8px; border-radius: 4px;" required>
 
                 <button type="button" onclick="tulajAdatMentese()"
                     style="margin-top: 20px; width: 100%; padding: 10px; background-color: #bb86fc; color: black; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">
-                    Mentés / Frissítés
+                    Save / Update
                 </button>
             </form>
         </div>
-            
+
     </div>
     <script src="./scripts/admin-dashboard.js"></script>
 </body>

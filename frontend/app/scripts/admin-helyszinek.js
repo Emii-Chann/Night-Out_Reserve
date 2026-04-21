@@ -40,7 +40,7 @@ async function betoltAdminHelyszinek() {
                             
                             <button onclick="nyitEszkozModal(${hely.id}, '${hely.nev}')" 
                                 style="flex: 1; padding: 10px 5px; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">
-                                <i class="fa-solid fa-plus"></i> +Item
+                                <i class="fa-solid fa-plus"></i> Item
                             </button>
 
                             <button onclick="helyszinSzerkesztes(${hely.id})" 
