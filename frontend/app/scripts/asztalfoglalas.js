@@ -32,21 +32,21 @@ async function asztalModalMegnyitasa(szorakozohely) {
     // ---------------------------------------------------------
     // 2. ÚJ RÉSZ: JOBB OLDALI PANEL KITÖLTÉSE
     // ---------------------------------------------------------
-    document.getElementById('info-hely-nev').innerText = helyNev || "Nincs megadva";
-    document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Nincs megadva";
-    document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Nincs megadva";
-    document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "Általános";
+    document.getElementById('info-hely-nev').innerText = helyNev || "Not specified";
+    document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Not specified";
+    document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Not specified";
+    document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "General";
 
     // Tulajdonos adatai (ellenőrizzük, hogy létezik-e)
   if (szorakozohely.tulajokAdatai) {
         // ITT FIGYELJ A VALTOZÓNEVEKRE: teljesNev és telefon!
-        document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "Nincs adat";
-        document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "Nincs adat";
-        document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "Nincs adat";
+        document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "No data";
+        document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "No data";
+        document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "No data";
     } else {
-        document.getElementById('info-tulaj-nev').innerText = "Nincs adat";
-        document.getElementById('info-tulaj-email').innerText = "Nincs adat";
-        document.getElementById('info-tulaj-tel').innerText = "Nincs adat";
+        document.getElementById('info-tulaj-nev').innerText = "No data";
+        document.getElementById('info-tulaj-email').innerText = "No data";
+        document.getElementById('info-tulaj-tel').innerText = "No data";
     }
     // ---------------------------------------------------------
 
@@ -141,8 +141,7 @@ function asztalModalBezarasa() {
 async function asztalFoglalasBekuldese() {
 
     if (!felId) {
-        // (Ezt majd lecserélheted SweetAlert-re!)
-        alert("Kérlek, lépj be a foglaláshoz!"); 
+        alert("Please log in to make a booking!"); 
         window.location.href = "login.html";
         return;
     }
@@ -179,7 +178,7 @@ async function asztalFoglalasBekuldese() {
         return;
     }
 
-    // Feltételezve, hogy az ellenorizNyitvatartas függvényt globálisan elérjük (pl. a jatekfoglalas.js-ből, vagy átmásolod ide is)
+    // Feltételezve, hogy az ellenorizNyitvatartas függvényt globálisan elérjük
     if (typeof ellenorizNyitvatartas === "function" && !ellenorizNyitvatartas(ido, idotartamOra, aktualisNyitvatartas)) {
         return; 
     }
@@ -227,18 +226,14 @@ async function asztalFoglalasBekuldese() {
 
 
 async function frissitFoglaltAsztalIdopontok() {
-    // 1. Keresd meg a HTML-ben a rejtett inputot, ami tárolja a helyszín ID-t!
-    // Lehet, hogy nálad 'asztal-szorakozohely-id' vagy 'hely-szorakozohely-id' a neve.
     const szorakozohelyId = document.getElementById('asztal-szorakozohely-id').value; 
     const asztalSzam = document.getElementById('asztal-szam-select').value; 
     const datum = document.getElementById('asztal-datum').value;
 
-    console.log("Küldöm az adatokat:", {szorakozohelyId, asztalSzam, datum}); // Ez segít a debugolásban!
+    console.log("Küldöm az adatokat:", {szorakozohelyId, asztalSzam, datum});
 
     if (!szorakozohelyId || !asztalSzam || !datum) return;
     try {
-        // 2. Lekérdezés az új "asztalos" végpontra
-        // Fontos: Itt 'asztalSzam'-ot küldünk, mert a Java Controllerben is azt várjuk!
         const url = `http://104.248.22.60:8080/api/asztalok/foglalt-asztal-idopontok?szorakozohelyId=${szorakozohelyId}&asztalSzam=${asztalSzam}&datum=${datum}`;
         
         const response = await fetch(url);
@@ -248,19 +243,18 @@ async function frissitFoglaltAsztalIdopontok() {
             return;
         }
 
-        const foglaltIdopontok = await response.json(); // Pl: ["18:00", "18:30"]
+        const foglaltIdopontok = await response.json(); 
 
-        // 3. Az időpontválasztó legördülő menü frissítése
         const idoSelect = document.getElementById('asztal-ido');
         const opciok = idoSelect.options;
 
         for (let i = 0; i < opciok.length; i++) {
             let opcio = opciok[i];
-            let alapErtek = opcio.value; // Az időpont, pl: "19:00"
+            let alapErtek = opcio.value; 
 
             if (foglaltIdopontok.includes(alapErtek)) {
                 opcio.disabled = true; 
-                opcio.text = alapErtek + " (Foglalt ❌)";
+                opcio.text = alapErtek + " (Booked ❌)";
                 opcio.style.color = "red";
             } else {
                 opcio.disabled = false; 
@@ -272,9 +266,7 @@ async function frissitFoglaltAsztalIdopontok() {
         console.error("Hiba az asztal időpontok lekérésekor:", error);
     }
 }
-// Eseményfigyelők az asztalos bemenetekre:
 document.addEventListener('DOMContentLoaded', () => {
-    // Keresd meg ezeket a sorokat:
     const asztalDatumMezo = document.getElementById('asztal-datum');
     const asztalValasztoMezo = document.getElementById('asztal-szam-select');
 

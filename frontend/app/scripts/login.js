@@ -10,7 +10,6 @@ async function handleLogin(event) {
     };
 
     try {
-        // 2. Az "await" csak az "async" függvényen belül működik
         const response = await fetch('http://104.248.22.60:8080/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

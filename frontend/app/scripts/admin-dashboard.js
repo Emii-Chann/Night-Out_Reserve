@@ -9,7 +9,7 @@ async function getReservations() {
 
     try {
         const response = await fetch(`http://104.248.22.60:8080/api/admin/foglalasok/osszes?szid=${szid}`);
-        if (!response.ok) throw new Error("Hiba a lekérdezéskor!");
+        if (!response.ok) throw new Error("Error during query!");
         
         const adatok = await response.json();
 
@@ -21,15 +21,15 @@ async function getReservations() {
                               (f.allapot === "LEMONDVA" || f.allapot === "ELUTASITVA") ? "rejected" : "pending";
 
             // --- EZT A RÉSZT CSERÉLD LE: ---
-            let reszlet = "Helyszín bérlés";
-            let tipusKulcs = "helyszin";
+            let reszlet = "Venue rental";
+            let tipusKulcs = "Venue";
 
             // Most már az ID-t figyeljük, nem a nevet!
             if (f.jatekId) {
-                reszlet = f.jatekNev ? `Játék: ${f.jatekNev}` : "Játék bérlés";
+                reszlet = f.jatekNev ? `Játék: ${f.jatekNev}` : "Game rental";
                 tipusKulcs = "jatek";
             } else if (f.asztalId || f.asztalSzam) {
-                reszlet = f.asztalSzam ? `Asztal: ${f.asztalSzam}.` : "Asztal bérlés";
+                reszlet = f.asztalSzam ? `Asztal: ${f.asztalSzam}.` : "Table rental";
                 tipusKulcs = "asztal";
             }
 
@@ -44,7 +44,7 @@ async function getReservations() {
                 date: f.kezdet ? new Date(f.kezdet).toLocaleDateString() : "---",
                 time: f.kezdet ? new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "",
                 people: f.letszam || f.asztalSzam || "-", 
-                place: f.szorakozohelyNev || "Ismeretlen hely",
+                place: f.szorakozohelyNev || "Unknown venue",
                 typeInfo: reszlet,
                 status: angolStatus,
                 reservationType: tipusKulcs
@@ -53,7 +53,7 @@ async function getReservations() {
 
 
     } catch (error) {
-        console.error("Dashboard hiba:", error);
+        console.error("Dashboard error:", error);
         return [];
     }
 }
@@ -67,7 +67,7 @@ function createReservationCard(reservation) {
         <h3>${reservation.place}</h3>
         <p class="admin-reservation-type" style="color: #a29bfe; font-weight: bold;">${reservation.typeInfo}</p>
         <p class="admin-reservation-meta">${reservation.date} • ${reservation.time} • ${reservation.people} fő</p>
-        <p class="admin-reservation-customer">Ügyfél: ${reservation.customerName}</p>
+        <p class="admin-reservation-customer">Customer: ${reservation.customerName}</p>
     `;
 
 let actionButtons = '';
@@ -86,7 +86,7 @@ let actionButtons = '';
     } else if (reservation.status === "rejected") {
         actionButtons = `
             <button class="admin-btn" style="background-color: #dc3545; color: white;" onclick="deleteReservation(${reservation.originalId}, '${reservation.reservationType}')">
-                <i class="fa-solid fa-trash"></i> Törlés
+                <i class="fa-solid fa-trash"></i> Delete
             </button>
         `;
     }
@@ -117,7 +117,7 @@ async function updateReservationStatus(id, newStatus, tipus) {
         });
         if (response.ok) await renderReservations();
     } catch (error) {
-        console.error("Hiba az állapot frissítésekor:", error);
+        console.error("Error updating status:", error);
     }
 }
 
@@ -145,14 +145,14 @@ async function deleteReservation(id, tipus) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Hiba a törlés során!",
+                text: "Error while deleting!",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#ef4444'
             });
         }
     } catch (error) {
-        console.error("Hiba a törléskor:", error);
+        console.error("Error while deleting:", error);
     }
 }}
 
@@ -163,7 +163,7 @@ async function renderReservations() {
     const rejectedContainer = document.getElementById("rejectedReservations");
 
     if (!incomingContainer || !acceptedContainer || !rejectedContainer) {
-        console.error("Hiba: Hiányzik valamelyik HTML konténer az azonosítók közül!");
+        console.error("Error: One of the HTML containers in the identifiers is missing!");
         return;
     }
 
@@ -263,7 +263,7 @@ async function mentesUjHely() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: "A név, város, cím megadása kötelező, és be kell jelentkezned!",
+            text: "Entering your name, city, and address is mandatory, and you must log in!",
             background: '#1e1e2d',
             color: '#fff',
             confirmButtonColor: '#ef4444'
@@ -315,7 +315,7 @@ async function mentesUjHely() {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "Szórakozóhely sikeresen felvéve!",
+                text: "venue successfully added!",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
@@ -327,14 +327,14 @@ async function mentesUjHely() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Hiba történt a mentés során: " + errorText,
+                text: "Error while deleting: " + errorText,
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#ef4444'
             });
         }
     } catch (error) {
-        console.error("Mentési hiba:", error);
+        console.error("Save error:", error);
     }
 }
 
@@ -347,7 +347,7 @@ function nyitEszkozModal() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: "Kérlek, válassz ki egy konkrét szórakozóhelyet a listából!",
+            text: "Please select a venue from the list",
             background: '#1e1e2d',
             color: '#fff',
             confirmButtonColor: '#ef4444'
@@ -395,7 +395,7 @@ async function mentesUjEszkoz() {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "Eszköz sikeresen hozzáadva!",
+                text: "Tool addes successfully",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
@@ -405,7 +405,7 @@ async function mentesUjEszkoz() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Hiba történt a mentés során.",
+                text: "Error while deleting.",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#ef4444'
@@ -427,7 +427,7 @@ async function tulajAdatMentese() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: "Kérlek, tölts ki minden adatot!",
+            text: "Please fill in all the details!",
             background: '#1e1e2d',
             color: '#fff',
             confirmButtonColor: '#ef4444'
@@ -456,7 +456,7 @@ async function tulajAdatMentese() {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "Az adataidat sikeresen frissítettük!",
+                text: "Your information has been successfully updated!",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
@@ -465,18 +465,18 @@ async function tulajAdatMentese() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Hiba történt a mentés során.",
+                text: "An error occurred while saving.",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#ef4444'
             });
         }
     } catch (hiba) {
-        console.error("Hálózati hiba:", hiba);
+        console.error("Network error:", hiba);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: "Nem sikerült kapcsolódni a szerverhez.",
+            text: "Could not connect to the server.",
             background: '#1e1e2d',
             color: '#fff',
             confirmButtonColor: '#ef4444'
@@ -509,14 +509,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 // Ha 404-et kapunk (még nem mentett el semmit a múltban),
                 // akkor simán üresen hagyjuk az űrlapot, hadd töltse ki először.
-                console.log("Még nincsenek elmentett adatok ehhez a profilhoz.");
+                console.log("There is no data saved for this profile yet.");
             }
         } catch (error) {
-            console.error("Hálózati hiba az adatok betöltésekor:", error);
+            console.error("Network error while loading data:", error);
         }
 
     } else {
-        console.warn("Nincs bejelentkezett tulajdonos a localStorage-ben!");
+        console.warn("There is no logged in owner in LocalStorage");
         window.location.href = "./admin-login.html";
 
     }

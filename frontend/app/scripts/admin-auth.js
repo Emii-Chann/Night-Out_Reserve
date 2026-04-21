@@ -2,20 +2,17 @@
 const ADMINS_KEY = "nr_admins";
 const CURRENT_ADMIN_KEY = "nr_current_admin";
 
-
-
 // Handle admin login page
 const adminLoginForm = document.getElementById("adminLoginForm");
 if (adminLoginForm) {
     adminLoginForm.addEventListener("submit", async (e) => {
-        e.preventDefault(); // Megakadályozzuk az oldal újratöltését
+        e.preventDefault(); 
         
         const emailInput = document.getElementById("adminEmail").value.trim();
         const passInput = document.getElementById("adminPassword").value;
         const errorEl = document.getElementById("adminLoginError");
 
         try {
-            // 1. Hívás a te Spring Boot végpontodra!
             const response = await fetch("http://104.248.22.60:8080/api/admin/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -26,37 +23,33 @@ if (adminLoginForm) {
             });
 
            if (response.ok) {
-    const adminData = await response.json();
-    
-    // Alapadatok mentése
-    localStorage.setItem("nr_current_admin", adminData.felhasznalonev);
-    localStorage.setItem("nr_admin_id", adminData.tulajId);
-    
-    // HA VANNAK HELYEI, mentsük el a listát, és válasszuk ki az elsőt alapértelmezettnek
-    if (adminData.szorakozohelyek && adminData.szorakozohelyek.length > 0) {
-        // A teljes listát eltesszük (később kell a dropdownhoz)
-        localStorage.setItem("nr_helyek_lista", JSON.stringify(adminData.szorakozohelyek));
-        
-        // Alapértelmezettként az első hely ID-ját állítjuk be aktívnak
-        localStorage.setItem("nr_szorakozohely_id", adminData.szorakozohelyek[0].id);
-        
-    } else {
-        console.warn("Ennek a tulajnak még nincs egyetlen szórakozóhelye sem!");
-    }
-    
-    window.location.href = "./admin-dashboard.html";
-}
+                const adminData = await response.json();
+                
+                // Alapadatok mentése
+                localStorage.setItem("nr_current_admin", adminData.felhasznalonev);
+                localStorage.setItem("nr_admin_id", adminData.tulajId);
+                
+                if (adminData.szorakozohelyek && adminData.szorakozohelyek.length > 0) {
+                    localStorage.setItem("nr_helyek_lista", JSON.stringify(adminData.szorakozohelyek));
+                    localStorage.setItem("nr_szorakozohely_id", adminData.szorakozohelyek[0].id);
+                } else {
+                    console.warn("This owner has no venues yet!");
+                }
+                
+                window.location.href = "./admin-dashboard.html";
+            } else {
+                errorEl.textContent = "Invalid email or password.";
+            }
         } catch (error) {
-            errorEl.textContent = "Hiba történt a szerverhez való csatlakozáskor (fut a backend?).";
-            console.error("Fetch hiba:", error);
+            errorEl.textContent = "Error connecting to the server (is the backend running?).";
+            console.error("Fetch error:", error);
         }
     });
 }
-// Handle set-password page
+
 // Handle set-password page
 const setPasswordForm = document.getElementById("setPasswordForm");
 if (setPasswordForm) {
-    // Ellenőrizzük, hogy be van-e lépve (van-e mentett ID)
     const adminId = localStorage.getItem("nr_admin_id");
     if (!adminId) {
         window.location.href = "./admin-login.html";
@@ -72,12 +65,12 @@ if (setPasswordForm) {
 
         // Alapvető ellenőrzések a frontenden
         if (newPass.length < 6) {
-            errorEl.textContent = "A jelszónak legalább 6 karakternek kell lennie.";
+            errorEl.textContent = "Password must be at least 6 characters long.";
             return;
         }
 
         if (newPass !== confirmPass) {
-            errorEl.textContent = "A két jelszó nem egyezik!";
+            errorEl.textContent = "Passwords do not match!";
             return;
         }
 
@@ -98,7 +91,7 @@ if (setPasswordForm) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: "Jelszó sikeresen módosítva!",
+                    text: "Password successfully changed!",
                     background: '#1e1e2d',
                     color: '#fff',
                     confirmButtonColor: '#8b5cf6'
@@ -107,10 +100,12 @@ if (setPasswordForm) {
             } else {
                 // HIBA (Pl. rossz régi jelszó)
                 const hibaUzenet = await response.text();
-                errorEl.textContent = hibaUzenet;
+                // Opcionális: Ha a backend magyar hibaüzenetet küld vissza, 
+                // azt is lehet a frontenden felülírni egy angolra, de alapból így hagyjuk.
+                errorEl.textContent = hibaUzenet; 
             }
         } catch (error) {
-            errorEl.textContent = "Hiba a szerverkapcsolatban.";
+            errorEl.textContent = "Error connecting to the server.";
             console.error(error);
         }
     });

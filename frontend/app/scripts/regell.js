@@ -31,20 +31,18 @@ function validateForm() {
         valid = false;
     }
 
-    // JAVÍTVA: Csak akkor hiba, ha NEM üres ÉS NEM illeszkedik a regexre
     let phoneRegex = /^[0-9]{9,12}$/;
     if (phone !== "" && !phoneRegex.test(phone)) {
         document.getElementById("phoneError").innerHTML = "<span style='color:#ff6b6b;'>Invalid phone number (9-12 digits)!</span>";
         valid = false;
     }
 
-    return valid; // JAVÍTVA: true-t ad vissza, ha minden OK, false-t ha hiba van
+    return valid; 
 }
 
 async function handleRegistration(event) {
     event.preventDefault(); 
     
-    // Most már jól működik a feltétel: ha nem valid, megáll
     if (!validateForm()) return; 
 
     const userData = {
@@ -74,7 +72,6 @@ async function handleRegistration(event) {
             });
             window.location.href = "login.html";
         } else {
-            // Megpróbáljuk kiolvasni a hibaüzenetet a bckendtől
             const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
             Swal.fire({
                 icon: 'error',
@@ -90,7 +87,7 @@ async function handleRegistration(event) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: "Could not reach the server. Is Docker running?",
+            text: "Could not reach the server.",
             background: '#1e1e2d',
             color: '#fff',
             confirmButtonColor: '#ef4444'

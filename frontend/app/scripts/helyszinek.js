@@ -7,7 +7,6 @@ async function betoltHelyszinek() {
         kontener.innerHTML = ""; 
 
         adatok.forEach(hely => {
-
             const kepUrl = `http://104.248.22.60:8080${hely.keputvonal}`;
             kontener.innerHTML += `
                 <div class="card">
@@ -30,10 +29,8 @@ async function betoltHelyszinek() {
             `;
         });
     } catch (hiba) {
-        console.error("Nem sikerült betölteni a helyszíneket:", hiba);
+        console.error("Failed to load venues:", hiba);
     }
 }
 
-// EZ A SOR HIÁNYZOTT! Ez mondja meg, hogy amint betölt az oldal, azonnal induljon el a függvény.
 document.addEventListener("DOMContentLoaded", betoltHelyszinek);
-

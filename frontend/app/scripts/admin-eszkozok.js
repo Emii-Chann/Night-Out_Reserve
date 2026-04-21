@@ -6,13 +6,12 @@ async function betoltEszkozok() {
     const helyszinId = localStorage.getItem("nr_szorakozohely_id");
 
     if (!helyszinId) {
-        Swal.fire("Hiba", "Nincs kiválasztott helyszín!", "error");
+        Swal.fire("Error", "No venue selected!", "error");
         return;
     }
 
     try {
         // 1. LÉPÉS: A szórakozóhely nevének lekérése
-        // Itt azt az API-t használd, ami visszaadja a helyszín adatait (nev, cim, stb.)
         const helyResponse = await fetch(`http://104.248.22.60:8080/api/helyszinek/${helyszinId}`);
         if (helyResponse.ok) {
             const helyAdat = await helyResponse.json();
@@ -29,7 +28,7 @@ async function betoltEszkozok() {
         asztalGrid.innerHTML = "";
         jatekGrid.innerHTML = "";
 
-        // Asztalok és játékok kirajzolása (a korábbi generaldEszkozKartya függvénnyel)
+        // Asztalok és játékok kirajzolása
         data.asztalok.forEach(asztal => {
             asztalGrid.innerHTML += generaldEszkozKartya(asztal, 'asztal');
         });
@@ -39,27 +38,23 @@ async function betoltEszkozok() {
         });
 
     } catch (error) {
-        console.error("Hiba a betöltés során:", error);
+        console.error("Error during loading:", error);
     }
 }
 
-// Segédfüggvény a kártyákhoz, hogy ne írjuk le kétszer
+// Segédfüggvény a kártyákhoz
 function generaldEszkozKartya(item, tipus) {
-
-    
-    // Az asztalnál az asztalSzam az azonosító, a játéknál meg nézd meg a modellt (valószínűleg id)
     const azonosito = tipus === 'asztal' ? item.asztalSzam : (item.id || item.jatekId);
 
-    // Debug: Ha még mindig baj van, nézd meg a konzolon:
-    console.log(`Eszköz (${tipus}) azonosítója:`, azonosito);
+    console.log(`Item (${tipus}) ID:`, azonosito);
 
-    const nev = tipus === 'asztal' ? `${item.asztalSzam}. asztal` : (item.jatekNev || item.nev || "Játék");
+    const nev = tipus === 'asztal' ? `Table ${item.asztalSzam}` : (item.jatekNev || item.nev || "Game");
 
     return `
         <div class="eszkoz-kartya">
             <div class="info">
                 <h3>${nev}</h3>
-                <p>${tipus === 'asztal' ? item.ferohely + ' fő' : (item.darab + ' db')}</p>
+                <p>${tipus === 'asztal' ? item.ferohely + ' people' : (item.darab + ' pcs')}</p>
             </div>
             <div class="akciok">
                 <button onclick="szerkesztEszkoz(${azonosito}, '${tipus}')" class="btn-edit">
@@ -76,13 +71,13 @@ function generaldEszkozKartya(item, tipus) {
 // Törlés funkció
 async function torolEszkoz(id, tipus) {
     const result = await Swal.fire({
-        title: 'Biztos törlöd?',
-        text: "Ez a művelet nem vonható vissza!",
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Igen, töröld!'
+        confirmButtonText: 'Yes, delete it!'
     });
 
     if (result.isConfirmed) {
@@ -92,11 +87,11 @@ async function torolEszkoz(id, tipus) {
             });
 
             if (res.ok) {
-                Swal.fire('Törölve!', 'Az eszköz eltávolítva.', 'success');
+                Swal.fire('Deleted!', 'The item has been removed.', 'success');
                 betoltEszkozok(); // Lista frissítése
             }
         } catch (error) {
-            Swal.fire('Hiba!', 'Nem sikerült a törlés.', 'error');
+            Swal.fire('Error!', 'Failed to delete.', 'error');
         }
     }
 }
@@ -107,7 +102,6 @@ async function szerkesztEszkoz(id, tipus) {
     document.getElementById("edit-tipus").value = tipus;
 
     try {
-        // Lekérjük az adott eszköz aktuális adatait
         const response = await fetch(`http://104.248.22.60:8080/api/admin/eszkoz/${tipus}/${id}`);
         const adat = await response.json();
 
@@ -126,8 +120,8 @@ async function szerkesztEszkoz(id, tipus) {
 
         modal.style.display = "block";
     } catch (error) {
-        console.error("Hiba az adatok betöltésekor:", error);
-        Swal.fire("Hiba", "Nem sikerült lekérni az eszköz adatait!", "error");
+        console.error("Error loading data:", error);
+        Swal.fire("Error", "Failed to fetch item data!", "error");
     }
 }
 
@@ -142,7 +136,6 @@ async function mentesSzerkesztes() {
     };
 
     if (tipus === "asztal") {
-        // Fontos: az asztalnál az asztalSzam az ID, de küldjük el a módosított értéket is
         adatok.asztalSzam = document.getElementById("edit-asztalSzam").value;
         adatok.ferohely = document.getElementById("edit-asztalFerohely").value;
     } else {
@@ -159,13 +152,13 @@ async function mentesSzerkesztes() {
         });
 
         if (response.ok) {
-            Swal.fire("Siker", "Eszköz frissítve!", "success");
+            Swal.fire("Success", "Item updated!", "success");
             document.getElementById("szerkesztEszkozModal").style.display = "none";
             betoltEszkozok(); // Lista újratöltése
         } else {
-            throw new Error("Sikertelen mentés");
+            throw new Error("Failed to save");
         }
     } catch (error) {
-        Swal.fire("Hiba", "Nem sikerült elmenteni a módosításokat!", "error");
+        Swal.fire("Error", "Failed to save changes!", "error");
     }
 }

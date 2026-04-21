@@ -33,21 +33,21 @@ function helyModalMegnyitasa(szorakozohely) {
     // ---------------------------------------------------------
     // 2. ÚJ RÉSZ: JOBB OLDALI PANEL KITÖLTÉSE
     // ---------------------------------------------------------
-    document.getElementById('info-hely-nev').innerText = helyNev || "Nincs megadva";
-    document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Nincs megadva";
-    document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Nincs megadva";
-    document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "Általános";
+    document.getElementById('info-hely-nev').innerText = helyNev || "Not specified";
+    document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Not specified";
+    document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Not specified";
+    document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "General";
 
     // Tulajdonos adatai (ellenőrizzük, hogy létezik-e)
   if (szorakozohely.tulajokAdatai) {
         // ITT FIGYELJ A VALTOZÓNEVEKRE: teljesNev és telefon!
-        document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "Nincs adat";
-        document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "Nincs adat";
-        document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "Nincs adat";
+        document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "No data";
+        document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "No data";
+        document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "No data";
     } else {
-        document.getElementById('info-tulaj-nev').innerText = "Nincs adat";
-        document.getElementById('info-tulaj-email').innerText = "Nincs adat";
-        document.getElementById('info-tulaj-tel').innerText = "Nincs adat";
+        document.getElementById('info-tulaj-nev').innerText = "No data";
+        document.getElementById('info-tulaj-email').innerText = "No data";
+        document.getElementById('info-tulaj-tel').innerText = "No data";
     }
     // ---------------------------------------------------------
 
@@ -102,8 +102,7 @@ async function helyFoglalasBekuldese() {
 
 
     if (!felId) {
-        // (Ezt majd lecserélheted SweetAlert-re!)
-        alert("Kérlek, lépj be a foglaláshoz!"); 
+        alert("Please log in to make a booking!"); 
         window.location.href = "login.html";
         return;
     }
@@ -226,14 +225,10 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     let vegPercekben = kezdetPercekben + (parseInt(idotartam) * 60);
 
     // --- AZ ÉJFÉLI TRÜKK ---
-    // Ha a záróra kisebb, mint a nyitvatartás (pl. 18:00 - 02:00), 
-    // akkor a záróra a következő napon van (+24 óra).
     if (zarPercekben <= nyitPercekben) {
         zarPercekben += 24 * 60;
     }
 
-    // Ha a felhasználó éjfél utánra foglal (pl. hajnali 1-re), 
-    // de a hely még az "előző napi" nyitvatartásban van benne:
     if (kezdetPercekben < nyitPercekben && kezdetPercekben < zarPercekben - (24 * 60)) {
         kezdetPercekben += 24 * 60;
         vegPercekben += 24 * 60;
@@ -280,8 +275,6 @@ async function frissitFoglaltHelyIdopontok() {
         
         const foglaltIdopontokBackend = await response.json(); 
         
-        // --- EZ A VARÁZSLAT HIÁNYZOTT! ---
-        // Átalakítjuk a "18:30:00"-kat "18:30"-ra, hogy passzoljon a HTML-hez
         const tisztaFoglaltIdopontok = foglaltIdopontokBackend.map(ido => ido.substring(0, 5));
 
         const idoSelect = document.getElementById('hely-ido'); 
@@ -291,10 +284,9 @@ async function frissitFoglaltHelyIdopontok() {
             let opcio = opciok[i];
             let alapErtek = opcio.value; 
 
-            // ITT MOST MÁR A TISZTÍTOTT TÖMBÖT NÉZZÜK!
             if (tisztaFoglaltIdopontok.includes(alapErtek)) {
                 opcio.disabled = true; 
-                opcio.text = alapErtek + " (Foglalt ❌)";
+                opcio.text = alapErtek + " (Booked ❌)";
                 opcio.style.color = "red";
             } else {
                 opcio.disabled = false; 
@@ -307,11 +299,9 @@ async function frissitFoglaltHelyIdopontok() {
     }
 }
 
-// Eseményfigyelő a helyfoglalás dátum mezőjére (ezt is a fájl végére, a DOMContentLoaded blokkba):
 document.addEventListener('DOMContentLoaded', () => {
     const helyDatumMezo = document.getElementById('hely-foglalas-datum');
 
-    // Itt csak a dátum változását kell figyelnünk, hiszen nincs külön kiválasztható eszköz
     if (helyDatumMezo) {
         helyDatumMezo.addEventListener('change', frissitFoglaltHelyIdopontok);
     }

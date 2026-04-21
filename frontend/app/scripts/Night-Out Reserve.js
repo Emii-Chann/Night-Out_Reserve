@@ -50,4 +50,3 @@ searchInputs.forEach((input) => {
         });
     });
 });
-

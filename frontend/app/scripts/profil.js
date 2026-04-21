@@ -1,4 +1,3 @@
-
 let felId = null;
 
 // Dinamikusan kiolvassuk az ID-t a tokenből
@@ -6,10 +5,8 @@ const token = localStorage.getItem("token");
 if (token) {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        
         // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
         felId = payload.userId; 
-        
     } catch (error) {
         console.error("Hiba a token dekódolásakor:", error);
     }
@@ -17,9 +14,7 @@ if (token) {
 
 async function profilAdatokBetoltese() {
     betoltFoglalasok(`http://104.248.22.60:8080/api/jatekok/felhasznalo/${felId}`, "jatek-lista", "game");
-
     betoltFoglalasok(`http://104.248.22.60:8080/api/asztalok/felhasznalo/${felId}`, "asztal-lista", "table");
-
     betoltFoglalasok(`http://104.248.22.60:8080/api/helyfoglalas/felhasznalo/${felId}`, "hely-lista", "venue");
 }
 
@@ -38,9 +33,7 @@ async function betoltFoglalasok(url, divId, tipus) {
         adatok.forEach((f) => {
             const kezdet = new Date(f.kezdet).toLocaleString("en-US");
             const vege = new Date(f.vege).toLocaleString("en-US");
-            const vegeTime = vege.split(",")[1]
-                ? vege.split(",")[1].trim()
-                : "";
+            const vegeTime = vege.split(",")[1] ? vege.split(",")[1].trim() : "";
 
             listaDiv.innerHTML += `
                 <div class="profil-booking-card" style="position: relative;">
@@ -65,27 +58,20 @@ async function betoltFoglalasok(url, divId, tipus) {
         });
     } catch (hiba) {
         console.error(hiba);
-        listaDiv.innerHTML =
-            "<p>An error occurred while loading your bookings.</p>";
+        listaDiv.innerHTML = "<p>An error occurred while loading your bookings.</p>";
     }
 }
 
 // --- ÚJ: PROFIL ADATOK BETÖLTÉSE ---
 async function felhasznaloAdatBetoltese() {
     try {
-        // Lekérjük a usert a backendről az ID alapján
         const response = await fetch(`http://104.248.22.60:8080/users/${felId}`);
-
-        
         if (response.ok) {
             const user = await response.json();
-            
-            console.log("Ezt a felhasználót küldte a Java:", user);
-            // ⚠️ FIGYELEM: Ha a Java modelledben 'teljesNev' vagy 'telefonszam' van, itt írd át!
             document.getElementById('profil-nev').value = user.username || ""; 
             document.getElementById('profil-email').value = user.email || "";
             document.getElementById('profil-tel').value = user.phone || "";
-                    }
+        }
     } catch (hiba) {
         console.error("Hiba a profil adatok betöltésekor:", hiba);
     }
@@ -112,7 +98,7 @@ async function profilAdatokMentese() {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: "6 karakter hosszú elgyen a username",
+          text: "Username must be at least 6 characters long.",
           background: '#1e1e2d',
           color: '#fff',
           confirmButtonColor: '#ef4444'
@@ -120,16 +106,14 @@ async function profilAdatokMentese() {
         return;
     }
 
-    // Ezt a formátumot várja majd a Java!
     const adatok = {
         id: felId,
-        nev: nev, // Itt is figyelj, hogy egyezzen a Java User/DTO változónevével!
+        nev: nev,
         email: email,
         telefon: telefon
     };
 
     try {
-        // Ezt a végpontot még meg kell csinálnod Javaban, ha nincs!
         const response = await fetch('http://104.248.22.60:8080/users/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -148,8 +132,6 @@ async function profilAdatokMentese() {
             
             // Kitöröljük a régi (elavult) tokent
             localStorage.removeItem("token");
-            
-            // Visszadobjuk a login oldalra
             window.location.href = "login.html"; 
             
         } else {
@@ -176,7 +158,6 @@ async function profilAdatokMentese() {
 }
 
 async function foglalasLemondasa(id, tipus) {
-    // 1. Biztosan le akarja mondani? Kérdezzünk rá!
     const result = await Swal.fire({
         title: 'Are you sure?',
         text: "Do you really want to cancel this booking?",
@@ -189,19 +170,18 @@ async function foglalasLemondasa(id, tipus) {
         confirmButtonText: 'Yes, cancel it!'
     });
 
-    if (!result.isConfirmed) return; // Ha a 'Mégse'-re nyom, kilépünk
+    if (!result.isConfirmed) return;
 
-    // 2. Melyik Java végpontot kell hívnunk?
     let vegpont = "";
     if (tipus === "venue") vegpont = "helyfoglalas";
-    else if (tipus === "table") vegpont = "asztalok"; // vagy ahogy nálad van
-    else if (tipus === "game") vegpont = "jatekok";   // vagy ahogy nálad van
+    else if (tipus === "table") vegpont = "asztalok";
+    else if (tipus === "game") vegpont = "jatekok";
 
     try {
         const response = await fetch(`http://104.248.22.60:8080/api/${vegpont}/lemondas/${id}`, {
-            method: 'PUT', // Frissítjük az adatot
+            method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem("token")}` // Biztonság kedvéért küldjük a tokent!
+                'Authorization': `Bearer ${localStorage.getItem("token")}` 
             }
         });
 
@@ -214,8 +194,6 @@ async function foglalasLemondasa(id, tipus) {
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
             });
-            
-            // Frissítjük a listákat, hogy azonnal eltűnjön a gomb és átíródjon a státusz!
             profilAdatokBetoltese(); 
         } else {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'Something went wrong.' });
@@ -226,10 +204,8 @@ async function foglalasLemondasa(id, tipus) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (felId) { // Csak akkor töltünk be bármit, ha van érvényes ID
+    if (felId) { 
         profilAdatokBetoltese();
         felhasznaloAdatBetoltese(); 
     }
 });
-
-

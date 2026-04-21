@@ -40,14 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
         } catch (error) {
-            console.error("Hibás token található a gépben, nem lehet dekódolni!", error);
+            console.error("Invalid token found, cannot be decoded!", error);
             // Ha hibás a token, érdemes lehet kitörölni, hogy ne okozzon gondot
             // localStorage.removeItem("token"); 
         }
     }
 });
 
-// Kijelentkezés függvény (ha még nem lenne megírva)
+// Kijelentkezés függvény
 function handleLogout() {
     localStorage.removeItem("token");
     window.location.reload(); // Frissítjük az oldalt, így visszaugrik a profil ikon
