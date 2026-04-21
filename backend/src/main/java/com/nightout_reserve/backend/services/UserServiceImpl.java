@@ -2,15 +2,24 @@ package com.nightout_reserve.backend.services;
 
 
 import com.nightout_reserve.backend.models.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.nightout_reserve.backend.repositories.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.nightout_reserve.backend.dto.UserRegistrationDTO;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.nightout_reserve.backend.repositories.AsztalFoglalasRepository;
+import com.nightout_reserve.backend.repositories.HelyFoglalasRepository;
+import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
 
 
 
@@ -99,9 +108,25 @@ public class UserServiceImpl implements UserService{
 
     }
 
-    @Override
-    public void hardDeleteUserById(Integer id) {
-        System.out.println("Deleting user with id "+ id);
-        userRepository.deleteById(id);
-    }
+    @Autowired
+    private JatekFoglalasRepository jatekFoglalasRepository;
+
+    @Autowired
+    private AsztalFoglalasRepository asztalFoglalasRepository;
+    @Autowired
+    private HelyFoglalasRepository helyFoglalasRepository;
+
+  @Override
+@Transactional // Fontos, hogy ez egy tranzakció legyen!
+public void hardDeleteUserById(Integer id) {
+    System.out.println("Deleting user with id "+ id);
+    
+    // 1. Először töröljük a userhez tartozó összes foglalást
+    jatekFoglalasRepository.deleteByFelhasznaloId(id);
+    asztalFoglalasRepository.deleteByFelhasznaloId(id);
+    helyFoglalasRepository.deleteByFelhasznaloId(id);
+    
+    // 2. Végül törölhetjük magát a usert
+    userRepository.deleteById(id);
+}
 }

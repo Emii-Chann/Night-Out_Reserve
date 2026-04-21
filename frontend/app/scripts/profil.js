@@ -209,3 +209,64 @@ document.addEventListener("DOMContentLoaded", () => {
         felhasznaloAdatBetoltese(); 
     }
 });
+
+
+// --- ÚJ: FIÓK TELJES TÖRLÉSE (GDPR) ---
+async function fiokTorlese() {
+    const result = await Swal.fire({
+        title: 'Are you absolutely sure?',
+        text: "This will permanently delete your account and all your bookings. This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        background: '#1e1e2d',
+        color: '#fff',
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#4b5563',
+        confirmButtonText: 'Yes, delete everything!',
+        cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+        try {
+            // Itt a backend DELETE végpontját hívjuk meg
+            const response = await fetch(`http://104.248.22.60:8080/users/hardDelete/${felId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (response.ok) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Account Deleted',
+                    text: 'Your data has been successfully removed from our system. Goodbye!',
+                    background: '#1e1e2d',
+                    color: '#fff',
+                    confirmButtonColor: '#8b5cf6'
+                });
+
+                // Kijelentkeztetés és takarítás
+                localStorage.removeItem("token");
+                window.location.href = "index.html";
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Could not delete account. Please try again later.',
+                    background: '#1e1e2d',
+                    color: '#fff'
+                });
+            }
+        } catch (error) {
+            console.error("Hiba a törlés során:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'Failed to reach the server.',
+                background: '#1e1e2d',
+                color: '#fff'
+            });
+        }
+    }
+}
