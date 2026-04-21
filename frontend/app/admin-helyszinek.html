@@ -15,8 +15,16 @@
 </head>
 
 <body>
+ <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div>
+            <h2>Night-Out</h2>
 
-           <nav class="sidebar-nav">
+            <span>Admin Panel</span>
+        </div>
+
+
+        <nav class="sidebar-nav">
 
             <select id="venueSelector" class="admin-venue-select"
                 style="margin-right: 15px; padding: 5px; border-radius: 5px;">
@@ -32,7 +40,7 @@
                 <i class="fa fa-repeat" aria-hidden="true"></i> Change Password
             </a>
             <a href="./admin-eszkozok.html" class="nav-profile-link">
-                <i class="fa fa-gamepad" aria-hidden="true"></i> Devices
+                <i class="fa fa-gamepad" aria-hidden="true"></i> Tools
             </a>
             <a href="./admin-profil.html" class="nav-profile-link">
                 <i class="fa fa-user" aria-hidden="true"></i> Profile
@@ -52,10 +60,9 @@
     <main class="admin-container" style="padding: 120px 20px;">
         <div class="admin-header"
             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h1>Helyszínek Kezelése</h1>
+            <h1>Managing Venues</h1>
             <div class="admin-actions">
-                <button onclick="document.getElementById('ujHelyModal').style.display='block'" class="btn-primary"> Új
-                    Szórakozóhely</button>
+                <button onclick="document.getElementById('ujHelyModal').style.display='block'" class="btn-primary"> New venue</button>
 
             </div>
         </div>
