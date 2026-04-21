@@ -6,7 +6,8 @@ const navbarKód = `
         </div>
         
         <div id="auth-menu">
-            <a href="./reg.html">
+         <a href="./admin-dashboard.html" class="nav-profile-link">Admin</a>
+        <a href="./reg.html">
                 <div class="profil"><i class="fa-regular fa-user"></i></div>
             </a>
         </div>
