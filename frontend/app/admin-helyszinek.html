@@ -16,36 +16,37 @@
 
 <body>
 
-    <div class="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div>
-            <h2>Night-Out</h2>
+           <nav class="sidebar-nav">
 
-            <span>Admin Panel</span>
-        </div>
-
-        <nav class="sidebar-nav">
-
+            <select id="venueSelector" class="admin-venue-select"
+                style="margin-right: 15px; padding: 5px; border-radius: 5px;">
+            </select>
+<nav>
             <a href="admin-dashboard.html" id="nav-dashboard">
-                <i class="fa-solid fa-chart-line"></i> Vezérlőpult
+                <i class="fa-solid fa-chart-line"></i> Dashboard
             </a>
             <a href="admin-helyszinek.html" id="nav-helyszinek">
-                <i class="fa-solid fa-location-dot"></i> Helyszínek
+                <i class="fa-solid fa-location-dot"></i> Locations
             </a>
             <a href="./set-password.html" class="nav-profile-link">
-                <i class="fa fa-repeat" aria-hidden="true"></i> Passwordchange</a>
+                <i class="fa fa-repeat" aria-hidden="true"></i> Change Password
+            </a>
             <a href="./admin-eszkozok.html" class="nav-profile-link">
-                <i class="fa fa-gamepad" aria-hidden="true"></i> Eszközök</a>
+                <i class="fa fa-gamepad" aria-hidden="true"></i> Devices
+            </a>
             <a href="./admin-profil.html" class="nav-profile-link">
-                <i class="fa fa-user" aria-hidden="true"></i> Profil</a>
+                <i class="fa fa-user" aria-hidden="true"></i> Profile
+            </a>
 
             <span id="adminNameDisplay" style="margin-right: 15px; color: #eee;"></span>
         </nav>
         <div class="sidebar-footer">
             <button onclick="kijelentkezes()" class="btn-logout">
-                <i class="fa-solid fa-right-from-bracket"></i> Kijelentkezés
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
             </button>
         </div>
+    </div>
+
     </div>
 
     <main class="admin-container" style="padding: 120px 20px;">
