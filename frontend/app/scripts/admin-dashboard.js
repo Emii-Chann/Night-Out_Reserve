@@ -16,7 +16,7 @@ async function getReservations() {
                               (f.allapot === "LEMONDVA" || f.allapot === "ELUTASITVA") ? "rejected" : "pending";
 
             let reszlet = "Venue rental";
-            let tipusKulcs = "Venue";
+            let tipusKulcs = "hely";
 
             // Most már az ID-t figyeljük, nem a nevet!
             if (f.jatekId) {
