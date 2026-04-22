@@ -1,14 +1,18 @@
 // --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
+// --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE (Cache tiltással) ---
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
 
     try {
-        const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/osszes?szid=${szid}`);
+        // Hozzáadtuk a cache: 'no-store' parancsot, hogy mindig a legfrissebb adatot kérje a szervertől!
+        const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/osszes?szid=${szid}`, {
+            cache: 'no-store' 
+        });
+        
         if (!response.ok) throw new Error("Error during query!");
         
         const adatok = await response.json();
 
-        // Kiszűrjük azokat, amik már teljesítve lettek!
         const lathatoAdatok = adatok.filter(f => f.allapot !== "TELJESITVE");
 
        return lathatoAdatok.map(f => {
@@ -18,7 +22,6 @@ async function getReservations() {
             let reszlet = "Venue rental";
             let tipusKulcs = "hely";
 
-            // Most már az ID-t figyeljük, nem a nevet!
             if (f.jatekId) {
                 reszlet = f.jatekNev ? `Játék: ${f.jatekNev}` : "Game rental";
                 tipusKulcs = "jatek";
@@ -27,7 +30,6 @@ async function getReservations() {
                 tipusKulcs = "asztal";
             }
 
-            // Visszaállítjuk az ID keresést az eredetire
             const db_id = f.id || f.helyszinFoglalasId || f.jatekFoglalasId || f.asztalFoglalasId;
 
             return {
@@ -94,11 +96,12 @@ function createReservationCard(reservation) {
     return card;
 }
 
-// --- 3. BACKEND KOMMUNIKÁCIÓ (FRISSÍTÉS ÉS TÖRLÉS) ---
 async function updateReservationStatus(id, newStatus, tipus) {
     console.log("KATTINTÁS TÖRTÉNT! ID:", id, "| Új státusz:", newStatus, "| Típus:", tipus);
-    let javaAllapot = (newStatus === "accepted") ? "JOVAHAGYVA" : 
-                      (newStatus === "rejected") ? "LEMONDVA" : 
+    
+    // Kicseréltük a szavakat ELFOGADVA / ELUTASITVA -ra, hátha a Java ezt várja!
+    let javaAllapot = (newStatus === "accepted") ? "ELFOGADVA" : 
+                      (newStatus === "rejected") ? "ELUTASITVA" : 
                       (newStatus === "completed") ? "TELJESITVE" : "FUGGOBEN";
 
     try {
@@ -107,12 +110,14 @@ async function updateReservationStatus(id, newStatus, tipus) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id, allapot: javaAllapot, tipus: tipus })
         });
-        if (response.ok) await renderReservations();
+        
+        if (response.ok) {
+            await renderReservations(); // Ha sikeres, újra rendereljük a friss adatokat
+        }
     } catch (error) {
         console.error("Error updating status:", error);
     }
 }
-
 async function deleteReservation(id, tipus) {
     const result = await Swal.fire({
         title: 'Are you sure?',
