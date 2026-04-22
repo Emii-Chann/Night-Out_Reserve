@@ -22,7 +22,7 @@ async function getReservations() {
                               (f.allapot === "TELJESITVE") ? "completed" : "pending";
 
             let reszlet = "Venue rental";
-            let tipusKulcs = "hely";
+            let tipusKulcs = "helyszin";
 
             if (f.jatekId) {
                 reszlet = f.jatekNev ? `Game: ${f.jatekNev}` : "Game rental";
