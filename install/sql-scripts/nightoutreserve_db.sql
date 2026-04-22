@@ -34,7 +34,7 @@ CREATE TABLE `asztal_foglalasok` (
   `letszam` int(11) NOT NULL,
   `kezdet` datetime NOT NULL,
   `vege` datetime NOT NULL,
-  `allapot` enum('FUGGO', 'JOVAHAGYVA', 'LEMONDVA', 'TELJESITVE') NOT NULL DEFAULT 'FUGGO',
+  `allapot` enum('PENDING','APPROVED','CANCELLED','COMPLETED') NOT NULL DEFAULT 'PENDING',
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp(),
   `torolve_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -108,7 +108,7 @@ CREATE TABLE `hely_foglalasok` (
   `letszam` int(11) NOT NULL,
   `kezdet` datetime NOT NULL,
   `vege` datetime NOT NULL,
-  `allapot` enum('FUGGO', 'JOVAHAGYVA', 'LEMONDVA', 'TELJESITVE') NOT NULL DEFAULT 'FUGGO',
+  `allapot` enum('PENDING','APPROVED','CANCELLED','COMPLETED') NOT NULL,
   `megjegyzes` text DEFAULT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp(),
   `torolve_at` datetime DEFAULT NULL
@@ -139,7 +139,7 @@ CREATE TABLE `jatek_foglalasok` (
   `jatek_id` int(11) NOT NULL,
   `kezdet` datetime NOT NULL,
   `vege` datetime NOT NULL,
-  `allapot` enum('FUGGO','JOVAHAGYVA','LEMONDVA','TELJESITVE') NOT NULL,
+  `allapot` enum('PENDING','APPROVED','CANCELLED','COMPLETED') NOT NULL,
   `letrehozva_at` datetime NOT NULL DEFAULT current_timestamp(),
   `torolve_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

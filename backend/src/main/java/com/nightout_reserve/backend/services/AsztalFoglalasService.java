@@ -1,13 +1,12 @@
 package com.nightout_reserve.backend.services;
 
-import com.nightout_reserve.backend.enums.Allapot;
-import com.nightout_reserve.backend.exceptions.AsztalMarFoglaltException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nightout_reserve.backend.enums.Allapot;
+import com.nightout_reserve.backend.exceptions.AsztalMarFoglaltException;
 import com.nightout_reserve.backend.models.Asztal;
 import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.repositories.AsztalFoglalasRepository;
@@ -101,30 +100,7 @@ public void statuszFrissites(Integer id, String ujStatusz) {
 
 
 
-    //********************
-    //Violates separation of concerns.
-    // Makes services non-reusable outside HTTP context.
-    // Impossible to unit test properly!!!!!!!!!!!!!!!!
-    //********************
-//    public ResponseEntity<String> mentes(AsztalFoglalas ujFoglalas) {
-//        int utkozesek = repo.countUtkozesek(
-//            ujFoglalas.getSzorakozohelyId(),
-//            ujFoglalas.getAsztalSzam(),
-//            ujFoglalas.getKezdet(),
-//            ujFoglalas.getVege()
-//        );
-//
-//        if (utkozesek > 0) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sajnos ez az asztal ebben az időpontban már foglalt!");
-//        }
-//
-//        if(ujFoglalas.getAllapot() == null) {
-//            ujFoglalas.setAllapot(Allapot.FUGGO);
-//}
-//
-//        repo.save(ujFoglalas);
-//        return ResponseEntity.ok("Sikeres asztalfoglalás!");
-//    }
+
 
     public AsztalFoglalas mentes(AsztalFoglalas ujFoglalas) throws AsztalMarFoglaltException{
         int utkozesek = repo.countUtkozesek( //Tesztelted ezt? Biztos működik?
@@ -134,7 +110,7 @@ public void statuszFrissites(Integer id, String ujStatusz) {
                 ujFoglalas.getVege()
         );
         if(ujFoglalas.getAllapot() == null) {
-            ujFoglalas.setAllapot(Allapot.FUGGO);
+            ujFoglalas.setAllapot(Allapot.PENDING);
         }
 
         if (utkozesek > 0) {

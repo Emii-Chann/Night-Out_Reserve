@@ -1,16 +1,24 @@
 package com.nightout_reserve.backend.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.nightout_reserve.backend.enums.Allapot;
 import com.nightout_reserve.backend.models.Asztal;
@@ -109,7 +117,7 @@ private void hozzaadIdoszeleteket(List<String> lista, LocalDateTime start, Local
                 .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
 
             // 2. Átállítjuk a státuszt
-                foglalas.setAllapot(Allapot.LEMONDVA);           
+                foglalas.setAllapot(Allapot.CANCELLED);           
 
             // 3. Elmentjük
             asztalFoglalasRepository.save(foglalas);

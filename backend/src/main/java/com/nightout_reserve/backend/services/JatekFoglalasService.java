@@ -1,15 +1,12 @@
 package com.nightout_reserve.backend.services;
 
-import com.nightout_reserve.backend.exceptions.JatekMarFoglaltException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.nightout_reserve.backend.enums.Allapot;
-import com.nightout_reserve.backend.models.AsztalFoglalas;
+import com.nightout_reserve.backend.exceptions.JatekMarFoglaltException;
 import com.nightout_reserve.backend.models.JatekFoglalas;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
@@ -119,7 +116,7 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
             ujJatekFoglalas.getVege()
         );
         if(ujJatekFoglalas.getAllapot() == null) {
-            ujJatekFoglalas.setAllapot(Allapot.FUGGO);
+            ujJatekFoglalas.setAllapot(Allapot.PENDING);
         }
         if (utkozesek > 0) {
             throw new JatekMarFoglaltException("Sajnos ez a játék ebben az időpontban már foglalt!");

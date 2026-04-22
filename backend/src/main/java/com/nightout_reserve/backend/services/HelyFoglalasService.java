@@ -1,15 +1,12 @@
 package com.nightout_reserve.backend.services;
 
-import com.nightout_reserve.backend.enums.Allapot;
-import com.nightout_reserve.backend.exceptions.HelyMarFoglaltException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.nightout_reserve.backend.enums.Allapot;
-import com.nightout_reserve.backend.models.AsztalFoglalas;
+import com.nightout_reserve.backend.exceptions.HelyMarFoglaltException;
 import com.nightout_reserve.backend.models.HelyFoglalas;
 import com.nightout_reserve.backend.repositories.HelyFoglalasRepository;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
@@ -81,25 +78,7 @@ public void helyszinStatuszFrissites(Integer id, String ujStatusz) {
     // 3. Visszaadjuk a már kiegészített listát
     return foglalasok;
 }
-//
-//    public ResponseEntity<String> mentes(HelyFoglalas ujFoglalas) {
-//        int utkozesek = repo.countUtkozesek(
-//            ujFoglalas.getSzorakozohelyId(),
-//            ujFoglalas.getKezdet(),
-//            ujFoglalas.getVege()
-//        );
-//
-//        if (utkozesek > 0) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sajnos ebben az időpontban a helyszín már foglalt!");
-//        }
-//
-//        if(ujFoglalas.getAllapot() == null) {
-//            ujFoglalas.setAllapot(Allapot.FUGGO);
-//           }
-//
-//        repo.save(ujFoglalas);
-//        return ResponseEntity.ok("Sikeres helyfoglalás!");
-//    }
+
 
     public HelyFoglalas mentes(HelyFoglalas ujHelyFoglalas) throws HelyMarFoglaltException{
         int utkozesek = repo.countUtkozesek(
@@ -108,7 +87,7 @@ public void helyszinStatuszFrissites(Integer id, String ujStatusz) {
             ujHelyFoglalas.getVege()
         );
         if(ujHelyFoglalas.getAllapot() == null) {
-            ujHelyFoglalas.setAllapot(Allapot.FUGGO);
+            ujHelyFoglalas.setAllapot(Allapot.PENDING);
         }
         if (utkozesek > 0) {
            throw new HelyMarFoglaltException("Sajnos ebben az időpontban a helyszín már foglalt!");
