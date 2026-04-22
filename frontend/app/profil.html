@@ -1,124 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-bs-theme="dark">
 <head>
     <link rel="icon" type="image/png" href="images/logo1.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile — My bookings</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css">
+    
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
-    <style>
-        /* Profile page only */
-        .profil-page-inner {
-            max-width: 920px;
-            margin: 0 auto;
-            padding: 110px 20px 80px;
-        }
-
-        .profil-intro-card {
-            background: linear-gradient(145deg, rgba(25, 25, 40, 0.95), rgba(15, 15, 26, 0.98));
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 28px 28px 24px;
-            margin-bottom: 28px;
-            text-align: center;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 1px rgba(139, 92, 246, 0.35);
-        }
-
-        .profil-intro-card h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        .profil-intro-card p {
-            color: var(--text-gray);
-            font-size: 0.95rem;
-            max-width: 520px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
-
-        .profil-section-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 22px 22px 18px;
-            margin-bottom: 22px;
-            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.55);
-        }
-
-        .profil-section-card h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .profil-section-card h2 i {
-            color: var(--primary-color);
-        }
-
-        .profil-list-placeholder {
-            color: var(--text-gray);
-            font-size: 0.95rem;
-        }
-
-        .profil-booking-card {
-            background: rgba(21, 21, 33, 0.65);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            text-align: left;
-        }
-
-        .profil-booking-card p {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            color: var(--text-white);
-            line-height: 1.45;
-        }
-
-        .profil-booking-card p:last-of-type {
-            margin-bottom: 0;
-        }
-
-        .profil-booking-card strong {
-            color: var(--text-gray);
-            font-weight: 600;
-        }
-
-        .profil-booking-card hr {
-            border: none;
-            border-top: 1px solid var(--border-color);
-            margin: 12px 0 0;
-        }
-
-        @media (max-width: 600px) {
-            .profil-page-inner {
-                padding-top: 96px;
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-
-            .profil-intro-card {
-                padding: 22px 18px;
-            }
-
-            .profil-intro-card h1 {
-                font-size: 1.45rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="./styles/profil.css">
 </head>
-
 <body>
     <div id="navbar-container"></div>
 
@@ -128,74 +23,61 @@
             <p>View your game, table, and venue reservations in one place.</p>
         </div>
 
-        <div class="profil-container">
-            <section class="profil-section-card">
-                <h2><i class="fa-solid fa-dice"></i> Game bookings</h2>
-                <div id="jatek-lista" class="profil-list-placeholder" role="status">Loading…</div>
-            </section>
-
-            <section class="profil-section-card">
-                <h2><i class="fa-solid fa-chair"></i> Table bookings</h2>
-                <div id="asztal-lista" class="profil-list-placeholder" role="status">Loading…</div>
-            </section>
-
-            <section class="profil-section-card">
-                <h2><i class="fa-solid fa-building"></i> Venue bookings</h2>
-                <div id="hely-lista" class="profil-list-placeholder" role="status">Loading…</div>
-            </section>
-
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <section class="profil-section-card h-100 mb-0">
+                    <h2><i class="fa-solid fa-dice"></i> Game bookings</h2>
+                    <div id="jatek-lista" class="profil-list-placeholder">Loading…</div>
+                </section>
+            </div>
+            
+            <div class="col-md-4">
+                <section class="profil-section-card h-100 mb-0">
+                    <h2><i class="fa-solid fa-chair"></i> Table bookings</h2>
+                    <div id="asztal-lista" class="profil-list-placeholder">Loading…</div>
+                </section>
+            </div>
+            
+            <div class="col-md-4">
+                <section class="profil-section-card h-100 mb-0">
+                    <h2><i class="fa-solid fa-building"></i> Venue bookings</h2>
+                    <div id="hely-lista" class="profil-list-placeholder">Loading…</div>
+                </section>
+            </div>
         </div>
 
-        <div class="profil-container">
-
-            <section class="profil-section-card">
-                <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
-                <form id="profil-szerkeszto-form">
-                    <div style="margin-bottom: 15px;">
-                        <label
-                            style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Username</label>
-                        <input type="text" id="profil-nev"
-                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;"
-                            required>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <label
-                            style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Email
-                            Address</label>
-                        <input type="email" id="profil-email"
-                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;"
-                            required>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <label
-                            style="display: block; margin-bottom: 5px; color: var(--text-gray); font-size: 0.9rem;">Phone
-                            Number</label>
-                        <input type="text" id="profil-tel"
-                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white;">
-                    </div>
-                    <button type="button" onclick="profilAdatokMentese()"
-                        style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">
-                        Save Changes
+        <section class="profil-section-card">
+            <h2><i class="fa-solid fa-user"></i> Personal Information</h2>
+            <form id="profil-szerkeszto-form">
+                <div class="mb-3">
+                    <label class="form-label text-secondary small">Username</label>
+                    <input type="text" id="profil-nev" class="form-control bg-dark text-white border-secondary" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary small">Email Address</label>
+                    <input type="email" id="profil-email" class="form-control bg-dark text-white border-secondary" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-secondary small">Phone Number</label>
+                    <input type="text" id="profil-tel" class="form-control bg-dark text-white border-secondary">
+                </div>
+                <button type="button" onclick="profilAdatokMentese()" class="btn text-white w-100 fw-bold py-2" style="background-color: #8b5cf6;">
+                    Save Changes
+                </button>
+                
+                <div class="mt-5 pt-4 border-top border-danger border-opacity-50">
+                    <h3 class="text-danger fs-5 mb-2">Danger Zone</h3>
+                    <p class="text-secondary small mb-3">Once you delete your account, there is no going back. All your bookings and personal data will be permanently removed.</p>
+                    <button type="button" onclick="fiokTorlese()" class="btn btn-outline-danger fw-bold">
+                        <i class="fa-solid fa-trash-can"></i> Delete My Account
                     </button>
-                    <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(239, 68, 68, 0.3);">
-                        <h3 style="color: #ef4444; font-size: 1.1rem;">Danger Zone</h3>
-                        <p style="color: #a0a0b0; font-size: 0.85rem; margin-bottom: 15px;">
-                            Once you delete your account, there is no going back. All your bookings and personal data
-                            will be permanently removed.
-                        </p>
-               
-                    </div>
-                </form>
-                <button onclick="fiokTorlese()"
-                            style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s;">
-                            <i class="fa-solid fa-trash-can"></i> Delete My Account
-                        </button>
-            </section>
-
+                </div>
+            </form>
+        </section>
     </main>
 
     <script src="./scripts/nav.js"></script>
     <script src="./scripts/profil.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
 </html>

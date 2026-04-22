@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
-    <link rel="icon" type="image/png" href="images/logo1.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Night-Out Reserve</title>
+    <link rel="icon" type="image/png" href="images/logo1.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <div id="navbar-container"></div>
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Your night, <span class="text-purple">your way</span></h1>
-            <p>Book exclusive venues, VIP tables, and premium games for the perfect nightlife experience.</p>
+    
+    <header class="hero d-flex flex-column justify-content-center align-items-center text-center px-3" style="min-height: 60vh;">
+        <div class="hero-content mt-5 pt-5 w-100">
+            <h1 class="display-3 fw-bold mb-3">Your night, <span style="color: #8b5cf6;">your way</span></h1>
+            <p class="lead text-secondary mb-4 mx-auto" style="max-width: 600px;">Book exclusive venues, VIP tables, and premium games for the perfect nightlife experience.</p>
 
-            <div class="search-bar">
+            <div class="search-bar mx-auto">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" placeholder="">
+                <input type="text" placeholder="Search venues...">
                 <button class="search-btn">Search</button>
             </div>
 
-            <div class="category-tabs">
+            <div class="category-tabs mt-4">
                 <a href="#" class="tab active">Venues</a>
                 <a href="./asztalok.html" class="tab">Tables</a>
                 <a href="./jatekok.html" class="tab">Games</a>
@@ -33,107 +37,109 @@
         </div>
     </header>
 
-    <div id="hely-helyszinek-lista"></div>
+    <div id="hely-helyszinek-lista" class="container py-5"></div>
 
     <div id="hely-foglalas-modal" style="display: none;" class="modal">
-        <div class="modal-tartalom" style="max-width: 800px;">
-            <h2 id="hely-modal-cim" style="text-align: center; margin-bottom: 20px;">Venue booking</h2>
+        <div class="modal-tartalom container p-4" style="max-width: 800px;">
+            <h2 id="hely-modal-cim" class="text-center mb-4 fw-bold">Venue booking</h2>
 
-            <div style="display: flex; gap: 30px; align-items: flex-start;">
-
-                <div style="flex: 1;">
-                    <h4 style="color: #bb86fc; margin-bottom: 15px;">Booking Details</h4>
+            <div class="row g-4">
+                
+                <div class="col-md-6">
+                    <h4 class="mb-3" style="color: #bb86fc;">Booking Details</h4>
                     <form id="hely-foglalas-form">
-                        <label>Date</label>
-                        <input type="date" id="hely-datum" required>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" id="hely-datum" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
 
-                        <label>Arrival time</label>
-                        <select id="hely-ido" required> </select>
+                        <div class="mb-3">
+                            <label class="form-label">Arrival time</label>
+                            <select id="hely-ido" class="form-select bg-dark text-white border-secondary" required></select>
+                        </div>
 
-                        <label>Duration (hours)</label>
-                        <input type="number" id="hely-idotartam" value="2" min="1" required>
+                        <div class="mb-3">
+                            <label class="form-label">Duration (hours)</label>
+                            <input type="number" id="hely-idotartam" class="form-control bg-dark text-white border-secondary" value="2" min="1" required>
+                        </div>
 
-                        <label>Guests</label>
-                        <input type="number" id="hely-letszam" value="2" min="1" required>
+                        <div class="mb-3">
+                            <label class="form-label">Guests</label>
+                            <input type="number" id="hely-letszam" class="form-control bg-dark text-white border-secondary" value="2" min="1" required>
+                        </div>
 
-                        <label>Note</label>
-                        <textarea id="hely-megjegyzes" rows="3" placeholder="Optional..."></textarea>
+                        <div class="mb-3">
+                            <label class="form-label">Note</label>
+                            <textarea id="hely-megjegyzes" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Optional..."></textarea>
+                        </div>
 
                         <input type="hidden" id="hely-szorakozohely-id">
 
-                        <div style="margin-top: 20px; display: flex; gap: 10px;">
-                            <button type="button" class="btn-primary" onclick="helyFoglalasBekuldese()">Submit
-                                booking</button>
-                            <button type="button" class="btn-outline" onclick="helyModalBezarasa()">Cancel</button>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="button" class="btn text-white flex-grow-1 fw-bold" style="background-color: #8b5cf6;" onclick="helyFoglalasBekuldese()">Submit booking</button>
+                            <button type="button" class="btn btn-outline-light flex-grow-1" onclick="helyModalBezarasa()">Cancel</button>
                         </div>
                     </form>
                 </div>
-                <div
-                    style="flex: 1; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid #444;">
-                    <h4 style="color: #bb86fc; margin-top: 0;">Venue Information</h4>
-                    <div id="helyszin-info-display">
-                        <p style="margin: 8px 0;"><strong>Name:</strong> <span id="info-hely-nev"
-                                style="color: #eee;">-</span></p>
-                        <p style="margin: 8px 0;"><strong>City:</strong> <span id="info-hely-varos"
-                                style="color: #eee;">-</span></p>
-                        <p style="margin: 8px 0;"><strong>Address:</strong> <span id="info-hely-cim"
-                                style="color: #eee;">-</span></p>
-                        <p style="margin: 8px 0;"><strong>Type:</strong> <span id="info-hely-tipus"
-                                style="color: #eee;">-</span></p>
-                    </div>
+                
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.05); border: 1px solid #444;">
+                        <h4 class="mb-3" style="color: #bb86fc;">Venue Information</h4>
+                        <div id="helyszin-info-display" class="mb-4">
+                            <p class="mb-2 text-secondary"><strong>Name:</strong> <span id="info-hely-nev" class="text-white">-</span></p>
+                            <p class="mb-2 text-secondary"><strong>City:</strong> <span id="info-hely-varos" class="text-white">-</span></p>
+                            <p class="mb-2 text-secondary"><strong>Address:</strong> <span id="info-hely-cim" class="text-white">-</span></p>
+                            <p class="mb-0 text-secondary"><strong>Type:</strong> <span id="info-hely-tipus" class="text-white">-</span></p>
+                        </div>
 
-                    <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+                        <hr class="border-secondary">
 
-                    <h4 style="color: #bb86fc;">Owner Contact</h4>
-                    <div id="tulaj-info-display">
-                        <p style="margin: 8px 0;"><strong>Contact Person:</strong> <span id="info-tulaj-nev"
-                                style="color: #eee;">-</span></p>
-                        <p style="margin: 8px 0;"><strong>Email:</strong> <span id="info-tulaj-email"
-                                style="color: #eee;">-</span></p>
-                        <p style="margin: 8px 0;"><strong>Phone:</strong> <span id="info-tulaj-tel"
-                                style="color: #eee;">-</span></p>
+                        <h4 class="mb-3 mt-3" style="color: #bb86fc;">Owner Contact</h4>
+                        <div id="tulaj-info-display">
+                            <p class="mb-2 text-secondary"><strong>Contact Person:</strong> <span id="info-tulaj-nev" class="text-white">-</span></p>
+                            <p class="mb-2 text-secondary"><strong>Email:</strong> <span id="info-tulaj-email" class="text-white">-</span></p>
+                            <p class="mb-0 text-secondary"><strong>Phone:</strong> <span id="info-tulaj-tel" class="text-white">-</span></p>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
-    <footer class="footer">
-        <div class="footer-container">
-
-            <div class="footer-column">
-                <h4>Night-Out Reserve</h4>
-                <p>Premium booking for nightlife and experiences.</p>
+    
+    <footer class="footer mt-auto py-5" style="background-color: #2e2e42;">
+        <div class="container">
+            <div class="row g-4 text-center text-md-start">
+                <div class="col-12 col-md-3">
+                    <h5 class="fw-bold text-white mb-3">Night-Out Reserve</h5>
+                    <p class="text-secondary small">Premium booking for nightlife and experiences.</p>
+                </div>
+                <div class="col-12 col-md-3 d-flex flex-column gap-2">
+                    <h5 class="fw-bold text-white mb-3">Pages</h5>
+                    <a href="./index.html" class="text-decoration-none text-secondary custom-link">Home</a>
+                    <a href="./rolunk.html" class="text-decoration-none text-secondary custom-link">About</a>
+                    <a href="./kapcsolat.html" class="text-decoration-none text-secondary custom-link">Contact</a>
+                </div>
+                <div class="col-12 col-md-3 d-flex flex-column gap-2">
+                    <h5 class="fw-bold text-white mb-3">Services</h5>
+                    <a href="#" class="text-decoration-none text-secondary custom-link">For Partners</a>
+                    <a href="#" class="text-decoration-none text-secondary custom-link">System Status</a>
+                </div>
+                <div class="col-12 col-md-3 d-flex flex-column gap-2">
+                    <h5 class="fw-bold text-white mb-3">Legal</h5>
+                    <a href="#" class="text-decoration-none text-secondary custom-link">Gift Card</a>
+                    <a href="#" class="text-decoration-none text-secondary custom-link">Privacy</a>
+                    <a href="#" class="text-decoration-none text-secondary custom-link">Terms of Use</a>
+                </div>
             </div>
-
-            <div class="footer-column">
-                <h4>Pages</h4>
-                <a href="./index.html">Home</a>
-                <a href="./rolunk.html">About</a>
-                <a href="./kapcsolat.html">Contact</a>
-            </div>
-
-            <div class="footer-column">
-                <h4>Services</h4>
-                <a href="#">For Partners</a>
-                <a href="#">System Status</a>
-            </div>
-
-            <div class="footer-column">
-                <h4>Legal</h4>
-                <a href="#">Gift Card</a>
-                <a href="#">Privacy</a>
-                <a href="#">Terms of Use</a>
-            </div>
-
-        </div>
-
         </div>
     </footer>
+
     <script src="./scripts/Night-Out Reserve.js"></script>
     <script src="./scripts/helyfoglalas.js"></script>
     <script src="./scripts/nav.js"></script>
     <script src="./scripts/helyfoglalas_helyszinek .js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
 </html>

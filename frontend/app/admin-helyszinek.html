@@ -1,246 +1,177 @@
 <!DOCTYPE html>
-<html lang="hu">
-
+<html lang="en" data-bs-theme="dark">
 <head>
     <link rel="icon" type="image/png" href="images/logo1.png">
     <meta charset="UTF-8">
-    <title>Admin - Helyszínek Kezelése</title>
+    <title>Admin - Managing Locations</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./styles/Night-Out Reserve.css">
     <link rel="stylesheet" href="./styles/admin.css">
-
 </head>
-
 <body>
- <div class="sidebar">
-    <div class="sidebar-logo" style="display: flex; align-items: center; gap: 10px;">
-        <div class="logo-icon">
-            <i class="fa-regular fa-calendar-check"></i>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon"><i class="fa-regular fa-calendar-check"></i></div>
+            <h2>Night-Out Reserve</h2>
         </div>
-        <h2 style="margin: 0;">Night-Out Reserve</h2>
-        
-    </div>
-
-
         <nav class="sidebar-nav">
-
-            <select id="venueSelector" class="admin-venue-select"
-                style="margin-right: 15px; padding: 5px; border-radius: 5px;">
-            </select>
-<nav>
-            <a href="admin-dashboard.html" id="nav-dashboard">
-                <i class="fa-solid fa-chart-line"></i> Dashboard
-            </a>
-            <a href="admin-helyszinek.html" id="nav-helyszinek">
-                <i class="fa-solid fa-location-dot"></i> Locations
-            </a>
-            <a href="./set-password.html" class="nav-profile-link">
-                <i class="fa fa-repeat" aria-hidden="true"></i> Change Password
-            </a>
-            <a href="./admin-eszkozok.html" class="nav-profile-link">
-                <i class="fa fa-gamepad" aria-hidden="true"></i> Tables & Games
-            </a>
-            <a href="./admin-profil.html" class="nav-profile-link">
-                <i class="fa fa-user" aria-hidden="true"></i> Profile
-            </a>
-
-            <span id="adminNameDisplay" style="margin-right: 15px; color: #eee;"></span>
+            <select id="venueSelector" class="admin-venue-select mb-3 ms-4 me-4 w-75 p-2 rounded border-0"></select>
+            <a href="admin-dashboard.html" id="nav-dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="admin-helyszinek.html" id="nav-helyszinek" class="active"><i class="fa-solid fa-location-dot"></i> Locations</a>
+            <a href="./set-password.html" class="nav-profile-link"><i class="fa fa-repeat"></i> Change Password</a>
+            <a href="./admin-eszkozok.html" class="nav-profile-link"><i class="fa fa-gamepad"></i> Tables & Games</a>
+            <a href="./admin-profil.html" class="nav-profile-link"><i class="fa fa-user"></i> Profile</a>
         </nav>
         <div class="sidebar-footer">
-            <button onclick="kijelentkezes()" class="btn-logout">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
-            </button>
+            <button onclick="kijelentkezes()" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </div>
     </div>
 
-    </div>
-
-    <main class="admin-container" style="padding: 120px 20px;">
-        <div class="admin-header"
-            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h1>Managing Venues</h1>
-            <div class="admin-actions">
-                <button onclick="document.getElementById('ujHelyModal').style.display='block'" class="btn-primary"> New venue</button>
-
-            </div>
+    <main class="admin-container p-5">
+        <div class="admin-header d-flex justify-content-between align-items-center mb-5">
+            <h1 class="fw-bold m-0">Managing Venues</h1>
+            <button onclick="document.getElementById('ujHelyModal').style.display='block'" class="admin-primary-btn m-0">+ New venue</button>
         </div>
 
-        <div class="admin-card" style="text-align: center;">
-            <div id="admin-helyszin-grid" class="helyszinek-grid"
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 20px;">
-            </div>
-        </div>
+        <div id="admin-helyszin-grid" class="helyszinek-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;"></div>
     </main>
 
+    <div id="ujHelyModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border-secondary p-4">
+                <h3 class="text-white border-bottom border-secondary pb-3 mb-4">Add Venue</h3>
 
-    <div id="ujHelyModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
-            z-index: 1000; overflow: auto;">
+                <label class="form-label text-secondary small">Venue name:</label>
+                <input type="text" id="uj-nev" class="form-control bg-dark text-white border-secondary mb-3" placeholder="E.g. Neon Bar">
 
-        <div style="position: relative; top: 15%; left: 50%; transform: translate(-50%, 0); 
-                background: #1e1e2f; padding: 25px; border-radius: 10px; 
-                border: 1px solid #00b894; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-secondary small">City:</label>
+                        <input type="text" id="uj-varos" class="form-control bg-dark text-white border-secondary" placeholder="E.g. Pécs">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-secondary small">Exact address:</label>
+                        <input type="text" id="uj-cim" class="form-control bg-dark text-white border-secondary" placeholder="E.g. Király utca 12.">
+                    </div>
+                </div>
 
-            <h3 style="color: white; margin-top: 0;">Hely hozzáadása: <br>
-            <h3 style="color: white; margin-top: 0;">Add Venue: <br>
-            </h3>
+                <label class="form-label text-secondary small">Description:</label>
+                <textarea id="uj-leiras" rows="3" class="form-control bg-dark text-white border-secondary mb-3" placeholder="Short description of the place..."></textarea>
 
+                <div class="row g-2 mb-4">
+                    <div class="col-6">
+                        <label class="form-label text-secondary small">Opening hours:</label>
+                        <input type="text" id="uj-nyitvatartas" class="form-control bg-dark text-white border-secondary" placeholder="E.g. 18:00 - 02:00">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-secondary small">Number of tables:</label>
+                        <input type="number" id="uj-asztalszam" class="form-control bg-dark text-white border-secondary" placeholder="E.g. 15">
+                    </div>
+                </div>
 
-            <label style="color: #a29bfe; font-size: 14px;">Venue name:</label>
-            <input type="text" id="uj-nev"
-                style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;"
-                placeholder="E.g. Neon Bar">
+                <label class="form-label text-secondary small">Venue image:</label>
+                <input type="file" id="uj-kep" accept="image/*" class="form-control bg-dark text-white border-secondary mb-2">
+                <div id="kep-preview" class="rounded w-100 mb-4" style="height: 120px; background-size: cover; display: none;"></div>
 
-            <label style="color: #a29bfe; font-size: 14px;">City:</label>
-            <input type="text" id="uj-varos"
-                style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;"
-                placeholder="E.g. Pécs">
-
-            <label style="color: #a29bfe; font-size: 14px;">Exact address:</label>
-            <input type="text" id="uj-cim"
-                style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;"
-                placeholder="E.g. Király utca 12.">
-
-            <label style="color: #a29bfe; font-size: 14px;">Description:</label>
-            <textarea id="uj-leiras"
-                style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box; resize: vertical;"
-                placeholder="Short description of the place..."></textarea>
-
-            <label style="color: #a29bfe; font-size: 14px;">Opening hours:</label>
-            <input type="text" id="uj-nyitvatartas"
-                style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;"
-                placeholder="E.g. 18:00 - 02:00">
-
-            <label style="color: #a29bfe; font-size: 14px;">Number of tables:</label>
-            <input type="number" id="uj-asztalszam"
-                style="width: 100%; margin-bottom: 20px; padding: 8px; border-radius: 5px; border: none; box-sizing: border-box;"
-                placeholder="E.g. 15">
-
-            <label style="color: #a29bfe; display: block; margin-top: 10px;">Venue image:</label>
-            <input type="file" id="uj-kep" accept="image/*" style="width: 100%; color: white; margin-bottom: 10px;">
-            <div id="kep-preview" style="width: 100%; height: 100px; background-size: cover; margin-bottom: 10px; border-radius: 5px; display: none;"></div>
-
-            <button onclick="mentesUjHely()" class="admin-btn accept"
-                style="width: 100%; margin-bottom: 10px;">Save</button>
-            <button onclick="document.getElementById('ujHelyModal').style.display='none'" class="admin-btn reject"
-                style="width: 100%;">Cancel</button>
+                <div class="d-flex gap-2">
+                    <button onclick="document.getElementById('ujHelyModal').style.display='none'" class="btn btn-outline-light w-50">Cancel</button>
+                    <button onclick="mentesUjHely()" class="admin-primary-btn m-0 w-50">Save</button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div id="ujEszkozModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border-secondary p-4">
+                <h3 class="text-white border-bottom border-secondary pb-3 mb-4">Add Equipment<br><small id="aktualisHelyNev" class="text-success fs-6"></small></h3>
 
+                <label class="form-label text-secondary small">Type:</label>
+                <select id="eszkozTipus" onchange="valtsEszkozMezoket()" class="form-select bg-dark text-white border-secondary mb-4">
+                    <option value="asztal">Table</option>
+                    <option value="jatek">Game (Billiards, Darts, etc.)</option>
+                </select>
 
+                <div id="asztalMezok">
+                    <label class="form-label text-secondary small">Table number/name:</label>
+                    <input type="text" id="asztalSzam" class="form-control bg-dark text-white border-secondary mb-3">
 
-    <div id="ujEszkozModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
-            z-index: 1000; overflow: auto;">
+                    <label class="form-label text-secondary small">Capacity (persons):</label>
+                    <input type="number" id="asztalFerohely" class="form-control bg-dark text-white border-secondary mb-4">
+                </div>
 
-        <div style="position: relative; top: 15%; left: 50%; transform: translate(-50%, 0); 
-                background: #1e1e2f; padding: 25px; border-radius: 10px; 
-                border: 1px solid #00b894; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <div id="jatekMezok" style="display: none;">
+                    <label class="form-label text-secondary small">Game name:</label>
+                    <input type="text" id="jatekNev" class="form-control bg-dark text-white border-secondary mb-3">
 
-            <h3 style="color: white; margin-top: 0;">Add Equipment: <br>
-                <span id="aktualisHelyNev" style="color: #00b894;"></span>
-            </h3>
+                    <label class="form-label text-secondary small">Description (E.g. 9-foot, pro):</label>
+                    <input type="text" id="jatekLeiras" class="form-control bg-dark text-white border-secondary mb-3">
 
-            <label style="color: #a29bfe;">Type:</label>
-            <select id="eszkozTipus" onchange="valtsEszkozMezoket()"
-                style="width: 100%; margin-bottom: 15px; padding: 8px;">
-                <option value="asztal">Table</option>
-                <option value="jatek">Game (Billiards, Darts, etc.)</option>
-            </select>
-
-            <div id="asztalMezok">
-                <label style="color: #a29bfe;">Table number/name:</label>
-                <input type="text" id="asztalSzam" style="width: 100%; margin-bottom: 10px; padding: 8px;">
-
-                <label style="color: #a29bfe;">Capacity (persons):</label>
-                <input type="number" id="asztalFerohely" style="width: 100%; margin-bottom: 15px; padding: 8px;">
-            </div>
-
-            <div id="jatekMezok" style="display: none;">
-                <label style="color: #a29bfe;">Game name:</label>
-                <input type="text" id="jatekNev" style="width: 100%; margin-bottom: 10px; padding: 8px;">
-
-                <label style="color: #a29bfe;">Description (E.g. 9-foot, pro):</label>
-                <input type="text" id="jatekLeiras" style="width: 100%; margin-bottom: 10px; padding: 8px;">
-
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
-                        <label style="color: #a29bfe;">Quantity:</label>
-                        <input type="number" id="jatekDarab" value="1" style="width: 100%; padding: 8px;">
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="color: #a29bfe;">Price/hour (Ft):</label>
-                        <input type="number" id="jatekAr" style="width: 100%; padding: 8px;">
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <label class="form-label text-secondary small">Quantity:</label>
+                            <input type="number" id="jatekDarab" value="1" class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-secondary small">Price/hour (HUF):</label>
+                            <input type="number" id="jatekAr" class="form-control bg-dark text-white border-secondary">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button onclick="mentesUjEszkoz()" class="admin-btn accept"
-                style="width: 100%; margin-bottom: 10px;">Add</button>
-            <button onclick="document.getElementById('ujEszkozModal').style.display='none'" class="admin-btn reject"
-                style="width: 100%;">Cancel</button>
+                <div class="d-flex gap-2">
+                    <button onclick="document.getElementById('ujEszkozModal').style.display='none'" class="btn btn-outline-light w-50">Cancel</button>
+                    <button onclick="mentesUjEszkoz()" class="admin-primary-btn m-0 w-50">Add</button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div id="szerkesztHelyszinModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border-secondary p-4">
+                <h3 class="text-white border-bottom border-secondary pb-3 mb-4">Edit Venue</h3>
 
-    <div id="szerkesztHelyszinModal" class="modal" style="display: none; position: fixed !important; top: 0 !important; left: 0 !important; 
-            width: 100vw !important; height: 100vh !important; 
-            background: rgba(0, 0, 0, 0.8) !important; 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
-            z-index: 1000 !important;">
+                <input type="hidden" id="edit-id"> 
+                
+                <label class="form-label text-secondary small">Name:</label>
+                <input type="text" id="edit-nev" class="form-control bg-dark text-white border-secondary mb-3">
 
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                background: #1e1e2f; padding: 30px; border-radius: 12px; 
-                border: 1px solid #00b894; width: 90%; max-width: 450px; 
-                box-shadow: 0 20px 50px rgba(0,0,0,0.9); color: white; z-index: 1000000;">
-
-            <h3 style="color: white; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Edit Venue</h3>
-
-            <input type="hidden" id="edit-id"> <label
-                style="color: #a29bfe; display: block; margin-top: 10px;">Name:</label>
-            <input type="text" id="edit-nev"
-                style="width: 100%; padding: 8px; background: #2d2d44; color: white; border: 1px solid #444; border-radius: 4px;">
-
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <div style="flex: 1;">
-                    <label style="color: #a29bfe;">City:</label>
-                    <input type="text" id="edit-varos"
-                        style="width: 100%; padding: 8px; background: #2d2d44; color: white; border: 1px solid #444; border-radius: 4px;">
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-secondary small">City:</label>
+                        <input type="text" id="edit-varos" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-secondary small">Address:</label>
+                        <input type="text" id="edit-cim" class="form-control bg-dark text-white border-secondary">
+                    </div>
                 </div>
-                <div style="flex: 1;">
-                    <label style="color: #a29bfe;">Address:</label>
-                    <input type="text" id="edit-cim"
-                        style="width: 100%; padding: 8px; background: #2d2d44; color: white; border: 1px solid #444; border-radius: 4px;">
+
+                <label class="form-label text-secondary small">Opening hours:</label>
+                <input type="text" id="edit-nyitvatartas" class="form-control bg-dark text-white border-secondary mb-3">
+
+                <label class="form-label text-secondary small">Description:</label>
+                <textarea id="edit-leiras" rows="3" class="form-control bg-dark text-white border-secondary mb-3"></textarea>
+
+                <label class="form-label text-secondary small">Venue image:</label>
+                <input type="file" id="edit-kep" accept="image/*" class="form-control bg-dark text-white border-secondary mb-2">
+                <div id="kep-preview" class="rounded w-100 mb-4" style="height: 120px; background-size: cover; display: none;"></div>
+
+                <div class="d-flex gap-2">
+                    <button onclick="document.getElementById('szerkesztHelyszinModal').style.display='none'" class="btn btn-outline-light w-50">Cancel</button>
+                    <button onclick="mentesModositas()" class="admin-primary-btn m-0 w-50">Save</button>
                 </div>
-            </div>
-
-            <label style="color: #a29bfe; display: block; margin-top: 10px;">Opening hours:</label>
-            <input type="text" id="edit-nyitvatartas"
-                style="width: 100%; padding: 8px; background: #2d2d44; color: white; border: 1px solid #444; border-radius: 4px;">
-
-            <label style="color: #a29bfe; display: block; margin-top: 10px;">Description:</label>
-            <textarea id="edit-leiras" rows="3"
-                style="width: 100%; padding: 8px; background: #2d2d44; color: white; border: 1px solid #444; border-radius: 4px;"></textarea>
-
-                  <label style="color: #a29bfe; display: block; margin-top: 10px;">Venue image:</label>
-            <input type="file" id="edit-kep" accept="image/*" style="width: 100%; color: white; margin-bottom: 10px;">
-            <div id="kep-preview" style="width: 100%; height: 100px; background-size: cover; margin-bottom: 10px; border-radius: 5px; display: none;"></div>
-
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button onclick="document.getElementById('szerkesztHelyszinModal').style.display='none'"
-                    style="flex: 1; background: transparent; color: white; border: 1px solid #444; padding: 10px; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button onclick="mentesModositas()"
-                    style="flex: 1; background: #8b5cf6; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">Save</button>
             </div>
         </div>
     </div>
 
     <script src="./scripts/nav.js"></script>
     <script src="./scripts/admin-helyszinek.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmxc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
 </html>

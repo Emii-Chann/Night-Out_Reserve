@@ -1,0 +1,105 @@
+ .profil-page-inner {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 110px 20px 80px;
+        }
+
+        .profil-intro-card {
+            background: linear-gradient(145deg, rgba(25, 25, 40, 0.95), rgba(15, 15, 26, 0.98));
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 28px 28px 24px;
+            margin-bottom: 28px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 1px rgba(139, 92, 246, 0.35);
+        }
+
+        .profil-intro-card h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .profil-intro-card p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .profil-section-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 22px 22px 18px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.55);
+        }
+
+        .profil-section-card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profil-section-card h2 i {
+            color: var(--primary-color);
+        }
+
+        .profil-list-placeholder {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .profil-booking-card {
+            background: rgba(21, 21, 33, 0.65);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .profil-booking-card p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-white);
+            line-height: 1.45;
+        }
+
+        .profil-booking-card p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .profil-booking-card strong {
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .profil-booking-card hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 12px 0 0;
+        }
+
+        @media (max-width: 600px) {
+            .profil-page-inner {
+                padding-top: 96px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .profil-intro-card {
+                padding: 22px 18px;
+            }
+
+            .profil-intro-card h1 {
+                font-size: 1.45rem;
+            }
+        }
