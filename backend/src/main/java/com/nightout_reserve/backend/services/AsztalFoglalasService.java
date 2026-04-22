@@ -12,6 +12,7 @@ import com.nightout_reserve.backend.models.AsztalFoglalas;
 import com.nightout_reserve.backend.repositories.AsztalFoglalasRepository;
 import com.nightout_reserve.backend.repositories.AsztalRepository;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
+import com.nightout_reserve.backend.repositories.UserRepository;
 
 
 @Service
@@ -25,6 +26,9 @@ public class AsztalFoglalasService {
 
     @Autowired
     private SzorakozohelyRepository szorakozohelyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
     
 
 
@@ -34,20 +38,31 @@ public class AsztalFoglalasService {
 }
 
 
-    public List<AsztalFoglalas> getFoglalasokByHely(Integer szid) {
-    // Itt a findAll() helyett az új szűrős metódust hívjuk:
+
+
+
+public List<AsztalFoglalas> getFoglalasokByHely(Integer szid) {
+    // 1. Lekérjük az adott helyszínhez tartozó összes asztalfoglalást
     List<AsztalFoglalas> lista = repo.findBySzorakozohelyId(szid);
     
-    // A név kikereső rész marad a régi
+    // 2. Végigmegyünk a listán, és „felöltöztetjük” adatokkal
     for (AsztalFoglalas f : lista) {
+        // Helyszín nevének kikeresése (ez már megvolt)
         if (f.getSzorakozohelyId() != null) {
             szorakozohelyRepository.findById(f.getSzorakozohelyId())
                 .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
         }
+
+        // --- ÚJ RÉSZ: Felhasználó nevének kikeresése ---
+        if (f.getFelhasznaloId() != null) {
+            userRepository.findById(f.getFelhasznaloId())
+                .ifPresent(user -> f.setFelhasznaloNev(user.getUsername())); 
+                // Megjegyzés: Ha a Felhasznalo osztályodban nem 'nev', 
+                // hanem pl. 'teljesNev' a mező, akkor user.getTeljesNev()-et írj!
+        }
     }
     return lista;
 }
-
 
     public List<AsztalFoglalas> getOsszesFoglalas() {
     List<AsztalFoglalas> lista = repo.findAll(); // Az összeset lekérjük
