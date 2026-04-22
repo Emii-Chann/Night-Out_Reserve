@@ -18,6 +18,9 @@
         };
         document.addEventListener("DOMContentLoaded", betoltHelyszinekreel);
 
+        async function betoltHelyszinekreel() {
+            try {
+                const response = await fetch('https://nigth-out-reserve.org/api/helyszinek/list');
                 const adatok = await response.json();
 
                 const kontener = document.getElementById('helyszinek-gridreel');
