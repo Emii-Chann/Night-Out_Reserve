@@ -1,11 +1,6 @@
-
 // --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
-
-
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
-
-   
 
     try {
         const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/osszes?szid=${szid}`);
@@ -20,7 +15,6 @@ async function getReservations() {
             let angolStatus = (f.allapot === "JOVAHAGYVA" || f.allapot === "ELFOGADVA") ? "accepted" : 
                               (f.allapot === "LEMONDVA" || f.allapot === "ELUTASITVA") ? "rejected" : "pending";
 
-            // --- EZT A RÉSZT CSERÉLD LE: ---
             let reszlet = "Venue rental";
             let tipusKulcs = "Venue";
 
@@ -33,9 +27,8 @@ async function getReservations() {
                 tipusKulcs = "asztal";
             }
 
-            // Visszaállítjuk az ID keresést az eredetire (mivel a képeden látszik, hogy f.id a neve)
+            // Visszaállítjuk az ID keresést az eredetire
             const db_id = f.id || f.helyszinFoglalasId || f.jatekFoglalasId || f.asztalFoglalasId;
-            // -------------------------------
 
             return {
                 id: tipusKulcs + "-" + db_id, 
@@ -50,7 +43,6 @@ async function getReservations() {
                 reservationType: tipusKulcs
             };
         });
-
 
     } catch (error) {
         console.error("Dashboard error:", error);
@@ -70,12 +62,13 @@ function createReservationCard(reservation) {
         <p class="admin-reservation-customer">Customer: ${reservation.customerName}</p>
     `;
 
-let actionButtons = '';
+    let actionButtons = '';
 
+    // Gombok ANGOLOSÍTVA
     if (reservation.status === "pending") {
         actionButtons = `
-            <button class="admin-btn accept" onclick="updateReservationStatus(${reservation.originalId}, 'accepted', '${reservation.reservationType}')">Elfogad</button>
-            <button class="admin-btn reject" onclick="updateReservationStatus(${reservation.originalId}, 'rejected', '${reservation.reservationType}')">Elutasít</button>
+            <button class="admin-btn accept" onclick="updateReservationStatus(${reservation.originalId}, 'accepted', '${reservation.reservationType}')">Accept</button>
+            <button class="admin-btn reject" onclick="updateReservationStatus(${reservation.originalId}, 'rejected', '${reservation.reservationType}')">Reject</button>
         `;
     } else if (reservation.status === "accepted") {
         actionButtons = `
@@ -103,7 +96,6 @@ let actionButtons = '';
 
 // --- 3. BACKEND KOMMUNIKÁCIÓ (FRISSÍTÉS ÉS TÖRLÉS) ---
 async function updateReservationStatus(id, newStatus, tipus) {
-
     console.log("KATTINTÁS TÖRTÉNT! ID:", id, "| Új státusz:", newStatus, "| Típus:", tipus);
     let javaAllapot = (newStatus === "accepted") ? "JOVAHAGYVA" : 
                       (newStatus === "rejected") ? "LEMONDVA" : 
@@ -122,7 +114,7 @@ async function updateReservationStatus(id, newStatus, tipus) {
 }
 
 async function deleteReservation(id, tipus) {
-    const result = await Swal.fire({ // NEM MŰKÖDIK
+    const result = await Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
@@ -135,26 +127,27 @@ async function deleteReservation(id, tipus) {
     });
 
     if (result.isConfirmed) {
-    try {
-        const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/torles/${tipus}/${id}`, {
-            method: 'DELETE'
-        });
-        if (response.ok) {
-            await renderReservations();
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "Error while deleting!",
-                background: '#1e1e2d',
-                color: '#fff',
-                confirmButtonColor: '#ef4444'
+        try {
+            const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/torles/${tipus}/${id}`, {
+                method: 'DELETE'
             });
+            if (response.ok) {
+                await renderReservations();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Error while deleting!",
+                    background: '#1e1e2d',
+                    color: '#fff',
+                    confirmButtonColor: '#ef4444'
+                });
+            }
+        } catch (error) {
+            console.error("Error while deleting:", error);
         }
-    } catch (error) {
-        console.error("Error while deleting:", error);
     }
-}}
+}
 
 // --- 4. RENDERELÉS ÉS INICIALIZÁLÁS ---
 async function renderReservations() {
@@ -163,8 +156,7 @@ async function renderReservations() {
     const rejectedContainer = document.getElementById("rejectedReservations");
 
     if (!incomingContainer || !acceptedContainer || !rejectedContainer) {
-        console.error("Error: One of the HTML containers in the identifiers is missing!");
-        return;
+        return; // Csendben visszatérünk, ha az adott oldalon nincs foglalási tábla
     }
 
     const reservations = await getReservations();
@@ -186,12 +178,11 @@ async function renderReservations() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Felhasználónév kiírása
-    // 1. Felhasználónév kiírása
     const adminName = localStorage.getItem("nr_current_admin");
     const adminDisplay = document.getElementById("adminNameDisplay");
     if (adminDisplay && adminName) adminDisplay.textContent = adminName;
 
-    // 2. Alapadatok kiolvasása (CSAK EGYSZER deklaráljuk őket!)
+    // 2. Alapadatok kiolvasása
     const venueSelector = document.getElementById("venueSelector");
     const helyekListaJson = localStorage.getItem("nr_helyek_lista");
     const aktivSzid = localStorage.getItem("nr_szorakozohely_id");
@@ -211,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // --- LEGERDÜLŐ MENÜ FELTÖLTÉSE ---
     if (venueSelector && helyekListaJson) {
         const helyek = JSON.parse(helyekListaJson);
-        venueSelector.innerHTML = ""; // Alaphelyzetbe állítás
+        venueSelector.innerHTML = ""; 
         
         helyek.forEach(hely => {
             const option = document.createElement("option");
@@ -229,12 +220,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-
     // 3. Kijelentkezés logikája
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
-            localStorage.clear(); // Minden mentett adatot törlünk
+            localStorage.clear();
             window.location.href = "./admin-login.html";
         });
     }
@@ -242,8 +232,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 4. Foglalások betöltése
     await renderReservations();
 });
-
-
 
 
 // Adatok elküldése a backendnek
@@ -255,8 +243,6 @@ async function mentesUjHely() {
     const nyitva = document.getElementById("ujHelyNyitva").value;
     const asztalok = document.getElementById("ujHelyAsztalok").value;
     
-    // Itt vesszük ki a tulajdonos ID-ját a localStorage-ből! 
-    // Kérlek ellenőrizd, hogy a bejelentkezéskor ezen a néven mented-e el!
     const tulajId = localStorage.getItem("nr_admin_id") || localStorage.getItem("nr_felhasznalo_id");
 
     if (!nev || !varos || !cim || !tulajId) {
@@ -289,33 +275,21 @@ async function mentesUjHely() {
     });
 
         if (response.ok) {
-
-                try {
-                // 1. Kinyerjük a backendtől kapott új helyszín adatait (ebben már benne van a generált ID!)
+            try {
                 const ujHelyVisszajon = await response.json();
-                
-                // 2. Lekérjük az eddigi listát a memóriából
                 let eddigiHelyek = JSON.parse(localStorage.getItem("nr_helyek_lista")) || [];
-                
-                // 3. Belerakjuk az új helyet a listába
                 eddigiHelyek.push(ujHelyVisszajon);
-                
-                // 4. Visszamentjük a memóriába
                 localStorage.setItem("nr_helyek_lista", JSON.stringify(eddigiHelyek));
-
-                // 5. Opcionális: Legyen rögtön az új hely az aktív kiválasztott hely!
                 localStorage.setItem("nr_szorakozohely_id", ujHelyVisszajon.id);
                 localStorage.setItem("nr_szorakozohely_nev", ujHelyVisszajon.nev);
-
             } catch (storageError) {
-                console.warn("Nem sikerült a listát frissíteni, lehet nem JSON-t küld a backend:", storageError);
+                console.warn("Nincs lista:", storageError);
             }
-            // --- ÚJ RÉSZ VÉGE ---
             
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "venue successfully added!",
+                text: "Venue successfully added!",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
@@ -327,7 +301,7 @@ async function mentesUjHely() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Error while deleting: " + errorText,
+                text: "Error while saving: " + errorText,
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#ef4444'
@@ -379,7 +353,7 @@ async function mentesUjEszkoz() {
         adatok.ferohely = document.getElementById("asztalFerohely").value;
     } else {
         adatok.jatekNev = document.getElementById("jatekNev").value;
-    adatok.jatekLeiras = document.getElementById("jatekLeiras").value;
+        adatok.jatekLeiras = document.getElementById("jatekLeiras").value;
         adatok.darab = document.getElementById("jatekDarab").value;
         adatok.ar_ora = document.getElementById("jatekAr").value;
     }
@@ -395,7 +369,7 @@ async function mentesUjEszkoz() {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "Tool addes successfully",
+                text: "Tool added successfully",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
@@ -405,7 +379,7 @@ async function mentesUjEszkoz() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: "Error while deleting.",
+                text: "Error while saving.",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#ef4444'
@@ -414,15 +388,12 @@ async function mentesUjEszkoz() {
     } catch (e) { console.error(e); }
 }
 
-
 async function tulajAdatMentese() {
-    // Adatok kiolvasása az űrlapból
     const id = document.getElementById('tulaj-id').value;
     const nev = document.getElementById('tulaj-nev').value;
     const email = document.getElementById('tulaj-email').value;
     const telefon = document.getElementById('tulaj-tel').value;
 
-    // Ellenőrzés, hogy nincs-e üres mező
     if (!nev || !email || !telefon) {
         Swal.fire({
             icon: 'error',
@@ -435,9 +406,8 @@ async function tulajAdatMentese() {
         return;
     }
 
-    // Összerakjuk a JSON objektumot a Java számára
     const adatok = {
-        id: id ? parseInt(id) : null, // Ha van ID, átalakítjuk számmá
+        id: id ? parseInt(id) : null, 
         teljesNev: nev,
         email: email,
         telefon: telefon
@@ -487,28 +457,28 @@ async function tulajAdatMentese() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // 1. Olvassuk ki az ID-t a localStorage-ből (Ahogy eddig is)
+    // A HIBÁT ITT JAVÍTOTTUK: Betettük a if (elemLetezik) ellenőrzéseket!
     const bejelentkezettId = localStorage.getItem('nr_admin_id'); 
 
     if (bejelentkezettId) {
-        // Beírjuk a rejtett mezőbe a mentéshez
-        document.getElementById('tulaj-id').value = bejelentkezettId;
+        const tulajIdMezo = document.getElementById('tulaj-id');
+        if (tulajIdMezo) tulajIdMezo.value = bejelentkezettId;
 
-        // 2. OKOS RÉSZ: Lekérjük a meglévő adatokat a Java backendről
         try {
             const response = await fetch(`https://nigth-out-reserve.org/api/tulajdonosok/${bejelentkezettId}`);
             
             if (response.ok) {
-                // Ha a Java talált adatot, kibontjuk
                 const adatok = await response.json();
                 
-                // És automatikusan beírjuk az input mezőkbe!
-                document.getElementById('tulaj-nev').value = adatok.teljesNev || "";
-                document.getElementById('tulaj-email').value = adatok.email || "";
-                document.getElementById('tulaj-tel').value = adatok.telefon || "";
+                const tulajNevMezo = document.getElementById('tulaj-nev');
+                const tulajEmailMezo = document.getElementById('tulaj-email');
+                const tulajTelMezo = document.getElementById('tulaj-tel');
+
+                if (tulajNevMezo) tulajNevMezo.value = adatok.teljesNev || "";
+                if (tulajEmailMezo) tulajEmailMezo.value = adatok.email || "";
+                if (tulajTelMezo) tulajTelMezo.value = adatok.telefon || "";
+
             } else {
-                // Ha 404-et kapunk (még nem mentett el semmit a múltban),
-                // akkor simán üresen hagyjuk az űrlapot, hadd töltse ki először.
                 console.log("There is no data saved for this profile yet.");
             }
         } catch (error) {
@@ -518,19 +488,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         console.warn("There is no logged in owner in LocalStorage");
         window.location.href = "./admin-login.html";
-
     }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Aktuális fájlnév lekérése (pl. admin-helyszinek.html)
     const path = window.location.pathname;
     const page = path.split("/").pop();
 
     if (page === "admin-dashboard.html") {
-        document.getElementById("nav-dashboard").classList.add("active");
+        const navDash = document.getElementById("nav-dashboard");
+        if (navDash) navDash.classList.add("active");
     } else if (page === "admin-helyszinek.html") {
-        document.getElementById("nav-helyszinek").classList.add("active");
+        const navHely = document.getElementById("nav-helyszinek");
+        if (navHely) navHely.classList.add("active");
     }
 });
 
@@ -539,4 +509,3 @@ function kijelentkezes() {
     localStorage.removeItem("nr_szorakozohely_id");
     window.location.href = "admin-login.html";
 }
-
