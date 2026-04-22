@@ -16,17 +16,19 @@ async function getReservations() {
         const lathatoAdatok = adatok.filter(f => f.allapot !== "TELJESITVE");
 
        return lathatoAdatok.map(f => {
-            let angolStatus = (f.allapot === "JOVAHAGYVA" || f.allapot === "ELFOGADVA") ? "accepted" : 
-                              (f.allapot === "LEMONDVA" || f.allapot === "ELUTASITVA") ? "rejected" : "pending";
+            // MOST MÁR A PONTOS JAVA ENUM SZAVAKAT HASZNÁLJUK!
+            let angolStatus = (f.allapot === "JOVAHAGYVA") ? "accepted" : 
+                              (f.allapot === "LEMONDVA") ? "rejected" : 
+                              (f.allapot === "TELJESITVE") ? "completed" : "pending";
 
             let reszlet = "Venue rental";
             let tipusKulcs = "hely";
 
             if (f.jatekId) {
-                reszlet = f.jatekNev ? `Játék: ${f.jatekNev}` : "Game rental";
+                reszlet = f.jatekNev ? `Game: ${f.jatekNev}` : "Game rental";
                 tipusKulcs = "jatek";
-            } else if (f.asztalId || f.asztalSzam) {
-                reszlet = f.asztalSzam ? `Asztal: ${f.asztalSzam}.` : "Table rental";
+            } else if (f.asztalId) {
+                reszlet = f.asztalSzam ? `Table: ${f.asztalSzam}.` : "Table rental";
                 tipusKulcs = "asztal";
             }
 
@@ -35,10 +37,10 @@ async function getReservations() {
             return {
                 id: tipusKulcs + "-" + db_id, 
                 originalId: db_id,            
-                customerName: "Vendég #" + (f.felhasznaloId || "?"),
+                customerName: "Guest #" + (f.felhasznaloId || "?"),
                 date: f.kezdet ? new Date(f.kezdet).toLocaleDateString() : "---",
                 time: f.kezdet ? new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "",
-                people: f.letszam || f.asztalSzam || "-", 
+                people: f.letszam || "-", 
                 place: f.szorakozohelyNev || "Unknown venue",
                 typeInfo: reszlet,
                 status: angolStatus,
@@ -99,25 +101,34 @@ function createReservationCard(reservation) {
 async function updateReservationStatus(id, newStatus, tipus) {
     console.log("KATTINTÁS TÖRTÉNT! ID:", id, "| Új státusz:", newStatus, "| Típus:", tipus);
     
-    // Kicseréltük a szavakat ELFOGADVA / ELUTASITVA -ra, hátha a Java ezt várja!
-    let javaAllapot = (newStatus === "accepted") ? "ELFOGADVA" : 
-                      (newStatus === "rejected") ? "ELUTASITVA" : 
-                      (newStatus === "completed") ? "TELJESITVE" : "FUGGOBEN";
+    // PONTOSAN AZOKAT A SZAVAKAT KÜLDJÜK, AMIT A JAVA ENUM VÁR:
+    let javaAllapot = (newStatus === "accepted") ? "JOVAHAGYVA" : 
+                      (newStatus === "rejected") ? "LEMONDVA" : 
+                      (newStatus === "completed") ? "TELJESITVE" : "FUGGO";
 
     try {
         const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/frissit-allapot`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, allapot: javaAllapot, tipus: tipus })
+            body: JSON.stringify({ 
+                id: id, 
+                allapot: javaAllapot, 
+                tipus: tipus 
+            })
         });
         
         if (response.ok) {
-            await renderReservations(); // Ha sikeres, újra rendereljük a friss adatokat
+            console.log("Sikeres frissítés az adatbázisban!");
+            await renderReservations(); // Újrarajzolja a listát!
+        } else {
+            console.error("A Java hibát dobott visszatéréskor!");
         }
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.error("Hálózati hiba küldés közben:", error);
     }
 }
+
+
 async function deleteReservation(id, tipus) {
     const result = await Swal.fire({
         title: 'Are you sure?',
