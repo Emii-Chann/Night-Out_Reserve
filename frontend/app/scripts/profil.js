@@ -40,7 +40,7 @@ async function betoltFoglalasok(url, divId, tipus) {
                     
                     ${(f.allapot !== 'LEMONDVA' && f.allapot !== 'ELUTASITVA') ? 
                         `<button onclick="foglalasLemondasa(${f.id}, '${tipus}')" 
-                                style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s;">
+                                style="position: absolute; down: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s;">
                             <i class="fa-solid fa-xmark"></i> Cancel
                         </button>` 
                     : ""}
@@ -90,7 +90,7 @@ async function profilAdatokMentese() {
           text: "Please fill in your name and email!",
           background: '#1e1e2d',
           color: '#fff',
-          confirmButtonColor: '#ef4444'
+          confirmButtonColor: '#8b5cf6'
         });
         return;
     }
@@ -101,7 +101,7 @@ async function profilAdatokMentese() {
           text: "Username must be at least 6 characters long.",
           background: '#1e1e2d',
           color: '#fff',
-          confirmButtonColor: '#ef4444'
+          confirmButtonColor: '#8b5cf6'
         });
         return;
     }
@@ -141,18 +141,18 @@ async function profilAdatokMentese() {
               text: "Failed to update profile.",
               background: '#1e1e2d',
               color: '#fff',
-              confirmButtonColor: '#ef4444'
+              confirmButtonColor: '#8b5cf6'
             });
         }
     } catch (hiba) {
-        console.error("Hiba a mentésnél:", hiba);
+        console.error("Error while saving:", hiba);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
           text: "Network error.",
           background: '#1e1e2d',
           color: '#fff',
-          confirmButtonColor: '#ef4444'
+          confirmButtonColor: '#8b5cf6'
         });
     }
 }
@@ -165,8 +165,8 @@ async function foglalasLemondasa(id, tipus) {
         showCancelButton: true,
         background: '#1e1e2d',
         color: '#fff',
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#4b5563',
+        confirmButtonColor: '#8b5cf6',
+        cancelButtonColor: '#ef4444',
         confirmButtonText: 'Yes, cancel it!'
     });
 
@@ -220,8 +220,8 @@ async function fiokTorlese() {
         showCancelButton: true,
         background: '#1e1e2d',
         color: '#fff',
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#4b5563',
+        confirmButtonColor: '#8b5cf6',
+        cancelButtonColor: '#ef4444',
         confirmButtonText: 'Yes, delete everything!',
         cancelButtonText: 'Cancel'
     });
@@ -259,7 +259,7 @@ async function fiokTorlese() {
                 });
             }
         } catch (error) {
-            console.error("Hiba a törlés során:", error);
+            console.error("Error during delete:", error);
             Swal.fire({
                 icon: 'error',
                 title: 'Network Error',

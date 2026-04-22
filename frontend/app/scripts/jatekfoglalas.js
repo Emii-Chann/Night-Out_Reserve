@@ -137,7 +137,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
             text: `The venue is not open yet. Opening time: ${nyit}`,
             background: '#1e1e2d',
             color: '#fff',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#8b5cf6'
         });
         return false;
     }
@@ -149,7 +149,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
             text: `This booking exceeds closing time. Closing time: ${zar}`,
             background: '#1e1e2d',
             color: '#fff',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#8b5cf6'
         });
         return false;
     }
@@ -181,7 +181,7 @@ async function foglalasBekuldese() {
             text: "Please fill all fields.",
             background: '#1e1e2d',
             color: '#fff',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#8b5cf6'
         });
         return;
     }
@@ -210,7 +210,7 @@ async function foglalasBekuldese() {
             text: "You cannot book in the past.",
             background: '#1e1e2d',
             color: '#fff',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#8b5cf6'
         });
         return;
     }
@@ -252,7 +252,7 @@ async function foglalasBekuldese() {
                 text: hibaSzoveg,
                 background: '#1e1e2d',
                 color: '#fff',
-                confirmButtonColor: '#ef4444'
+                confirmButtonColor: '#8b5cf6'
             });
         } else {
             Swal.fire({
@@ -261,7 +261,7 @@ async function foglalasBekuldese() {
                 text: "An error occurred while saving.",
                 background: '#1e1e2d',
                 color: '#fff',
-                confirmButtonColor: '#ef4444'
+                confirmButtonColor: '#8b5cf6'
             });
         }
     } catch (hiba) {

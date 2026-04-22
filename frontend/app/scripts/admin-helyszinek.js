@@ -68,8 +68,10 @@ async function helyszinTorles(id) {
         text: "This process cannot be undone!",
         icon: 'warning',
         showCancelButton: true,
+        background: '#1e1e2d',
+        color: '#fff',
         confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#4b5563',
+        cancelButtonColor: '#8b5cf6',
         confirmButtonText: 'Yes, delete it!'
     });
 
@@ -178,7 +180,7 @@ async function mentesUjEszkoz() {
                 text: "Error during saving.",
                 background: '#1e1e2d',
                 color: '#fff',
-                confirmButtonColor: '#ef4444'
+                confirmButtonColor: '#8b5cf6'
             });
         }
     } catch (e) { console.error(e); }
@@ -262,7 +264,7 @@ async function mentesModositas() {
             text: "Failed to save changes.",
             background: '#1e1e2d',
             color: '#fff',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#8b5cf6'
         });
     }
 }

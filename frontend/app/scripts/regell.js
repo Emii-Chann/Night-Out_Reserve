@@ -71,7 +71,7 @@ async function handleRegistration(event) {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "Registration successful 🎉",
+                text: "Registration successful",
                 background: '#1e1e2d',
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6'
@@ -85,7 +85,7 @@ async function handleRegistration(event) {
                 text: "Error: " + (errorData.message || "Registration failed"),
                 background: '#1e1e2d',
                 color: '#fff',
-                confirmButtonColor: '#ef4444'
+                confirmButtonColor: '#8b5cf6'
             });
         }
     } catch (error) {
@@ -96,7 +96,7 @@ async function handleRegistration(event) {
             text: "Could not reach the server.",
             background: '#1e1e2d',
             color: '#fff',
-            confirmButtonColor: '#ef4444'
+            confirmButtonColor: '#8b5cf6'
         });
     }
 }

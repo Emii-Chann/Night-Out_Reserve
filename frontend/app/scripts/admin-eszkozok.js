@@ -75,8 +75,10 @@ async function torolEszkoz(id, tipus) {
         text: "This action cannot be undone!",
         icon: 'warning',
         showCancelButton: true,
+        background: '#1e1e2d',
+        color: '#fff',
         confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
+        cancelButtonColor: '#8b5cf6',
         confirmButtonText: 'Yes, delete it!'
     });
 
@@ -88,6 +90,7 @@ async function torolEszkoz(id, tipus) {
 
             if (res.ok) {
                 Swal.fire('Deleted!', 'The item has been removed.', 'success');
+                
                 betoltEszkozok(); // Lista frissítése
             }
         } catch (error) {

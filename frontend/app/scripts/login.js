@@ -29,7 +29,7 @@ async function handleLogin(event) {
                 text: "Error: " + errorMsg,
                 background: '#1e1e2d',
                 color: '#fff',
-                confirmButtonColor: '#ef4444'
+                confirmButtonColor: '#8b5cf6'
             });
         }
     } catch (err) {
