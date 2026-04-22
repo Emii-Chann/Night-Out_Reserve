@@ -1,41 +1,53 @@
 // --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
+// --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE (Cache tiltással) ---
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
 
     try {
-        const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/osszes?szid=${szid}`);
+        // Hozzáadtuk a cache: 'no-store' parancsot, hogy mindig a legfrissebb adatot kérje a szervertől!
+        const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/osszes?szid=${szid}`, {
+            cache: 'no-store' 
+        });
+        
         if (!response.ok) throw new Error("Error during query!");
         
         const adatok = await response.json();
 
-        // Kiszűrjük azokat, amik már teljesítve lettek!
-        const lathatoAdatok = adatok.filter(f => f.allapot !== "TELJESITVE");
+        const lathatoAdatok = adatok.filter(f => f.allapot !== "COMPLETED");
 
        return lathatoAdatok.map(f => {
-            let angolStatus = (f.allapot === "JOVAHAGYVA" || f.allapot === "ELFOGADVA") ? "accepted" : 
-                              (f.allapot === "LEMONDVA" || f.allapot === "ELUTASITVA") ? "rejected" : "pending";
+            let angolStatus = (f.allapot === "APPROVED") ? "accepted" : 
+                              (f.allapot === "CANCELLED") ? "rejected" : 
+                              (f.allapot === "COMPLETED") ? "completed" : "pending";
 
             let reszlet = "Venue rental";
-            let tipusKulcs = "hely";
+            let tipusKulcs = "helyszin";
 
-            // Most már az ID-t figyeljük, nem a nevet!
             if (f.jatekId) {
-                reszlet = f.jatekNev ? `Játék: ${f.jatekNev}` : "Game rental";
+                reszlet = f.jatekNev ? `Game: ${f.jatekNev}` : "Game rental";
                 tipusKulcs = "jatek";
             } else if (f.asztalId || f.asztalSzam) {
-                reszlet = f.asztalSzam ? `Asztal: ${f.asztalSzam}.` : "Table rental";
+                reszlet = f.asztalSzam ? `Table: ${f.asztalSzam}.` : "Table rental";
                 tipusKulcs = "asztal";
             }
 
-            // Visszaállítjuk az ID keresést az eredetire
             const db_id = f.id || f.helyszinFoglalasId || f.jatekFoglalasId || f.asztalFoglalasId;
+
+            // --- 1. IDŐTARTAM (Kezdet - Vég) ---
+            let startTime = f.kezdet ? new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+            let endTime = f.vege ? new Date(f.vege).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+            let displayTime = endTime ? `${startTime} - ${endTime}` : startTime;
+
+            // --- 2. FELHASZNÁLÓNÉV ---
+            // Keresünk egy név mezőt, ha nem találjuk, marad a "Guest #ID" biztonsági tartaléknak
+            let foglaloNeve = f.felhasznaloNev || f.foglaloNev || f.felhasznaloNeve || f.nev || ("Guest #" + (f.felhasznaloId || "?"));
 
             return {
                 id: tipusKulcs + "-" + db_id, 
                 originalId: db_id,            
-                customerName: "Vendég #" + (f.felhasznaloId || "?"),
+                customerName: foglaloNeve,
                 date: f.kezdet ? new Date(f.kezdet).toLocaleDateString() : "---",
-                time: f.kezdet ? new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "",
+                time: displayTime, // Itt adjuk át az új mettől-meddig időt!
                 people: f.letszam || f.asztalSzam || "-", 
                 place: f.szorakozohelyNev || "Unknown venue",
                 typeInfo: reszlet,
@@ -94,24 +106,36 @@ function createReservationCard(reservation) {
     return card;
 }
 
-// --- 3. BACKEND KOMMUNIKÁCIÓ (FRISSÍTÉS ÉS TÖRLÉS) ---
 async function updateReservationStatus(id, newStatus, tipus) {
     console.log("KATTINTÁS TÖRTÉNT! ID:", id, "| Új státusz:", newStatus, "| Típus:", tipus);
-    let javaAllapot = (newStatus === "accepted") ? "JOVAHAGYVA" : 
-                      (newStatus === "rejected") ? "LEMONDVA" : 
-                      (newStatus === "completed") ? "TELJESITVE" : "FUGGOBEN";
+    
+    // PONTOSAN AZOKAT A SZAVAKAT KÜLDJÜK, AMIT A JAVA ENUM VÁR:
+    let javaAllapot = (newStatus === "accepted") ? "APPROVED" : 
+                      (newStatus === "rejected") ? "CANCELLED" : 
+                      (newStatus === "completed") ? "COMPLETED" : "PENDING";
 
     try {
         const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/frissit-allapot`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, allapot: javaAllapot, tipus: tipus })
+            body: JSON.stringify({ 
+                id: id, 
+                allapot: javaAllapot, 
+                tipus: tipus 
+            })
         });
-        if (response.ok) await renderReservations();
+        
+        if (response.ok) {
+            console.log("Sikeres frissítés az adatbázisban!");
+            await renderReservations(); // Újrarajzolja a listát!
+        } else {
+            console.error("A Java hibát dobott visszatéréskor!");
+        }
     } catch (error) {
-        console.error("Error updating status:", error);
+        console.error("Hálózati hiba küldés közben:", error);
     }
 }
+
 
 async function deleteReservation(id, tipus) {
     const result = await Swal.fire({

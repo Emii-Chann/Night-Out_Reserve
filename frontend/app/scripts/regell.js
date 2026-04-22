@@ -12,8 +12,8 @@ function validateForm() {
 
     let valid = true;
 
-    if (username.length < 4) {
-        document.getElementById("userError").innerHTML = "<span style='color:#ff6b6b;'>Min. 4 characters</span>";
+    if (username.length < 6) {
+        document.getElementById("userError").innerHTML = "<span style='color:#ff6b6b;'>Min. 6 characters</span>";
         valid = false;
     }
 

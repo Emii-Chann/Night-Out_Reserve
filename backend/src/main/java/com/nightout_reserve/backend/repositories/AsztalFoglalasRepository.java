@@ -26,7 +26,7 @@ public interface AsztalFoglalasRepository extends JpaRepository<AsztalFoglalas, 
 
 @Query("SELECT af FROM AsztalFoglalas af WHERE af.szorakozohelyId = :helyId " +
        "AND af.asztalSzam = :asztalSzam " +
-       "AND af.allapot IN (com.nightout_reserve.backend.enums.Allapot.FUGGO, com.nightout_reserve.backend.enums.Allapot.JOVAHAGYVA) " +
+       "AND af.allapot IN (com.nightout_reserve.backend.enums.Allapot.PENDING, com.nightout_reserve.backend.enums.Allapot.PENDING) " +
        "AND CAST(af.kezdet AS date) = :datum")
 List<AsztalFoglalas> findFoglalasokAdottNapon(
     @Param("helyId") Integer helyId, 

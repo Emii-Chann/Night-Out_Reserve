@@ -25,7 +25,7 @@ public interface HelyFoglalasRepository extends JpaRepository<HelyFoglalas, Inte
     int countUtkozesek(@Param("helyId") Integer helyId, @Param("ujKezdet") LocalDateTime ujKezdet, @Param("ujVege") LocalDateTime ujVege);
 
 
-    @Query("SELECT hf FROM HelyFoglalas hf WHERE hf.szorakozohelyId = :helyId AND hf.torolveAt IS NULL AND hf.allapot IN ('FUGGO', 'JOVAHAGYVA') AND DATE(hf.kezdet) = :datum")
+    @Query("SELECT hf FROM HelyFoglalas hf WHERE hf.szorakozohelyId = :helyId AND hf.torolveAt IS NULL AND hf.allapot IN ('PENDING', 'APPROVED') AND DATE(hf.kezdet) = :datum")
     List<HelyFoglalas> findFoglalasokAdottNapon(@Param("helyId") Integer helyId, @Param("datum") LocalDate datum);
     @Transactional
     void deleteByFelhasznaloId(Integer felhasznaloId);

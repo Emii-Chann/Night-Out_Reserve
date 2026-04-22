@@ -1,19 +1,17 @@
 package com.nightout_reserve.backend.services;
 
-import com.nightout_reserve.backend.exceptions.JatekMarFoglaltException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.nightout_reserve.backend.enums.Allapot;
-import com.nightout_reserve.backend.models.AsztalFoglalas;
+import com.nightout_reserve.backend.exceptions.JatekMarFoglaltException;
 import com.nightout_reserve.backend.models.JatekFoglalas;
 import com.nightout_reserve.backend.repositories.JatekFoglalasRepository;
 import com.nightout_reserve.backend.repositories.JatekRepository;
 import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
+import com.nightout_reserve.backend.repositories.UserRepository;
 
 
 
@@ -30,6 +28,9 @@ public class JatekFoglalasService {
     @Autowired
     private JatekRepository jatekRepo;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
 
 
@@ -39,17 +40,30 @@ public class JatekFoglalasService {
 }
 
 public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
-    // Itt a findAll() helyett az új szűrős metódust hívjuk:
-    List<JatekFoglalas> lista = repo.findBySzorakozohelyId(szid);
-    
-    for (JatekFoglalas f : lista) {
-        if (f.getSzorakozohelyId() != null) {
-            szorakozohelyRepo.findById(f.getSzorakozohelyId())
-                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+        // Lekérjük a játék foglalásokat
+        List<JatekFoglalas> lista = repo.findBySzorakozohelyId(szid);
+        
+        for (JatekFoglalas f : lista) {
+            // Helyszín nevének kikeresése
+            if (f.getSzorakozohelyId() != null) {
+                szorakozohelyRepo.findById(f.getSzorakozohelyId())
+                    .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
+            }
+
+            // Játék nevének kikeresése
+            if (f.getJatekId() != null) {
+                jatekRepo.findById(f.getJatekId())
+                    .ifPresent(jatek -> f.setJatekNev(jatek.getNev()));
+            }
+
+            // --- ÚJ RÉSZ: Felhasználó nevének kikeresése ---
+            if (f.getFelhasznaloId() != null) {
+                userRepository.findById(f.getFelhasznaloId())
+                    .ifPresent(user -> f.setFelhasznaloNev(user.getUsername())); 
+            }
         }
+        return lista;
     }
-    return lista;
-}
 
 
 
@@ -119,7 +133,7 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
             ujJatekFoglalas.getVege()
         );
         if(ujJatekFoglalas.getAllapot() == null) {
-            ujJatekFoglalas.setAllapot(Allapot.FUGGO);
+            ujJatekFoglalas.setAllapot(Allapot.PENDING);
         }
         if (utkozesek > 0) {
             throw new JatekMarFoglaltException("Sajnos ez a játék ebben az időpontban már foglalt!");
