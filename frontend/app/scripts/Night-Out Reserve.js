@@ -24,29 +24,3 @@ if (modal && closeBtn && modalTitle) {
     });
 }
 
-// Real-time search filtering for location cards
-const searchInputs = document.querySelectorAll(".search-bar input");
-
-searchInputs.forEach((input) => {
-    input.addEventListener("input", function () {
-        const query = this.value.toLowerCase().trim();
-        const cards = document.querySelectorAll(".container .card");
-
-        cards.forEach((card) => {
-            const nameText =
-                (card.querySelector("h3")?.textContent || "").toLowerCase();
-            const categoryText =
-                (card.querySelector(".tag")?.textContent || "").toLowerCase();
-            const locationText =
-                (card.querySelector(".location")?.textContent || "").toLowerCase();
-
-            const matches =
-                !query ||
-                nameText.includes(query) ||
-                categoryText.includes(query) ||
-                locationText.includes(query);
-
-            card.style.display = matches ? "" : "none";
-        });
-    });
-});
