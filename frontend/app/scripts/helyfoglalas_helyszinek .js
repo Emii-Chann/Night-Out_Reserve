@@ -16,7 +16,7 @@ async function asztalHelyszinekBetoltese() {
                     </div>
                     <div class="card-content">
                     <h3>${hely.nev}</h3>
-                    <p class="location"><i class="fa-solid fa-location-dot"></i> ${hely.cim}</p>
+                    <p class="location"><i class="fa-solid fa-location-dot"></i>${hely.varos}, ${hely.cim}</p>
                     <div class="details">
                         <span><i class="fa-regular fa-clock"></i> ${hely.nyitvatartas || 'Not set'}</span>
                     </div>
