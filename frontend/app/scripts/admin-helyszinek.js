@@ -5,17 +5,24 @@ async function betoltAdminHelyszinek() {
     if (!adminId) return;
 
     try {
-        const response = await fetch(`https://nigth-out-reserve.org/api/helyszinek/list/${adminId}`);
+        const response = await fetch(`https://nigth-out-reserve.org/api/helyszinek/list/${adminId}?_t=${new Date().getTime()}`);
         const adatok = await response.json();
 
         const kontener = document.getElementById('admin-helyszin-grid');
         kontener.innerHTML = ""; 
 
         adatok.forEach(hely => {
-          const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
+            const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
 
-            // JSON biztonságos formázása a gombokhoz
-            const helyJson = JSON.stringify(hely).replace(/'/g, "&#39;");
+            // --- ÚJ RÉSZ: Rejtett kód kezelése ---
+            let nyersLeiras = hely.leiras || "";
+            
+            // Ha NINCS benne a kód, akkor bérelhető (pipálva lesz)
+            let isBerelheto = !nyersLeiras.includes("[NEM_BERELHETO]");
+            
+            // Kivágjuk a szövegből a kódot, hogy a kártyán már a tiszta szöveg jelenjen meg!
+            let tisztaLeiras = nyersLeiras.replace("[NEM_BERELHETO]", "").trim();
+            // -------------------------------------
 
             kontener.innerHTML += `
                 <div class="card" style="display: flex; flex-direction: column; background-color: #1e1e2d; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
@@ -32,27 +39,21 @@ async function betoltAdminHelyszinek() {
                         <p style="color: #8b5cf6; font-size: 0.85rem; margin-bottom: 10px; font-weight: 500;">
                             Tables: ${hely.asztalokSzama} pcs
                         </p>
-                        <p style="color: #d1d5db; font-size: 0.8rem; line-height: 1.4; margin-bottom: 20px; flex-grow: 1;">
-                            ${hely.leiras || 'No description provided.'}
+                        <p style="color: #d1d5db; font-size: 0.8rem; line-height: 1.4; margin-bottom: 10px; flex-grow: 1;">
+                            ${tisztaLeiras || 'No description provided.'}
                         </p>
 
-                        <div style="display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
-                            
-                            <button onclick="nyitEszkozModal(${hely.id}, '${hely.nev}')" 
-                                style="flex: 1; padding: 10px 5px; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">
-                                <i class="fa-solid fa-plus"></i> Item
-                            </button>
+                        <div style="margin-top: auto; padding: 10px 0 15px 0; border-top: 1px solid rgba(255,255,255,0.05);">
+                            <label style="color: #d1d5db; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 0;">
+                                <input type="checkbox" onchange="toggleBerelheto(${hely.id}, this.checked)" ${isBerelheto ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: #8b5cf6; cursor: pointer;">
+                                Enable whole venue booking
+                            </label>
+                        </div>
 
-                            <button onclick="helyszinSzerkesztes(${hely.id})" 
-                                style="flex: 1; padding: 10px 5px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">
-                                <i class="fa-solid fa-pen"></i> Edit
-                            </button>
-
-                            <button onclick="helyszinTorles(${hely.id})" 
-                                style="flex: 1; padding: 10px 5px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">
-                                <i class="fa-solid fa-trash"></i> Delete
-                            </button>
-
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="nyitEszkozModal(${hely.id}, '${hely.nev}')" style="flex: 1; padding: 10px 5px; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;"><i class="fa-solid fa-plus"></i> Item</button>
+                            <button onclick="helyszinSzerkesztes(${hely.id})" style="flex: 1; padding: 10px 5px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="helyszinTorles(${hely.id})" style="flex: 1; padding: 10px 5px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;"><i class="fa-solid fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 </div>
@@ -284,4 +285,29 @@ function kijelentkezes() {
     localStorage.removeItem("nr_admin_id");
     localStorage.removeItem("nr_szorakozohely_id");
     window.location.href = "admin-login.html";
+}
+// FÜGGVÉNY A CHECKBOX MENTÉSÉHEZ
+async function toggleBerelheto(helyId, isChecked) {
+    try {
+        const response = await fetch(`https://nigth-out-reserve.org/api/helyszinek/${helyId}/berelheto?statusz=${isChecked}`, {
+            method: 'PUT'
+        });
+
+        if (!response.ok) throw new Error("Server error");
+        
+        Swal.fire({
+            toast: true,
+            position: 'bottom-end',
+            icon: 'success',
+            title: isChecked ? 'Booking enabled!' : 'Booking disabled!',
+            showConfirmButton: false,
+            timer: 2000,
+            background: '#1e1e2d',
+            color: '#fff'
+        });
+    } catch (error) {
+        console.error("Mentési hiba:", error);
+        Swal.fire('Error!', 'Could not save the setting.', 'error');
+        betoltAdminHelyszinek(); // Visszaállítjuk a pipát a mentés hiba miatt
+    }
 }
