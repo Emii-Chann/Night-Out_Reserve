@@ -40,7 +40,7 @@ async function betoltFoglalasok(url, divId, tipus) {
                     
                     ${(f.allapot !== 'LEMONDVA' && f.allapot !== 'ELUTASITVA') ? 
                         `<button onclick="foglalasLemondasa(${f.id}, '${tipus}')" 
-                                style="position: absolute; down: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s;">
+                                style="position: absolute; bottom: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s;">
                             <i class="fa-solid fa-xmark"></i> Cancel
                         </button>` 
                     : ""}
