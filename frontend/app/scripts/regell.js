@@ -78,7 +78,9 @@ async function handleRegistration(event) {
             });
             window.location.href = "login.html";
         } else {
-            const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
+
+            const hibaUzenet = await response.text();
+            throw new Error(hibaUzenet || "Valami hiba történt a szerveren.");
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
