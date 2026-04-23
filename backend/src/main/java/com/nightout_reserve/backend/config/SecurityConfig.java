@@ -39,21 +39,21 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
-                        .requestMatchers("/auth/login", "/users/**", "/**").permitAll() // example of non authenticated path
-                        // TODO: every unauthet paths here
-//                        .anyRequest().authenticated() // Temporary no-auth until end of development phase
+                        .requestMatchers("/auth/login", "/users/**", "/**").permitAll() 
+                        
+
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) 
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // TODO: set it only to frontend urls
+        configuration.setAllowedOrigins(List.of("*")); 
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(false); // TODO: then set this true
+        configuration.setAllowCredentials(false); 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

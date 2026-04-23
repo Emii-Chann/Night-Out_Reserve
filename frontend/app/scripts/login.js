@@ -1,5 +1,5 @@
 async function handleLogin(event) {
-    event.preventDefault(); // Megállítjuk a 405-ös hibát
+    event.preventDefault(); 
     
     const usernameIn = document.getElementById("username").value;
     const passwordIn = document.getElementById("password").value;

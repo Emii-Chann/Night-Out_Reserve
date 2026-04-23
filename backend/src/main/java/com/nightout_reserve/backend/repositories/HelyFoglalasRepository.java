@@ -18,9 +18,9 @@ public interface HelyFoglalasRepository extends JpaRepository<HelyFoglalas, Inte
 
         List<HelyFoglalas> findBySzorakozohelyId(Integer szorakozohelyId); 
         
-// Értelemszerűen a JatekFoglalas-nál JatekFoglalas-t írj a kacsacsőrbe, stb.
 
-    // Megszámolja, hány olyan foglalás van az adott helyen, ami időben átfedésben van az újjal
+
+    
     @Query(value = "SELECT COUNT(*) FROM hely_foglalasok WHERE szorakozohely_id = :helyId AND kezdet < :ujVege AND vege > :ujKezdet AND allapot != 'TÖRÖLVE'", nativeQuery = true)
     int countUtkozesek(@Param("helyId") Integer helyId, @Param("ujKezdet") LocalDateTime ujKezdet, @Param("ujVege") LocalDateTime ujVege);
 

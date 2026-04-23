@@ -24,7 +24,7 @@ public class AsztalService {
     private AsztalRepository asztalRepository;
 
     public void ujAsztalMentese(Integer szorakozohelyId, Integer asztalSzam, Integer ferohely) {
-        // Létrehozzuk a modellt (használd a saját Asztal osztályodat)
+        
         Asztal ujAsztal = new Asztal();
         
         ujAsztal.setSzorakozohelyId(szorakozohelyId);
@@ -40,23 +40,23 @@ public class AsztalService {
 
     @Transactional
     public Asztal updateAsztal(Integer id, Integer ujFerohely) {
-        // Megkeressük az asztalt, ha nincs meg, hibát dobunk
+        
         Asztal asztal = asztalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Asztal nem található ezzel az azonosítóval: " + id));
 
-        // Módosítjuk a férőhelyet
+        
         asztal.setFerohely(ujFerohely);
 
-        // Itt opcionálisan módosíthatod az asztalszámot is, ha szükséges:
-        // asztal.setAsztalSzam(ujAsztalSzam);
+        
+        
 
-        // Elmentjük a módosításokat
+        
         return asztalRepository.save(asztal);
     }
 
-    /**
-     * Lekéri az összes asztalt egy adott szórakozóhelyhez.
-     */
+    
+
+
     public List<Asztal> findBySzorakozohelyId(Integer szid) {
         return asztalRepository.findBySzorakozohelyId(szid);
     }

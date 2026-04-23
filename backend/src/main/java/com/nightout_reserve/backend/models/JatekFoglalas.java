@@ -27,7 +27,7 @@ public class JatekFoglalas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "jatek_foglalas_id")
-    private Integer id; // Figyelj, itt az oszlop neve jatek_foglalas_id!
+    private Integer id; 
 
     @Column(name = "felhasznalo_id")
     private Integer felhasznaloId;
@@ -42,7 +42,7 @@ public class JatekFoglalas {
     
     private LocalDateTime vege;
     
-    @Enumerated(EnumType.STRING) // <-- EZ A KULCS!
+    @Enumerated(EnumType.STRING) 
     @Column(name = "allapot")
     private Allapot allapot;
 

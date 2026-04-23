@@ -42,7 +42,7 @@ public class SzorakozohelyController {
 
     @GetMapping("/list")
     public List<Szorakozohely> getHelyszinek() {
-        // A repository-ban megírt metódust hívjuk meg
+        
         return repo.findByTorolveAtIsNull();
     }
 
@@ -57,7 +57,7 @@ public class SzorakozohelyController {
 @Autowired
 private SzorakozohelyService szorakozohelyService;
 
-@CrossOrigin(origins = "*") // Tedd ezt az osztály fölé
+@CrossOrigin(origins = "*") 
 
 
 
@@ -70,7 +70,7 @@ public ResponseEntity<?> ujHelyFormData(
         @RequestParam("leiras") String leiras,
         @RequestParam("nyitvatartas") String nyitvatartas,
         @RequestParam("asztalokSzama") Integer asztalokSzama,
-        @RequestParam("tulajId") Integer tulajId, // Ezt kapjuk a JS-ből
+        @RequestParam("tulajId") Integer tulajId, 
         @RequestParam(value = "kep", required = false) MultipartFile kep) throws IOException {
 
     Szorakozohely ujHely = new Szorakozohely();
@@ -84,7 +84,7 @@ public ResponseEntity<?> ujHelyFormData(
     TulajokAdatai tulaj = tulajokAdataiRepository.findById(tulajId)
             .orElseThrow(() -> new RuntimeException("Tulajdonos nem található!"));
     
-    // Beállítjuk a teljes objektumot
+    
     ujHely.setTulajokAdatai(tulaj);
 
     if (kep != null && !kep.isEmpty()) {
@@ -133,24 +133,24 @@ public ResponseEntity<Szorakozohely> updateHelyszin(
 
     Szorakozohely regi = repo.findById(id).orElseThrow();
     
-    // Alapadatok frissítése
+    
     regi.setNev(nev);
     regi.setVaros(varos);
     regi.setCim(cim);
     regi.setLeiras(leiras);
     regi.setNyitvatartas(nyitvatartas);
 
-    // Kép mentése, ha érkezett új fájl
+    
     if (kep != null && !kep.isEmpty()) {
-        // Létrehozunk egy egyedi fájlnevet
+        
         String fajlNev = id + "_" + System.currentTimeMillis() + "_" + kep.getOriginalFilename();
         
-        // Meghatározzuk hova mentsük (pl. az uploads mappába)
-        // Fontos: a mappának léteznie kell!
+        
+        
         Path utvonal = Paths.get("uploads/" + fajlNev);
         Files.write(utvonal, kep.getBytes());
         
-        // Elmentjük az útvonalat az adatbázisba
+        
         regi.setKeputvonal("/uploads/" + fajlNev);
     }
 
@@ -167,18 +167,18 @@ public ResponseEntity<Szorakozohely> getHelyszinById(@PathVariable Integer id) {
 
 @GetMapping("/list/{tulajId}")
 public List<Szorakozohely> getHelyszinek(@PathVariable Integer tulajId) {
-    // Most már csak a beküldött ID-hoz tartozó helyeket kérjük le
+    
 return repo.findByTulajokAdataiIdAndTorolveAtIsNull(tulajId);}
 
 @PostMapping("/{id}/kep-feltoltes")
 public ResponseEntity<?> kepFeltoltes(@PathVariable Integer id, @RequestParam("file") MultipartFile file) {
     try {
-        // 1. Mentsd el a fájlt egy mappába (pl. "uploads/")
+        
         String fileName = id + "_" + file.getOriginalFilename();
         Path path = Paths.get("uploads/" + fileName);
         Files.write(path, file.getBytes());
 
-        // 2. Frissítsd a helyszín adatát az adatbázisban
+        
         Szorakozohely hely = repo.findById(id).get();
         hely.setKeputvonal("/uploads/" + fileName);
         repo.save(hely);
@@ -189,7 +189,7 @@ public ResponseEntity<?> kepFeltoltes(@PathVariable Integer id, @RequestParam("f
     }
 }
 
-// ÚJ VÉGPONT: A weboldal checkboxa ide fogja küldeni az adatot
+
     @PutMapping("/{id}/berelheto")
     public ResponseEntity<?> frissitBerelhetoseg(@PathVariable Integer id, @RequestParam Boolean statusz) {
         try {

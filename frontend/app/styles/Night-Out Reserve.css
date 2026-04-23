@@ -95,7 +95,7 @@ body::after {
     font-weight: bold;
 }
 
-/* Ensure Bootstrap can't override homepage header/logo text */
+
 body .navbar .logo span {
     color: #ffffff;
 }
@@ -207,7 +207,7 @@ body .hero-content h1 {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Featured carousel on homepage */
+
 .featured-carousel {
     margin: 20px auto 30px auto;
     max-width: 900px;
@@ -656,19 +656,19 @@ body .hero-content h1 {
    background-color: var(--primary-color);
     color: #ffffff;
     border: none;
-    border-radius: 8px; /* Kicsit kerekítettebb, modernebb */
+    border-radius: 8px; 
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
 
-    /* MÉRET NÖVELÉSE */
-    padding: 15px 35px;    /* Nagyobb kattintható felület */
-    font-size: 1.1rem;     /* Nagyobb betűk */
     
-    /* KÖZÉPRE IGAZÍTÁS */
-    display: block;        /* Blokkszintű elemként kezeljük */
-    margin: 20px auto;     /* Alul-felül 20px távolság, két oldalt automatikus (középre tolja) */
-    width: fit-content;    /* Csak akkora legyen, amekkora a szöveg benne */
+    padding: 15px 35px;    
+    font-size: 1.1rem;     
+    
+    
+    display: block;        
+    margin: 20px auto;     
+    width: fit-content;    
 }
 
 .btn-foglalas:hover {

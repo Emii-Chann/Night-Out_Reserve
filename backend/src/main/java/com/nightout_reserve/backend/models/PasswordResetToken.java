@@ -21,9 +21,9 @@ public class PasswordResetToken {
 
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER) // <--- ITT
-    @JoinColumn(nullable = false, name = "felhasznalo_id") // <--- ITT
-    private User felhasznalo; // <--- ITT
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER) 
+    @JoinColumn(nullable = false, name = "felhasznalo_id") 
+    private User felhasznalo; 
 
     private LocalDateTime lejarat;
 
@@ -32,8 +32,8 @@ public class PasswordResetToken {
     public PasswordResetToken(String token, User user) {
         this.token = token;
         this.felhasznalo = user;
-        this.lejarat = LocalDateTime.now().plusMinutes(30); // 30 percig érvényes
+        this.lejarat = LocalDateTime.now().plusMinutes(30); 
     }
 
-    // Getterek és Setterek (id, token, tulajdonos, lejarat)
+    
 }

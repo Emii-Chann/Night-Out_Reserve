@@ -11,14 +11,14 @@ async function betoltEszkozok() {
     }
 
     try {
-        // 1. LÉPÉS: A szórakozóhely nevének lekérése
+        
         const helyResponse = await fetch(`https://nigth-out-reserve.org/api/helyszinek/${helyszinId}`);
         if (helyResponse.ok) {
             const helyAdat = await helyResponse.json();
             document.getElementById("aktualis-helyszin-neve").innerText = helyAdat.nev;
         }
 
-        // 2. LÉPÉS: Az eszközök lekérése (amit már megírtunk)
+        
         const response = await fetch(`https://nigth-out-reserve.org/api/admin/eszkozok/${helyszinId}`);
         const data = await response.json();
 
@@ -28,7 +28,7 @@ async function betoltEszkozok() {
         asztalGrid.innerHTML = "";
         jatekGrid.innerHTML = "";
 
-        // Asztalok és játékok kirajzolása
+        
         data.asztalok.forEach(asztal => {
             asztalGrid.innerHTML += generaldEszkozKartya(asztal, 'asztal');
         });
@@ -42,7 +42,7 @@ async function betoltEszkozok() {
     }
 }
 
-// Segédfüggvény a kártyákhoz
+
 function generaldEszkozKartya(item, tipus) {
     const azonosito = tipus === 'asztal' ? item.asztalSzam : (item.id || item.jatekId);
 
@@ -68,7 +68,7 @@ function generaldEszkozKartya(item, tipus) {
     `;
 }
 
-// Törlés funkció
+
 async function torolEszkoz(id, tipus) {
     const result = await Swal.fire({
         title: 'Are you sure?',
@@ -91,7 +91,7 @@ async function torolEszkoz(id, tipus) {
             if (res.ok) {
                 Swal.fire('Deleted!', 'The item has been removed.', 'success');
                 
-                betoltEszkozok(); // Lista frissítése
+                betoltEszkozok(); 
             }
         } catch (error) {
             Swal.fire('Error!', 'Failed to delete.', 'error');
@@ -157,7 +157,7 @@ async function mentesSzerkesztes() {
         if (response.ok) {
             Swal.fire("Success", "Item updated!", "success");
             document.getElementById("szerkesztEszkozModal").style.display = "none";
-            betoltEszkozok(); // Lista újratöltése
+            betoltEszkozok(); 
         } else {
             throw new Error("Failed to save");
         }

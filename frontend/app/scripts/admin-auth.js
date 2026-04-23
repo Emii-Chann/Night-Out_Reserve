@@ -1,8 +1,8 @@
-// Simple localStorage-based admin authentication flow
+
 const ADMINS_KEY = "nr_admins";
 const CURRENT_ADMIN_KEY = "nr_current_admin";
 
-// Handle admin login page
+
 const adminLoginForm = document.getElementById("adminLoginForm");
 if (adminLoginForm) {
     adminLoginForm.addEventListener("submit", async (e) => {
@@ -25,7 +25,7 @@ if (adminLoginForm) {
            if (response.ok) {
                 const adminData = await response.json();
                 
-                // Alapadatok mentése
+                
                 localStorage.setItem("nr_current_admin", adminData.felhasznalonev);
                 localStorage.setItem("nr_admin_id", adminData.tulajId);
                 
@@ -47,7 +47,7 @@ if (adminLoginForm) {
     });
 }
 
-// Handle set-password page
+
 const setPasswordForm = document.getElementById("setPasswordForm");
 if (setPasswordForm) {
     const adminId = localStorage.getItem("nr_admin_id");
@@ -63,7 +63,7 @@ if (setPasswordForm) {
         const confirmPass = document.getElementById("confirmNewPassword").value;
         const errorEl = document.getElementById("setPasswordError");
 
-        // Alapvető ellenőrzések a frontenden
+        
         if (newPass.length < 6) {
             errorEl.textContent = "Password must be at least 6 characters long.";
             return;
@@ -75,7 +75,7 @@ if (setPasswordForm) {
         }
 
         try {
-            // HÍVÁS A BACKENDRE
+            
             const response = await fetch("https://nigth-out-reserve.org/api/admin/jelszo-modositas", {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -87,7 +87,7 @@ if (setPasswordForm) {
             });
 
             if (response.ok) {
-                // SIKER!
+                
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -98,10 +98,10 @@ if (setPasswordForm) {
                 });
                 window.location.href = "./admin-dashboard.html";
             } else {
-                // HIBA (Pl. rossz régi jelszó)
+                
                 const hibaUzenet = await response.text();
-                // Opcionális: Ha a backend magyar hibaüzenetet küld vissza, 
-                // azt is lehet a frontenden felülírni egy angolra, de alapból így hagyjuk.
+                
+                
                 errorEl.textContent = hibaUzenet; 
             }
         } catch (error) {

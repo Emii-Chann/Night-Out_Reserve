@@ -53,7 +53,7 @@ public class AdminDashboardController {
 public List<Object> getAllFoglalasok(@RequestParam Integer szid) {
     List<Object> minden = new ArrayList<>();
     
-    // Most már szűrve kérjük le az adatokat!
+    
     minden.addAll(asztalFoglalasService.getFoglalasokByHely(szid));
     minden.addAll(jatekService.getJatekFoglalasokByHely(szid));
     minden.addAll(helyService.getHelyszinFoglalasokByHely(szid));
@@ -69,7 +69,7 @@ public ResponseEntity<?> frissitAllapot(@RequestBody Map<String, String> body) {
 
     if ("asztal".equals(tipus)) asztalFoglalasService.statuszFrissites(id, ujAllapot);
     else if ("jatek".equals(tipus)) jatekService.jatekStatuszFrissites(id, ujAllapot);
-    else if ("helyszin".equals(tipus)) helyService.helyszinStatuszFrissites(id, ujAllapot); // EZ AZ ÚJ
+    else if ("helyszin".equals(tipus)) helyService.helyszinStatuszFrissites(id, ujAllapot); 
 
     return ResponseEntity.ok().body("Kész!");
 }
@@ -80,7 +80,7 @@ public ResponseEntity<?> torles(@PathVariable String tipus, @PathVariable Intege
     try {
         switch (tipus.toLowerCase()) {
             case "asztal":
-                asztalFoglalasService.deleteById(id); // Vagy ha a repót hívod közvetlenül: asztalRepo.deleteById(id);
+                asztalFoglalasService.deleteById(id); 
                 break;
             case "jatek":
                 jatekService.deleteById(id);

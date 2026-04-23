@@ -19,7 +19,7 @@ import jakarta.transaction.Transactional;
 public class JatekService {
 
     @Autowired
-    private JatekRepository jatekRepository; // A sima Jatek repót használjuk!
+    private JatekRepository jatekRepository; 
 
     public void ujJatekHelyszinhez(Integer helyId, String nev, String leiras, Integer darab, Integer ar) {
         Jatek ujJatek = new Jatek();
@@ -28,9 +28,9 @@ public class JatekService {
         ujJatek.setDarab(darab);
         ujJatek.setLeiras(leiras);
         ujJatek.setArOra(ar);
-        ujJatek.setMinIdotartamPerc(60); // Legyen alapból 1 óra
+        ujJatek.setMinIdotartamPerc(60); 
 
-        jatekRepository.save(ujJatek); // Bumm, bent is van a táblában!
+        jatekRepository.save(ujJatek); 
     }
 
     @Transactional
@@ -38,12 +38,12 @@ public class JatekService {
         Jatek jatek = jatekRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("A játék nem található!"));
 
-        // Csak azokat a mezőket frissítjük, amiket kaptunk
+        
         jatek.setNev(nev);
         jatek.setDarab(darab);
         jatek.setArOra(ar);
 
-        return jatekRepository.save(jatek); // Visszatérünk a frissített objektummal
+        return jatekRepository.save(jatek); 
     }
     public Optional<Jatek> findById(Integer id) {
         return jatekRepository.findById(id);

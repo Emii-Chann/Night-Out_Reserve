@@ -21,28 +21,28 @@ public class HelyFoglalasService {
 
 
     @Autowired
-private SzorakozohelyRepository szorakozohelyRepository; // (Vagy ahogy nálad hívják ezt a fájlt)
+private SzorakozohelyRepository szorakozohelyRepository; 
 
 @Autowired
     private UserRepository userRepository;
 
 
     public void deleteById(Integer id) {
-    repo.deleteById(id); // A repository beépítve tudja a törlést!
+    repo.deleteById(id); 
 }
 
 public List<HelyFoglalas> getHelyszinFoglalasokByHely(Integer szid) {
-        // Itt a findAll() helyett az új szűrős metódust hívjuk:
+        
         List<HelyFoglalas> lista = repo.findBySzorakozohelyId(szid);
         
         for (HelyFoglalas f : lista) {
-            // Helyszín nevének kikeresése
+            
             if (f.getSzorakozohelyId() != null) {
                 szorakozohelyRepository.findById(f.getSzorakozohelyId())
                     .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev())); 
             }
 
-            // --- ÚJ RÉSZ: Felhasználó nevének kikeresése ---
+            
             if (f.getFelhasznaloId() != null) {
                 userRepository.findById(f.getFelhasznaloId())
                     .ifPresent(user -> f.setFelhasznaloNev(user.getUsername())); 
@@ -66,7 +66,7 @@ public List<HelyFoglalas> getOsszesHelyszinFoglalas() {
     return lista;
 }
 
-// Ne felejtsd el az állapotfrissítőt sem ide!
+
 public void helyszinStatuszFrissites(Integer id, String ujStatusz) {
     HelyFoglalas f = repo.findById(id).orElseThrow();
     f.setAllapot(Allapot.valueOf(ujStatusz));
@@ -75,18 +75,18 @@ public void helyszinStatuszFrissites(Integer id, String ujStatusz) {
     
 
    public List<HelyFoglalas> getFelhasznaloFoglalasai(Integer felhasznaloId) {
-    // 1. Lekérjük a nyers foglalásokat
+    
     List<HelyFoglalas> foglalasok = repo.findByFelhasznaloId(felhasznaloId);
     
-    // 2. Végigmegyünk rajtuk, és kikeresjük hozzájuk a helyszín nevét
+    
     for (HelyFoglalas f : foglalasok) {
         if (f.getSzorakozohelyId() != null) {
             szorakozohelyRepository.findById(f.getSzorakozohelyId())
-                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev())); // Ha nem getNev(), akkor írd át arra, ahogy a Szorakozohely modelben van!
+                .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev())); 
         }
     }
     
-    // 3. Visszaadjuk a már kiegészített listát
+    
     return foglalasok;
 }
 

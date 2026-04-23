@@ -14,15 +14,15 @@ async function betoltAdminHelyszinek() {
         adatok.forEach(hely => {
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
 
-            // --- ÚJ RÉSZ: Rejtett kód kezelése ---
+            
             let nyersLeiras = hely.leiras || "";
             
-            // Ha NINCS benne a kód, akkor bérelhető (pipálva lesz)
+            
             let isBerelheto = !nyersLeiras.includes("[NEM_BERELHETO]");
             
-            // Kivágjuk a szövegből a kódot, hogy a kártyán már a tiszta szöveg jelenjen meg!
+            
             let tisztaLeiras = nyersLeiras.replace("[NEM_BERELHETO]", "").trim();
-            // -------------------------------------
+            
 
             kontener.innerHTML += `
                 <div class="card" style="display: flex; flex-direction: column; background-color: #1e1e2d; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
@@ -286,7 +286,7 @@ function kijelentkezes() {
     localStorage.removeItem("nr_szorakozohely_id");
     window.location.href = "admin-login.html";
 }
-// FÜGGVÉNY A CHECKBOX MENTÉSÉHEZ
+
 async function toggleBerelheto(helyId, isChecked) {
     try {
         const response = await fetch(`https://nigth-out-reserve.org/api/helyszinek/${helyId}/berelheto?statusz=${isChecked}`, {
@@ -308,6 +308,6 @@ async function toggleBerelheto(helyId, isChecked) {
     } catch (error) {
         console.error("Mentési hiba:", error);
         Swal.fire('Error!', 'Could not save the setting.', 'error');
-        betoltAdminHelyszinek(); // Visszaállítjuk a pipát a mentés hiba miatt
+        betoltAdminHelyszinek(); 
     }
 }

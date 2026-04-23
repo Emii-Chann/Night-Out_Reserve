@@ -1,6 +1,6 @@
-// cookie-consent.js
 
-// 1. A felugró sáv HTML kódja
+
+
 const cookieHTML = `
 <div id="cookie-banner" class="cookie-banner" style="display: none;">
     <div class="cookie-content">
@@ -13,7 +13,7 @@ const cookieHTML = `
 </div>
 `;
 
-// 2. A lila-sötét témádhoz passzoló CSS stílus
+
 const cookieCSS = `
 <style>
     .cookie-banner {
@@ -83,18 +83,18 @@ const cookieCSS = `
 </style>
 `;
 
-// 3. A logika: Csak akkor mutatjuk meg, ha még nem döntött a user
+
 document.addEventListener("DOMContentLoaded", () => {
-    // Ellenőrizzük a localStorage-t
+    
     if (!localStorage.getItem("cookie_consent")) {
-        // Beillesztjük a stílust a <head>-be, a HTML-t pedig a <body> aljára
+        
         document.head.insertAdjacentHTML("beforeend", cookieCSS);
         document.body.insertAdjacentHTML("beforeend", cookieHTML);
         
         const banner = document.getElementById("cookie-banner");
         banner.style.display = "flex";
 
-        // Gombok működése
+        
         document.getElementById("accept-cookies").addEventListener("click", () => {
             localStorage.setItem("cookie_consent", "accepted");
             banner.style.display = "none";

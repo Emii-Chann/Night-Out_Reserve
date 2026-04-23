@@ -53,12 +53,12 @@ public class HelyFoglalasController {
     }
 
 
-    @GetMapping("/foglalt-hely-idopontok") // ÚJ URL!
+    @GetMapping("/foglalt-hely-idopontok") 
     public ResponseEntity<List<String>> getFoglaltHelyIdopontok(
             @RequestParam Integer szorakozohelyId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datum) {
 
-        // Itt a HelyFoglalas entitásodat használd!
+        
         List<HelyFoglalas> napiFoglalasok = helyFoglalasRepository.findFoglalasokAdottNapon(szorakozohelyId, datum);
         
         List<String> foglaltPercek = new ArrayList<>();
@@ -80,14 +80,14 @@ public class HelyFoglalasController {
     @PutMapping("/lemondas/{id}")
     public ResponseEntity<String> lemondHelyFoglalas(@PathVariable Integer id) {
         try {
-            // 1. Megkeressük a foglalást
+            
             HelyFoglalas foglalas = helyFoglalasRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
 
-            // 2. Átállítjuk a státuszt
+            
                 foglalas.setAllapot(Allapot.CANCELLED);           
 
-            // 3. Elmentjük
+            
             helyFoglalasRepository.save(foglalas);
 
             return ResponseEntity.ok("Sikeres lemondás!");

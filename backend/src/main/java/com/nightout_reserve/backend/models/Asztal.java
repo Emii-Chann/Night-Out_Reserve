@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "asztalok") // Vagy ahogy a MySQL-ben elnevezted a fizikai asztalok tábláját
+@Table(name = "asztalok") 
 @Getter
 @Setter
 public class Asztal {

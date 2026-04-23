@@ -2,12 +2,12 @@ let aktualisNyitvatartas = "";
 
 let felId = null;
 
-// Dinamikusan kiolvassuk az ID-t a tokenből
+
 const token = localStorage.getItem("token");
 if (token) {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        
         felId = payload.userId;
     } catch (error) {
         console.error("Hiba a token dekódolásakor:", error);
@@ -26,9 +26,9 @@ async function modalMegnyitasa(szorakozohely) {
 
     console.log("Ezt az objektumot kapta a JS:", szorakozohely);
 
-    // ---------------------------------------------------------
-    // 2. JOBB OLDALI PANEL KITÖLTÉSE
-    // ---------------------------------------------------------
+    
+    
+    
     document.getElementById('info-hely-nev').innerText = helyNev || "Not specified";
     document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Not specified";
     document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Not specified";
@@ -43,7 +43,7 @@ async function modalMegnyitasa(szorakozohely) {
         document.getElementById('info-tulaj-email').innerText = "No data";
         document.getElementById('info-tulaj-tel').innerText = "No data";
     }
-    // ---------------------------------------------------------
+    
 
 
     const maiDatum = new Date().toISOString().split('T')[0];

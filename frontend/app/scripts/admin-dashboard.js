@@ -1,10 +1,10 @@
-// --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE ---
-// --- 1. ADATOK LEKÉRÉSE ÉS SZŰRÉSE (Cache tiltással) ---
+
+
 async function getReservations() {
     const szid = localStorage.getItem("nr_szorakozohely_id");
 
     try {
-        // Hozzáadtuk a cache: 'no-store' parancsot, hogy mindig a legfrissebb adatot kérje a szervertől!
+        
         const response = await fetch(`https://nigth-out-reserve.org/api/admin/foglalasok/osszes?szid=${szid}`, {
             cache: 'no-store' 
         });
@@ -33,13 +33,13 @@ async function getReservations() {
 
             const db_id = f.id || f.helyszinFoglalasId || f.jatekFoglalasId || f.asztalFoglalasId;
 
-            // --- 1. IDŐTARTAM (Kezdet - Vég) ---
+            
             let startTime = f.kezdet ? new Date(f.kezdet).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
             let endTime = f.vege ? new Date(f.vege).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
             let displayTime = endTime ? `${startTime} - ${endTime}` : startTime;
 
-            // --- 2. FELHASZNÁLÓNÉV ---
-            // Keresünk egy név mezőt, ha nem találjuk, marad a "Guest #ID" biztonsági tartaléknak
+            
+            
             let foglaloNeve = f.felhasznaloNev || f.foglaloNev || f.felhasznaloNeve || f.nev || ("Guest #" + (f.felhasznaloId || "?"));
 
             return {
@@ -47,7 +47,7 @@ async function getReservations() {
                 originalId: db_id,            
                 customerName: foglaloNeve,
                 date: f.kezdet ? new Date(f.kezdet).toLocaleDateString() : "---",
-                time: displayTime, // Itt adjuk át az új mettől-meddig időt!
+                time: displayTime, 
                 people: f.letszam || f.asztalSzam || "-", 
                 place: f.szorakozohelyNev || "Unknown venue",
                 typeInfo: reszlet,
@@ -62,7 +62,7 @@ async function getReservations() {
     }
 }
 
-// --- 2. KÁRTYA GENERÁLÁSA (GOMBOKKAL) ---
+
 function createReservationCard(reservation) {
     const card = document.createElement("div");
     card.className = "admin-reservation-card";
@@ -76,7 +76,7 @@ function createReservationCard(reservation) {
 
     let actionButtons = '';
 
-    // Gombok ANGOLOSÍTVA
+    
     if (reservation.status === "pending") {
         actionButtons = `
             <button class="admin-btn accept" onclick="updateReservationStatus(${reservation.originalId}, 'accepted', '${reservation.reservationType}')">Accept</button>
@@ -109,7 +109,7 @@ function createReservationCard(reservation) {
 async function updateReservationStatus(id, newStatus, tipus) {
     console.log("KATTINTÁS TÖRTÉNT! ID:", id, "| Új státusz:", newStatus, "| Típus:", tipus);
     
-    // PONTOSAN AZOKAT A SZAVAKAT KÜLDJÜK, AMIT A JAVA ENUM VÁR:
+    
     let javaAllapot = (newStatus === "accepted") ? "APPROVED" : 
                       (newStatus === "rejected") ? "CANCELLED" : 
                       (newStatus === "completed") ? "COMPLETED" : "PENDING";
@@ -127,7 +127,7 @@ async function updateReservationStatus(id, newStatus, tipus) {
         
         if (response.ok) {
             console.log("Sikeres frissítés az adatbázisban!");
-            await renderReservations(); // Újrarajzolja a listát!
+            await renderReservations(); 
         } else {
             console.error("A Java hibát dobott visszatéréskor!");
         }
@@ -173,14 +173,14 @@ async function deleteReservation(id, tipus) {
     }
 }
 
-// --- 4. RENDERELÉS ÉS INICIALIZÁLÁS ---
+
 async function renderReservations() {
     const incomingContainer = document.getElementById("incomingReservations");
     const acceptedContainer = document.getElementById("acceptedReservations");
     const rejectedContainer = document.getElementById("rejectedReservations");
 
     if (!incomingContainer || !acceptedContainer || !rejectedContainer) {
-        return; // Csendben visszatérünk, ha az adott oldalon nincs foglalási tábla
+        return; 
     }
 
     const reservations = await getReservations();
@@ -201,18 +201,18 @@ async function renderReservations() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Felhasználónév kiírása
+    
     const adminName = localStorage.getItem("nr_current_admin");
     const adminDisplay = document.getElementById("adminNameDisplay");
     if (adminDisplay && adminName) adminDisplay.textContent = adminName;
 
-    // 2. Alapadatok kiolvasása
+    
     const venueSelector = document.getElementById("venueSelector");
     const helyekListaJson = localStorage.getItem("nr_helyek_lista");
     const aktivSzid = localStorage.getItem("nr_szorakozohely_id");
     const helyszinDisplay = document.getElementById("aktualis-helyszin-neve");
 
-    // --- DINAMIKUS NÉVKIÍRÁS (A lista alapján) ---
+    
     if (helyszinDisplay && helyekListaJson && aktivSzid) {
         const helyek = JSON.parse(helyekListaJson);
         const aktualisHely = helyek.find(h => h.id.toString() === aktivSzid);
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // --- LEGERDÜLŐ MENÜ FELTÖLTÉSE ---
+    
     if (venueSelector && helyekListaJson) {
         const helyek = JSON.parse(helyekListaJson);
         venueSelector.innerHTML = ""; 
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // 3. Kijelentkezés logikája
+    
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
@@ -253,12 +253,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // 4. Foglalások betöltése
+    
     await renderReservations();
 });
 
 
-// Adatok elküldése a backendnek
+
 async function mentesUjHely() {
     const nev = document.getElementById("ujHelyNev").value;
     const varos = document.getElementById("ujHelyVaros").value;
@@ -481,7 +481,7 @@ async function tulajAdatMentese() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // A HIBÁT ITT JAVÍTOTTUK: Betettük a if (elemLetezik) ellenőrzéseket!
+    
     const bejelentkezettId = localStorage.getItem('nr_admin_id'); 
 
     if (bejelentkezettId) {

@@ -1,4 +1,4 @@
-package com.nightout_reserve.backend.dto; // A te csomagneved
+package com.nightout_reserve.backend.dto; 
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserProfileUpdateRequestDTO {
     private Integer id;
-    private String nev;     // ⚠️ Ha a Java User modelledben 'teljesNev' van, akkor itt is azt írd!
+    private String nev;     
     private String email;
-    private String telefon; // ⚠️ Ha a Java User modelledben 'telefonszam' van, itt is azt írd!
+    private String telefon; 
 }

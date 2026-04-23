@@ -21,7 +21,7 @@ public class JatekFoglalasService {
     @Autowired
     private JatekFoglalasRepository repo;
 
-    // Ezeket behúzzuk, hogy tudjunk neveket keresni az ID-k alapján
+    
     @Autowired
     private SzorakozohelyRepository szorakozohelyRepo;
 
@@ -36,27 +36,27 @@ public class JatekFoglalasService {
 
 
         public void deleteById(Integer id) {
-    repo.deleteById(id); // A repository beépítve tudja a törlést!
+    repo.deleteById(id); 
 }
 
 public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
-        // Lekérjük a játék foglalásokat
+        
         List<JatekFoglalas> lista = repo.findBySzorakozohelyId(szid);
         
         for (JatekFoglalas f : lista) {
-            // Helyszín nevének kikeresése
+            
             if (f.getSzorakozohelyId() != null) {
                 szorakozohelyRepo.findById(f.getSzorakozohelyId())
                     .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
             }
 
-            // Játék nevének kikeresése
+            
             if (f.getJatekId() != null) {
                 jatekRepo.findById(f.getJatekId())
                     .ifPresent(jatek -> f.setJatekNev(jatek.getNev()));
             }
 
-            // --- ÚJ RÉSZ: Felhasználó nevének kikeresése ---
+            
             if (f.getFelhasznaloId() != null) {
                 userRepository.findById(f.getFelhasznaloId())
                     .ifPresent(user -> f.setFelhasznaloNev(user.getUsername())); 
@@ -68,22 +68,22 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
 
 
     public List<JatekFoglalas> getOsszesJatekFoglalas() {
-    // 1. Lekérjük az összes játékfoglalást az adatbázisból
+    
     List<JatekFoglalas> lista = repo.findAll();
     
-    // 2. Végigmegyünk rajtuk és feltöltjük a szórakozóhely nevét
+    
     for (JatekFoglalas f : lista) {
-        // 1. Szórakozóhely nevének lekérése (ezt már megcsináltuk)
+        
         if (f.getSzorakozohelyId() != null) {
             szorakozohelyRepo.findById(f.getSzorakozohelyId())
                 .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));
         }
 
-        // 2. Játék nevének lekérése (EZ HIÁNYZOTT!)
+        
         if (f.getJatekId() != null) {
             jatekRepo.findById(f.getJatekId())
                 .ifPresent(jatek -> f.setJatekNev(jatek.getNev())); 
-                // Ellenőrizd: a Jatek entitásodban 'nev' vagy 'megnevezes' a mező?
+                
         }
     }
     
@@ -92,11 +92,11 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
 }
 
     public void jatekStatuszFrissites(Integer id, String ujStatusz) {
-    // 1. Megkeressük a játékfoglalást (feltételezve, hogy a repo a JatekFoglalasRepository)
+    
     JatekFoglalas foglalas = repo.findById(id)
             .orElseThrow(() -> new RuntimeException("A játékfoglalás nem található: " + id));
 
-    // 2. Beállítjuk az új állapotot (Enum használatával)
+    
     try {
         Allapot statuszEnum = Allapot.valueOf(ujStatusz);
         foglalas.setAllapot(statuszEnum);
@@ -104,7 +104,7 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
         throw new RuntimeException("Érvénytelen állapot: " + ujStatusz);
     }
 
-    // 3. Mentés
+    
     repo.save(foglalas);
 }
 
@@ -113,7 +113,7 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
     public List<JatekFoglalas> getFelhasznaloFoglalasai(Integer felhasznaloId) {
         List<JatekFoglalas> foglalasok = repo.findByFelhasznaloId(felhasznaloId);
 
-        // EZ A CIKLUS TESZI BELE A NEVEKET!
+        
         for (JatekFoglalas f : foglalasok) {
             szorakozohelyRepo.findById(f.getSzorakozohelyId())
                 .ifPresent(hely -> f.setSzorakozohelyNev(hely.getNev()));

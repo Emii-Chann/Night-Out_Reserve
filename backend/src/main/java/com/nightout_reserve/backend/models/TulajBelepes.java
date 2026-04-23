@@ -36,10 +36,10 @@ public class TulajBelepes {
 
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tulaj_id") // Ez köti össze a szorakozohelyek tábla oszlopával
+    @JoinColumn(name = "tulaj_id") 
     private List<Szorakozohely> szorakozohelyek;
 
-// Generálj hozzá Gettert és Settert!
+
     public List<Szorakozohely> getSzorakozohelyek() {
     return szorakozohelyek;
 }

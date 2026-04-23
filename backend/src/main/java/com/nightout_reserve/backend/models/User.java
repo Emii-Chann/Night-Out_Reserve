@@ -1,6 +1,6 @@
 package com.nightout_reserve.backend.models;
 
-import java.time.LocalDateTime; //important!
+import java.time.LocalDateTime; 
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

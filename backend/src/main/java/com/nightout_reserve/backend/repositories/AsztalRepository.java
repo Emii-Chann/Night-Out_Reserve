@@ -7,7 +7,7 @@ import com.nightout_reserve.backend.models.AsztalFoglalas;
 
 public interface AsztalRepository extends JpaRepository<Asztal, Integer> {
     
-    // Lekéri egy adott szórakozóhely összes asztalát
+    
     List<Asztal> findBySzorakozohelyId(Integer szorakozohelyId);
 
 }

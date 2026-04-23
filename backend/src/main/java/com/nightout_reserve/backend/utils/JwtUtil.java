@@ -13,9 +13,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     @Value("${jwt.secret}")
-    private String SECRET_KEY; // Injected after construction
-    private SecretKey key; // Initialized in @PostConstruct
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
+    private String SECRET_KEY; 
+    private SecretKey key; 
+    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; 
 
     @PostConstruct
     public void init() {

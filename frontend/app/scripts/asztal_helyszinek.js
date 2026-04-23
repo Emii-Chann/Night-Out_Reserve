@@ -5,28 +5,28 @@ async function asztalHelyszinekBetoltese() {
         const response = await fetch('https://nigth-out-reserve.org/api/helyszinek/list');
         const helyszinek = await response.json();
 
-        helyszinekDiv.innerHTML = ''; // Kiürítjük betöltés előtt
-        let megjelenitettHelyekSzama = 0; // Számoljuk, hányat rajzolunk ki
+        helyszinekDiv.innerHTML = ''; 
+        let megjelenitettHelyekSzama = 0; 
 
         for (const hely of helyszinek) {
             
-            // --- ÚJ SZŰRŐ RÉSZ: Vannak asztalok? ---
+            
             try {
-                // Lekérjük az asztalokat az adott helyhez
+                
                 const asztalResponse = await fetch(`https://nigth-out-reserve.org/api/asztalok/${hely.id}/list`);
                 const asztalok = await asztalResponse.json();
 
-                // Ha egyáltalán nincsenek asztalok feltöltve, ÁTUGORJUK EZT A HELYSZÍNT!
+                
                 if (!asztalok || asztalok.length === 0) {
                     continue; 
                 }
             } catch (e) {
                 console.error("Nem sikerült lekérni az asztalokat a helyhez:", hely.nev);
-                continue; // Ha hiba van a szerverrel, inkább elrejtjük a helyet
+                continue; 
             }
-            // ---------------------------------------
+            
 
-            megjelenitettHelyekSzama++; // Ha eljutott ide, akkor van asztal, számoljuk!
+            megjelenitettHelyekSzama++; 
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
             
             helyszinekDiv.innerHTML += `
@@ -52,7 +52,7 @@ async function asztalHelyszinekBetoltese() {
             `;
         }
 
-        // BÓNUSZ: Ha egyetlen helynek sincs még asztala, kiírunk egy szép üzenetet
+        
         if (megjelenitettHelyekSzama === 0) {
             helyszinekDiv.innerHTML = '<p class="text-center text-secondary mt-5 fs-4">There are currently no venues with available tables.</p>';
         }
@@ -63,5 +63,5 @@ async function asztalHelyszinekBetoltese() {
     }
 }
 
-// Azonnal meghívjuk a betöltést, amint a script lefut
+
 asztalHelyszinekBetoltese();

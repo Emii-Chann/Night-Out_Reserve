@@ -2,13 +2,13 @@ let helyAktualisNyitvatartas = "";
 
 let felId = null;
 
-// Dinamikusan kiolvassuk az ID-t a tokenből
+
 const token = localStorage.getItem("token");
 if (token) {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         
-        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        
         felId = payload.userId; 
         
     } catch (error) {
@@ -21,29 +21,29 @@ function helyModalMegnyitasa(szorakozohely) {
     frissitFoglaltHelyIdopontok();
 
 
-    // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
+    
     const szorakozohelyId = szorakozohely.id;
     const helyNev = szorakozohely.nev;
-    const nyitvatartas = szorakozohely.nyitvatartas; // Ha nálad máshogy hívják a modellt, itt írd át!
+    const nyitvatartas = szorakozohely.nyitvatartas; 
 
     helyAktualisNyitvatartas = nyitvatartas;
-    document.getElementById('hely-foglalas-modal').style.display = 'flex'; // Nálad flex van, ez tökéletes
+    document.getElementById('hely-foglalas-modal').style.display = 'flex'; 
     document.getElementById('hely-modal-cim').innerText = `${helyNev} - Venue booking (${nyitvatartas || '0-24'})`;
     document.getElementById('hely-szorakozohely-id').value = szorakozohelyId;
 
     console.log("Ezt az objektumot kapta a JS:", szorakozohely);
 
-    // ---------------------------------------------------------
-    // 2. ÚJ RÉSZ: JOBB OLDALI PANEL KITÖLTÉSE
-    // ---------------------------------------------------------
+    
+    
+    
     document.getElementById('info-hely-nev').innerText = helyNev || "Not specified";
     document.getElementById('info-hely-varos').innerText = szorakozohely.varos || "Not specified";
     document.getElementById('info-hely-cim').innerText = szorakozohely.cim || "Not specified";
     document.getElementById('info-hely-tipus').innerText = szorakozohely.tipus || "General";
 
-    // Tulajdonos adatai (ellenőrizzük, hogy létezik-e)
+    
   if (szorakozohely.tulajokAdatai) {
-        // ITT FIGYELJ A VALTOZÓNEVEKRE: teljesNev és telefon!
+        
         document.getElementById('info-tulaj-nev').innerText = szorakozohely.tulajokAdatai.teljesNev || "No data";
         document.getElementById('info-tulaj-email').innerText = szorakozohely.tulajokAdatai.email || "No data";
         document.getElementById('info-tulaj-tel').innerText = szorakozohely.tulajokAdatai.telefon || "No data";
@@ -52,15 +52,15 @@ function helyModalMegnyitasa(szorakozohely) {
         document.getElementById('info-tulaj-email').innerText = "No data";
         document.getElementById('info-tulaj-tel').innerText = "No data";
     }
-    // ---------------------------------------------------------
+    
 
-    // 3. Dátum beállítása (kiegészítettem azzal, hogy rögtön a mai napot adja meg értéknek)
+    
     const maiDatum = new Date().toISOString().split('T')[0];
     const datumMezo = document.getElementById('hely-datum');
     datumMezo.setAttribute('min', maiDatum);
     datumMezo.value = maiDatum; 
 
-    // 4. --- A TE OKOS IDŐPONT GENERÁLÓD (Változatlanul) ---
+    
     const idoSelect = document.getElementById('hely-ido');
     idoSelect.innerHTML = ''; 
 
@@ -130,7 +130,7 @@ async function helyFoglalasBekuldese() {
         return;
     }
 
-    // --- ELLENŐRZÉSEK ---
+    
     const valasztottKezdet = new Date(`${datum}T${ido}`);
     if (valasztottKezdet < new Date()) {
         Swal.fire({
@@ -144,12 +144,12 @@ async function helyFoglalasBekuldese() {
         return;
     }
 
-    // Feltételezzük, hogy az ellenorizNyitvatartas függvényt már megírtuk valamelyik közös JS fájlban
+    
     if (typeof ellenorizNyitvatartas === "function" && !ellenorizNyitvatartas(ido, idotartam, helyAktualisNyitvatartas)) {
         return; 
     }
 
-    // --- DÁTUM FORMÁZÁS (Helyi idő) ---
+    
     const formatum = (date) => {
         const pad = (n) => n < 10 ? '0' + n : n;
         return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) +
@@ -159,7 +159,7 @@ async function helyFoglalasBekuldese() {
     const vegeDatumObj = new Date(valasztottKezdet);
     vegeDatumObj.setHours(vegeDatumObj.getHours() + parseInt(idotartam));
 
-    // A JSON felépítése (pontosan egyezik a Java HelyFoglalas modellel)
+    
     const foglalasAdatok = {
         szorakozohelyId: parseInt(szorakozohelyId),
         felhasznaloId: felId,
@@ -188,7 +188,7 @@ async function helyFoglalasBekuldese() {
             helyModalBezarasa();
             document.getElementById('hely-foglalas-form').reset();
         } else if (response.status === 409) {
-            // Ha a Java "Conflict" hibát dobott, kiírjuk a szövegét
+            
             const hibaSzoveg = await response.text();
             Swal.fire({
                 icon: 'error',
@@ -227,7 +227,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
     let kezdetPercekben = vOra * 60 + vPerc;
     let vegPercekben = kezdetPercekben + (parseInt(idotartam) * 60);
 
-    // --- AZ ÉJFÉLI TRÜKK ---
+    
     if (zarPercekben <= nyitPercekben) {
         zarPercekben += 24 * 60;
     }
@@ -236,7 +236,7 @@ function ellenorizNyitvatartas(valasztottIdo, idotartam, nyitvatartasStr) {
         kezdetPercekben += 24 * 60;
         vegPercekben += 24 * 60;
     }
-    // -----------------------
+    
 
     if (kezdetPercekben < nyitPercekben) {
         Swal.fire({

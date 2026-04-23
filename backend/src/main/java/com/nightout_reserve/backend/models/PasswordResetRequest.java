@@ -1,4 +1,4 @@
-package com.nightout_reserve.backend.models; // Cseréld a te csomagnevedre!
+package com.nightout_reserve.backend.models; 
 
 import lombok.Getter;
 import lombok.Setter;

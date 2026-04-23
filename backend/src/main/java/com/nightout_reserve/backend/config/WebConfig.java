@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Kiszolgálja az uploads mappa tartalmát a /uploads/** URL-en keresztül
+        
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }

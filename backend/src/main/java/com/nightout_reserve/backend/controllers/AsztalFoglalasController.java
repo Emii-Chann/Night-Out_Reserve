@@ -46,7 +46,7 @@ public class AsztalFoglalasController {
     
     @GetMapping("/{helyId}/list")
     public List<Asztal> getAsztalokListaja(@PathVariable Integer helyId) {
-        // A Controller csak átpasszolja a kérést a Service-nek!
+        
         return asztalFoglalasService.getAsztalokListaja(helyId);
 
 
@@ -72,24 +72,24 @@ public class AsztalFoglalasController {
     @GetMapping("/foglalt-asztal-idopontok")
 public ResponseEntity<List<String>> getFoglaltAsztalIdopontok(
         @RequestParam Integer szorakozohelyId,
-        @RequestParam Integer asztalSzam, // Itt az asztal azonosítója
+        @RequestParam Integer asztalSzam, 
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datum) {
 
-    // 1. Lekérjük a konkrét ASZTAL foglalásait az adott napon
+    
     List<AsztalFoglalas> napiAsztalFoglalasok = asztalFoglalasRepository.findFoglalasokAdottNapon(szorakozohelyId, asztalSzam, datum);
     
-    // 2. Lekérjük a TELJES HELYSZÍN foglalásait is ugyanerre a napra
+    
     List<HelyFoglalas> napiHelyFoglalasok = helyFoglalasRepository.findFoglalasokAdottNapon(szorakozohelyId, datum);
     
     List<String> foglaltPercek = new ArrayList<>();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-    // Saját asztalfoglalások feldolgozása
+    
     for (AsztalFoglalas f : napiAsztalFoglalasok) {
         hozzaadIdoszeleteket(foglaltPercek, f.getKezdet(), f.getVege(), formatter);
     }
 
-    // Helyszín foglalások feldolgozása (ez szürkíti ki az asztalt, ha a hely foglalt!)
+    
     for (HelyFoglalas f : napiHelyFoglalasok) {
         hozzaadIdoszeleteket(foglaltPercek, f.getKezdet(), f.getVege(), formatter);
     }
@@ -97,7 +97,7 @@ public ResponseEntity<List<String>> getFoglaltAsztalIdopontok(
     return ResponseEntity.ok(foglaltPercek);
 }
 
-// Ne felejtsd el ezt a segédfüggvényt is beletenni a kontrollerbe!
+
 private void hozzaadIdoszeleteket(List<String> lista, LocalDateTime start, LocalDateTime end, DateTimeFormatter fmt) {
     LocalDateTime iter = start;
     while (iter.isBefore(end)) {
@@ -112,14 +112,14 @@ private void hozzaadIdoszeleteket(List<String> lista, LocalDateTime start, Local
     @PutMapping("/lemondas/{id}")
     public ResponseEntity<String> lemondAsztalFoglalas(@PathVariable Integer id) {
         try {
-            // 1. Megkeressük a foglalást
+            
             AsztalFoglalas foglalas = asztalFoglalasRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
 
-            // 2. Átállítjuk a státuszt
+            
                 foglalas.setAllapot(Allapot.CANCELLED);           
 
-            // 3. Elmentjük
+            
             asztalFoglalasRepository.save(foglalas);
 
             return ResponseEntity.ok("Sikeres lemondás!");

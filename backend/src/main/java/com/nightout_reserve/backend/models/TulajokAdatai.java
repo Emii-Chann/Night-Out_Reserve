@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tulajokadatai") // ⚠️ Ellenőrizd a bal oldali menüdben, hogy tényleg ez-e a tábla neve!
+@Table(name = "tulajokadatai") 
 @Getter
 @Setter
 

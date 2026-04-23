@@ -17,17 +17,17 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "szorakozohelyek")
-@Getter // Ez automatikusan legenerálja az összes gettert a háttérben
+@Getter 
 @Setter 
 public class Szorakozohely {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    // Hozzáadva a pontos oszlopnév
+    
     @ManyToOne
-    @JoinColumn(name = "tulaj_id") // Ennek az oszlopnak lennie kell a 'szorakozohelyek' tábládban!
-    @JsonIgnoreProperties({"letrehozvaAt"}) // Ezeket nem küldjük ki feleslegesen a frontendnek
+    @JoinColumn(name = "tulaj_id") 
+    @JsonIgnoreProperties({"letrehozvaAt"}) 
     private TulajokAdatai tulajokAdatai;
     
     private String varos;
@@ -37,14 +37,14 @@ public class Szorakozohely {
     private String nyitvatartas;
     private String keputvonal;
     
-    // Hozzáadva a pontos oszlopnév
+    
     @Column(name = "asztalok_szama")
     private Integer asztalokSzama;
     
     @Column(name = "letrehozva_at", insertable = false, updatable = false)
     private LocalDateTime letrehozvaAt;
     
-    // Hozzáadva a pontos oszlopnév
+    
     @Column(name = "torolve_at")
     private LocalDateTime torolveAt;
 

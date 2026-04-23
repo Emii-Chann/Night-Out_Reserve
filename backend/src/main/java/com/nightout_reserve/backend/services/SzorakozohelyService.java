@@ -11,7 +11,7 @@ import com.nightout_reserve.backend.repositories.SzorakozohelyRepository;
 @Service
 public class SzorakozohelyService {
 
-    // Itt hívjuk be a Repository-t (írd át a pontos nevére, ha nálad máshogy hívják!)
+    
     @Autowired
     private SzorakozohelyRepository szorakozohelyRepository;
 
@@ -24,19 +24,19 @@ public class SzorakozohelyService {
     ujHely.setNyitvatartas(nyitvatartas);
     ujHely.setAsztalokSzama(asztalokSzama);
 
-    // 1. Létrehozunk egy hivatkozást a tulajdonosra az ID alapján
+    
     TulajokAdatai tulaj = new TulajokAdatai();
     tulaj.setId(tulajId); 
     
-    // 2. Ezt az objektumot adjuk át! (Figyelj a nagy 'T' betűre a setTulajokAdatai-ban)
+    
     ujHely.setTulajokAdatai(tulaj);
 
-    // A letrehozva_at részt a Java/DB automatikusan kezeli...
+    
     szorakozohelyRepository.save(ujHely);
 }
 
 
-// ÚJ METÓDUS: A pipa állapotának mentése a leírásba rejtve
+
     public void frissitBerelhetoseg(Integer id, Boolean statusz) {
         Szorakozohely hely = szorakozohelyRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Helyszín nem található"));
@@ -44,10 +44,10 @@ public class SzorakozohelyService {
         String aktualisLeiras = hely.getLeiras() != null ? hely.getLeiras() : "";
         
         if (statusz) {
-            // Ha BÉRELHETŐ (pipálva van), kivesszük a rejtett kódot
+            
             aktualisLeiras = aktualisLeiras.replace("[NEM_BERELHETO]", "").trim();
         } else {
-            // Ha NEM BÉRELHETŐ (nincs pipálva), betesszük a kódot a szöveg végére
+            
             if (!aktualisLeiras.contains("[NEM_BERELHETO]")) {
                 aktualisLeiras += " [NEM_BERELHETO]";
             }

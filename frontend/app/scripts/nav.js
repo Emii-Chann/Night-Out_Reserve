@@ -15,21 +15,21 @@ const navbarKód = `
 `;
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. LÉPÉS: Navbar beillesztése a HTML-be
+    
     const navbarHelye = document.getElementById("navbar-container");
     if (navbarHelye) {
         navbarHelye.innerHTML = navbarKód;
     }
 
-    // 2. LÉPÉS: Bejelentkezés ellenőrzése és a gombok cseréje
+    
     const token = localStorage.getItem("token");
     const authMenu = document.getElementById("auth-menu");
 
     if (token && authMenu) {
         try {
-            // Megpróbáljuk dekódolni a JWT tokent
+            
             const payload = JSON.parse(atob(token.split('.')[1]));
-            const username = payload.sub; // A Spring Security általában a 'sub'-ba teszi a nevet
+            const username = payload.sub; 
 
             authMenu.innerHTML = `
                 <div class="auth-menu-logged">
@@ -41,14 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         } catch (error) {
             console.error("Invalid token found, cannot be decoded!", error);
-            // Ha hibás a token, érdemes lehet kitörölni, hogy ne okozzon gondot
-            // localStorage.removeItem("token"); 
+            
+            
         }
     }
 });
 
-// Kijelentkezés függvény
+
 function handleLogout() {
     localStorage.removeItem("token");
-    window.location.reload(); // Frissítjük az oldalt, így visszaugrik a profil ikon
+    window.location.reload(); 
 }

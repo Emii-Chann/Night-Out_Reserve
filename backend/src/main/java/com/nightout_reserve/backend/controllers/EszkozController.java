@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/eszkozok")
-@CrossOrigin(origins = "*") // Frontend eléréshez
+@CrossOrigin(origins = "*") 
 public class EszkozController {
 
     @Autowired
@@ -26,12 +26,12 @@ public class EszkozController {
     @Autowired
     private JatekRepository jatekRepo;
 
-    // 1. Összes eszköz lekérése a szórakozóhely ID alapján
+    
     @GetMapping("/{helyszinId}")
     public ResponseEntity<Map<String, Object>> getMindenEszkoz(@PathVariable Integer helyszinId) {
         Map<String, Object> response = new HashMap<>();
         
-        // Lekérjük az asztalokat és a játékokat külön
+        
         List<Asztal> asztalok = asztalRepo.findBySzorakozohelyId(helyszinId);
         List<Jatek> jatekok = jatekRepo.findBySzorakozohelyId(helyszinId);
         
@@ -41,34 +41,34 @@ public class EszkozController {
         return ResponseEntity.ok(response);
     }
 
-    // 2. Asztal törlése
+    
     @DeleteMapping("/asztal/{id}")
     public ResponseEntity<?> torolAsztal(@PathVariable Integer id) {
         asztalRepo.deleteById(id);
         return ResponseEntity.ok("Asztal törölve");
     }
 
-    // 3. Játék törlése
+    
     @DeleteMapping("/jatek/{id}")
     public ResponseEntity<?> torolJatek(@PathVariable Integer id) {
         jatekRepo.deleteById(id);
         return ResponseEntity.ok("Játék törölve");
     }
 
-    // 4. Asztal módosítása
+    
     @PutMapping("/asztal/{id}")
     public ResponseEntity<?> modositAsztal(@PathVariable Integer id, @RequestBody Asztal adatok) {
         Asztal asztal = asztalRepo.findById(id).orElseThrow();
         asztal.setAsztalSzam(adatok.getAsztalSzam());
         asztal.setFerohely(adatok.getFerohely());
-        // ... egyéb mezők ...
+        
         asztalRepo.save(asztal);
         return ResponseEntity.ok("Asztal frissítve");
     }
 
     @RestController
 @RequestMapping("/api/admin/eszkoz")
-@CrossOrigin(origins = "*") // Fejlesztés alatt engedélyezzük a frontendet
+@CrossOrigin(origins = "*") 
 public class AdminEszkozController {
 
     @Autowired
@@ -77,7 +77,7 @@ public class AdminEszkozController {
     @Autowired
     private JatekService jatekService;
 
-    // 1. ADATOK LEKÉRÉSE SZERKESZTÉSHEZ (GET)
+    
     @GetMapping("/{tipus}/{id}")
     public ResponseEntity<?> getEszkozForEdit(@PathVariable String tipus, @PathVariable Integer id) {
         if ("asztal".equalsIgnoreCase(tipus)) {
@@ -92,7 +92,7 @@ public class AdminEszkozController {
         return ResponseEntity.badRequest().body("Ismeretlen eszköztípus!");
     }
 
-    // 2. MÓDOSÍTÁS MENTÉSE (PUT)
+    
     @PutMapping("/modosit/{tipus}/{id}")
     public ResponseEntity<?> updateEszkoz(
             @PathVariable String tipus,
@@ -101,9 +101,9 @@ public class AdminEszkozController {
 
         try {
             if ("asztal".equalsIgnoreCase(tipus)) {
-                // Adatok kinyerése a JSON-ből
+                
                 Integer ujFerohely = Integer.parseInt(adatok.get("ferohely").toString());
-                // Az asztalnál az ID maga az asztalSzam a te rendszeredben
+                
                 Asztal frissitett = asztalService.updateAsztal(id, ujFerohely);
                 return ResponseEntity.ok(frissitett);
 

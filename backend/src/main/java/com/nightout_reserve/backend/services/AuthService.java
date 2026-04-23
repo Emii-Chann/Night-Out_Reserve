@@ -38,7 +38,7 @@ public class AuthService {
             throw new UserWrongPasswordException("A jelszó hibás");
         }
 
-        // Generate JWT token with username and userId
+        
         return jwtUtil.generateToken(up.getUsername(), up.getId());
     }
 

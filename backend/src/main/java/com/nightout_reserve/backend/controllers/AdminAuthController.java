@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "*") // Nagyon fontos, hogy a frontend hozzáférjen!
+@CrossOrigin(origins = "*") 
 public class AdminAuthController {
 
     @Autowired
@@ -20,17 +20,17 @@ public class AdminAuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         try {
-            // A JavaScriptből ezeken a neveken várjuk az adatokat
+            
             String email = credentials.get("email");
             String jelszo = credentials.get("password");
 
-            // Rábízzuk a Service-re a munkát
+            
             TulajBelepes loggedInAdmin = tulajBelepesService.login(email, jelszo);
             
             return ResponseEntity.ok(loggedInAdmin);
 
         } catch (RuntimeException e) {
-            // Ha a Service hibát dob (pl. rossz jelszó), itt elkapjuk és visszaküldjük a frontednek
+            
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }

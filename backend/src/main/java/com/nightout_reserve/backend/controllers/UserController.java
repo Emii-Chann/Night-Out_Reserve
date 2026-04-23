@@ -18,7 +18,7 @@ import com.nightout_reserve.backend.dto.UserRegistrationDTO;
 
 
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000") // Engedélyezzük a frontendnek a hozzáférést
+@CrossOrigin(origins = "http://localhost:3000") 
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -55,7 +55,7 @@ public class UserController {
 
   @PostMapping("/create")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserRegistrationDTO registrationDTO) {
-    // A service-nek adjuk át a DTO-t
+    
     User newUser = userService.createUser(registrationDTO);
     return new ResponseEntity<>(newUser, HttpStatus.CREATED);
 }
@@ -86,16 +86,16 @@ public class UserController {
     @Autowired
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
-    // ---------------------------------------------------------
-    // 1. VÉGPONT: ADATOK BETÖLTÉSE (Amikor megnyílik a profil oldal)
-    // ---------------------------------------------------------
+    
+    
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserProfile(@PathVariable Integer id) {
         User user = userRepository.findById(id).orElse(null);
         
         if (user != null) {
-            // FONTOS: Valós rendszerben sosem küldjük ki a jelszó hash-t a frontendnek!
-            // Ezt lenullázhatjuk a kiküldés előtt a memóriában (az adatbázisban megmarad).
+            
+            
             user.setPassword(null); 
             return ResponseEntity.ok(user);
         } else {
@@ -103,30 +103,30 @@ public class UserController {
         }
     }
 
-    // ---------------------------------------------------------
-    // 2. VÉGPONT: ADATOK FRISSÍTÉSE (Amikor rányom a Mentés gombra)
-    // ---------------------------------------------------------
+    
+    
+    
     @PostMapping("/update")
     public ResponseEntity<?> updateUserProfile(@RequestBody UserProfileUpdateRequestDTO request) {
         
-        // Ellenőrizzük, hogy kaptunk-e ID-t
+        
         if (request.getId() == null) {
             return ResponseEntity.badRequest().body("Hiányzik a felhasználó azonosítója!");
         }
 
-        // 1. Kikeresjük a meglévő felhasználót az adatbázisból
+        
         User letezoUser = userRepository.findById(request.getId()).orElse(null);
 
         if (letezoUser != null) {
-            // 2. Felülírjuk CSAK azt a 3 adatot, amit a felhasználó módosíthat
-            // ⚠️ FIGYELJ: Ha nálad setTeljesNev() vagy setTelefonszam() van, írd át!
+            
+            
             letezoUser.setUsername(request.getNev());
             letezoUser.setEmail(request.getEmail());
             letezoUser.setPhone(request.getTelefon());
             
-            // A jelszó (letezoUser.getJelszo()) és a dátum érintetlen marad!
+            
 
-            // 3. Elmentjük az adatbázisba az új állapotot
+            
             userRepository.save(letezoUser);
             
             return ResponseEntity.ok("Profil sikeresen frissítve!");

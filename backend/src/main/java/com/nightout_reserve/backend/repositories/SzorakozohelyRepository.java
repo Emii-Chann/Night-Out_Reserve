@@ -22,9 +22,9 @@ import com.nightout_reserve.backend.models.Szorakozohely;
 @Repository
 public interface SzorakozohelyRepository extends JpaRepository<Szorakozohely, Integer> {
 
-    // 1. Alapból tudja: findAll(), findById(), save(), delete()
     
-    // 2. Egyedi lekérdezés: Csak azokat adjuk vissza, amik nincsenek törölve
+    
+    
     List<Szorakozohely> findByTorolveAtIsNull();
 
 @Query(value = "SELECT id AS jatekId, nev AS nev, ar_ora AS arOra " +

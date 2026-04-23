@@ -72,21 +72,21 @@ public class JatekFoglalasController {
             @RequestParam Integer jatekId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datum) {
 
-        // 1. Játék foglalások lekérése
+        
         List<JatekFoglalas> napiJatekFoglalasok = jatekFoglalasRepository.findFoglalasokAdottNapon(helyId, jatekId, datum);
         
-        // 2. Teljes helyszín foglalások lekérése
+        
         List<HelyFoglalas> napiHelyFoglalasok = helyFoglalasRepository.findFoglalasokAdottNapon(helyId, datum);
         
         List<String> foglaltPercek = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        // Játék foglalások feldolgozása
+        
         for (JatekFoglalas f : napiJatekFoglalasok) {
             hozzaadIdoszeleteket(foglaltPercek, f.getKezdet(), f.getVege(), formatter);
         }
 
-        // Helyszín foglalások feldolgozása (ez szürkíti ki a játékot is!)
+        
         for (HelyFoglalas f : napiHelyFoglalasok) {
             hozzaadIdoszeleteket(foglaltPercek, f.getKezdet(), f.getVege(), formatter);
         }
@@ -94,7 +94,7 @@ public class JatekFoglalasController {
         return ResponseEntity.ok(foglaltPercek);
     }
 
-    // Ezt a metódust is másold be a Controllerbe, ez végzi a piszkos munkát
+    
     private void hozzaadIdoszeleteket(List<String> lista, LocalDateTime start, LocalDateTime end, DateTimeFormatter fmt) {
         LocalDateTime iter = start;
         while (iter.isBefore(end)) {
@@ -111,15 +111,15 @@ public class JatekFoglalasController {
         @PutMapping("/lemondas/{id}")
         public ResponseEntity<String> lemondHelyFoglalas(@PathVariable Integer id) {
             try {
-                // 1. Megkeressük a foglalást
+                
                 JatekFoglalas foglalas = jatekFoglalasRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Foglalás nem található!"));
     
-                // 2. Átállítjuk a státuszt az ENUM használatával!
-                // Itt a "LEMONDVA" helyett az Enum pontos értékét adjuk meg:
+                
+                
                 foglalas.setAllapot(Allapot.CANCELLED); 
     
-                // 3. Elmentjük
+                
                 jatekFoglalasRepository.save(foglalas);
     
                 return ResponseEntity.ok("Sikeres lemondás!");

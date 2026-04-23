@@ -11,12 +11,12 @@ async function asztalHelyszinekBetoltese() {
         helyszinek.forEach(hely => {
             let tisztaLeiras = hely.leiras || "";
             
-            // --- ÚJ RÉSZ: Ellenőrizzük a rejtett kódot! ---
-            // Ha benne van a [NEM_BERELHETO], akkor a vendég nem láthatja, átugorjuk!
+            
+            
             if (tisztaLeiras.includes("[NEM_BERELHETO]")) {
                 return; 
             }
-            // ----------------------------------------------
+            
 
             megjelenitettHelyekSzama++;
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;

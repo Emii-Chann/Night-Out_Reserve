@@ -31,13 +31,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtUtil.validateToken(token)) {
-                Integer userId = jwtUtil.getUserIdFromToken(token); // Get userId from token
-                // Create a custom principal object or use username + userId
+                Integer userId = jwtUtil.getUserIdFromToken(token); 
+                
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
-                                new CustomUserPrincipal(username, userId), // Custom principal
-                                null, // Credentials not needed after token validation
-                                null  // Add roles/authorities here if needed
+                                new CustomUserPrincipal(username, userId), 
+                                null, 
+                                null  
                         );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);

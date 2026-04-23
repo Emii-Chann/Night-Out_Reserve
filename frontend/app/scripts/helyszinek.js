@@ -9,13 +9,13 @@ async function betoltHelyszinek() {
 
         for (const hely of adatok) {
             
-            // --- ÚJ SZŰRŐ RÉSZ: Vannak játékok? ---
+            
             try {
-                // Lekérjük a játékokat az adott helyhez
+                
                 const jatekResponse = await fetch(`https://nigth-out-reserve.org/api/helyszinek/jatekok/${hely.id}`);
                 const jatekok = await jatekResponse.json();
 
-                // Ha nincsenek játékok, ÁTUGORJUK a kirajzolást!
+                
                 if (!jatekok || jatekok.length === 0) {
                     continue; 
                 }
@@ -23,7 +23,7 @@ async function betoltHelyszinek() {
                 console.error("Nem sikerült lekérni a játékokat a helyhez:", hely.nev);
                 continue;
             }
-            // ---------------------------------------
+            
 
             megjelenitettHelyekSzama++;
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
@@ -48,7 +48,7 @@ async function betoltHelyszinek() {
             `;
         }
 
-        // BÓNUSZ: Ha sehol sincs még feltöltött játék
+        
         if (megjelenitettHelyekSzama === 0) {
             kontener.innerHTML = '<p class="text-center text-secondary mt-5 fs-4">There are currently no venues with available games.</p>';
         }

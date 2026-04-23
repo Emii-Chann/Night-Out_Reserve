@@ -43,7 +43,7 @@ public class AuthController {
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO ulDTO) {
         try {
             String token = authService.login(ulDTO);
-            return ResponseEntity.ok(token); // Return JWT token directly
+            return ResponseEntity.ok(token); 
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -64,7 +64,7 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
         return ResponseEntity.badRequest().body("Hiányzó adatok!");
     }
 
-    // 1. Megkeressük a tokent az adatbázisban
+    
     Optional<PasswordResetToken> resetTokenOpt = passwordResetTokenRepository.findByToken(token);
     
     if (resetTokenOpt.isEmpty()) {
@@ -73,21 +73,21 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
 
     PasswordResetToken resetToken = resetTokenOpt.get();
 
-    // 2. Ellenőrizzük, hogy nem járt-e le (ha van lejárati időd)
+    
     if (resetToken.getLejarat().isBefore(LocalDateTime.now())) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("A jelszó-visszaállító link lejárt!");
     }
 
-    // 3. Megkeressük a tulajdonost és frissítjük a jelszavát
-    User felhasznalo = resetToken.getFelhasznalo(); // <--- ITT
     
-    // BCrypt-tel kódoljuk az új jelszót!
+    User felhasznalo = resetToken.getFelhasznalo(); 
+    
+    
     felhasznalo.setPassword(passwordEncoder.encode(ujJelszo));
     
-    // Mentsük el az új jelszót a te repository-ddal (pl. felhasznalokRepository)
-    userRepository.save(felhasznalo); // <--- ITT
+    
+    userRepository.save(felhasznalo); 
 
-    // 4. Töröljük a felhasznált tokent
+    
     passwordResetTokenRepository.delete(resetToken);
 
     return ResponseEntity.ok("Sikeres jelszócsere!");
@@ -105,29 +105,29 @@ private EmailService emailService;
 public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
     String email = body.get("email");
 
-    // Mivel a te repository-d sima User-t ad vissza (nem Optional-t):
+    
     User felhasznalo = userRepository.findByEmail(email);
     
-    // Így az ellenőrzés is változik:
+    
     if (felhasznalo == null) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nincs ilyen e-mail címmel regisztrált felhasználó!");
     }
 
-    // 2. Generálunk egy egyedi tokent
+    
     String token = UUID.randomUUID().toString();
 
-    // 3. Elmentjük a tokent
+    
     PasswordResetToken resetToken = new PasswordResetToken();
     resetToken.setToken(token);
-    resetToken.setFelhasznalo(felhasznalo); // Itt figyelj: a PasswordResetToken osztályban is Felhasznalo vagy User a mező neve?
+    resetToken.setFelhasznalo(felhasznalo); 
     resetToken.setLejarat(LocalDateTime.now().plusHours(1));
 
     passwordResetTokenRepository.save(resetToken);
 
-    // 4. Link összeállítása
+    
     String resetLink = "https://nigth-out-reserve.org/jelszo-csere.html?token=" + token;
 
-    // 5. E-mail küldése
+    
     try {
       emailService.sendResetEmail(felhasznalo.getEmail(), token);
     } catch (Exception e) {

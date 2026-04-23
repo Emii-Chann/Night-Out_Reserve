@@ -1,11 +1,11 @@
 let felId = null;
 
-// Dinamikusan kiolvassuk az ID-t a tokenből
+
 const token = localStorage.getItem("token");
 if (token) {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        // ITT A VARÁZSLAT: Pontosan azt a kulcsot használjuk, amit a képen láttunk!
+        
         felId = payload.userId; 
     } catch (error) {
         console.error("Hiba a token dekódolásakor:", error);
@@ -62,7 +62,7 @@ async function betoltFoglalasok(url, divId, tipus) {
     }
 }
 
-// --- ÚJ: PROFIL ADATOK BETÖLTÉSE ---
+
 async function felhasznaloAdatBetoltese() {
     try {
         const response = await fetch(`https://nigth-out-reserve.org/users/${felId}`);
@@ -77,7 +77,7 @@ async function felhasznaloAdatBetoltese() {
     }
 }
 
-// --- ÚJ: PROFIL ADATOK MENTÉSE ---
+
 async function profilAdatokMentese() {
     const nev = document.getElementById('profil-nev').value;
     const email = document.getElementById('profil-email').value;
@@ -130,7 +130,7 @@ async function profilAdatokMentese() {
               confirmButtonColor: '#8b5cf6'
             });
             
-            // Kitöröljük a régi (elavult) tokent
+            
             localStorage.removeItem("token");
             window.location.href = "login.html"; 
             
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// --- ÚJ: FIÓK TELJES TÖRLÉSE (GDPR) ---
+
 async function fiokTorlese() {
     const result = await Swal.fire({
         title: 'Are you absolutely sure?',
@@ -228,7 +228,7 @@ async function fiokTorlese() {
 
     if (result.isConfirmed) {
         try {
-            // Itt a backend DELETE végpontját hívjuk meg
+            
             const response = await fetch(`https://nigth-out-reserve.org/users/hardDelete/${felId}`, {
                 method: 'DELETE',
                 headers: {
@@ -246,7 +246,7 @@ async function fiokTorlese() {
                     confirmButtonColor: '#8b5cf6'
                 });
 
-                // Kijelentkeztetés és takarítás
+                
                 localStorage.removeItem("token");
                 window.location.href = "index.html";
             } else {
