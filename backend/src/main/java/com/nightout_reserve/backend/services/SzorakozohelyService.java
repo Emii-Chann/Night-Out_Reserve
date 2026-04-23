@@ -34,4 +34,27 @@ public class SzorakozohelyService {
     // A letrehozva_at részt a Java/DB automatikusan kezeli...
     szorakozohelyRepository.save(ujHely);
 }
-}
+
+
+// ÚJ METÓDUS: A pipa állapotának mentése a leírásba rejtve
+    public void frissitBerelhetoseg(Integer id, Boolean statusz) {
+        Szorakozohely hely = szorakozohelyRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Helyszín nem található"));
+            
+        String aktualisLeiras = hely.getLeiras() != null ? hely.getLeiras() : "";
+        
+        if (statusz) {
+            // Ha BÉRELHETŐ (pipálva van), kivesszük a rejtett kódot
+            aktualisLeiras = aktualisLeiras.replace("[NEM_BERELHETO]", "").trim();
+        } else {
+            // Ha NEM BÉRELHETŐ (nincs pipálva), betesszük a kódot a szöveg végére
+            if (!aktualisLeiras.contains("[NEM_BERELHETO]")) {
+                aktualisLeiras += " [NEM_BERELHETO]";
+            }
+        }
+        
+        hely.setLeiras(aktualisLeiras);
+        szorakozohelyRepository.save(hely);
+    }
+  
+  }

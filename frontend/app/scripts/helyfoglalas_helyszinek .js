@@ -6,8 +6,19 @@ async function asztalHelyszinekBetoltese() {
         const helyszinek = await response.json();
 
         helyszinekDiv.innerHTML = ''; 
+        let megjelenitettHelyekSzama = 0;
 
         helyszinek.forEach(hely => {
+            let tisztaLeiras = hely.leiras || "";
+            
+            // --- ÚJ RÉSZ: Ellenőrizzük a rejtett kódot! ---
+            // Ha benne van a [NEM_BERELHETO], akkor a vendég nem láthatja, átugorjuk!
+            if (tisztaLeiras.includes("[NEM_BERELHETO]")) {
+                return; 
+            }
+            // ----------------------------------------------
+
+            megjelenitettHelyekSzama++;
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
             helyszinekDiv.innerHTML += `
                 <div class="card">
@@ -31,9 +42,14 @@ async function asztalHelyszinekBetoltese() {
                 </div>
             `;
         });
+
+        if (megjelenitettHelyekSzama === 0) {
+            helyszinekDiv.innerHTML = '<p class="text-center text-secondary mt-5 fs-4">There are currently no venues available for full booking.</p>';
+        }
+
     } catch (hiba) {
         console.error("Error loading venues:", hiba);
-        helyszinekDiv.innerHTML = '<p>Could not load venues.</p>';
+        helyszinekDiv.innerHTML = '<p class="text-center text-danger mt-5">Could not load venues.</p>';
     }
 }
 

@@ -5,8 +5,27 @@ async function betoltHelyszinek() {
 
         const kontener = document.getElementById('helyszinek-grid');
         kontener.innerHTML = ""; 
+        let megjelenitettHelyekSzama = 0;
 
-        adatok.forEach(hely => {
+        for (const hely of adatok) {
+            
+            // --- ÚJ SZŰRŐ RÉSZ: Vannak játékok? ---
+            try {
+                // Lekérjük a játékokat az adott helyhez
+                const jatekResponse = await fetch(`https://nigth-out-reserve.org/api/helyszinek/jatekok/${hely.id}`);
+                const jatekok = await jatekResponse.json();
+
+                // Ha nincsenek játékok, ÁTUGORJUK a kirajzolást!
+                if (!jatekok || jatekok.length === 0) {
+                    continue; 
+                }
+            } catch (e) {
+                console.error("Nem sikerült lekérni a játékokat a helyhez:", hely.nev);
+                continue;
+            }
+            // ---------------------------------------
+
+            megjelenitettHelyekSzama++;
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
             kontener.innerHTML += `
                 <div class="card">
@@ -27,9 +46,17 @@ async function betoltHelyszinek() {
                     </div>
                 </div>
             `;
-        });
+        }
+
+        // BÓNUSZ: Ha sehol sincs még feltöltött játék
+        if (megjelenitettHelyekSzama === 0) {
+            kontener.innerHTML = '<p class="text-center text-secondary mt-5 fs-4">There are currently no venues with available games.</p>';
+        }
+
     } catch (hiba) {
         console.error("Failed to load venues:", hiba);
+        const kontener = document.getElementById('helyszinek-grid');
+        if(kontener) kontener.innerHTML = '<p class="text-center text-danger mt-5">Could not load venues.</p>';
     }
 }
 
