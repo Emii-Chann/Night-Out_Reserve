@@ -18,6 +18,9 @@ if (token) {
 
 
 function helyModalMegnyitasa(szorakozohely) {
+    frissitFoglaltHelyIdopontok();
+
+
     // 1. Kiszedjük az adatokat az objektumból, hogy a te logikád továbbra is működjön
     const szorakozohelyId = szorakozohely.id;
     const helyNev = szorakozohely.nev;
