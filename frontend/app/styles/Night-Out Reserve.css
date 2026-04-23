@@ -653,17 +653,27 @@ body .hero-content h1 {
     padding: 20px;
 }
 .btn-foglalas {
-    background-color: var(--primary-color);
+   background-color: var(--primary-color);
     color: #ffffff;
     border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
+    border-radius: 8px; /* Kicsit kerekítettebb, modernebb */
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+
+    /* MÉRET NÖVELÉSE */
+    padding: 15px 35px;    /* Nagyobb kattintható felület */
+    font-size: 1.1rem;     /* Nagyobb betűk */
+    
+    /* KÖZÉPRE IGAZÍTÁS */
+    display: block;        /* Blokkszintű elemként kezeljük */
+    margin: 20px auto;     /* Alul-felül 20px távolság, két oldalt automatikus (középre tolja) */
+    width: fit-content;    /* Csak akkora legyen, amekkora a szöveg benne */
 }
+
 .btn-foglalas:hover {
     background-color: var(--primary-hover);
+    transform: scale(1.05);
 }
 
 #asztal-helyszinek-lista{

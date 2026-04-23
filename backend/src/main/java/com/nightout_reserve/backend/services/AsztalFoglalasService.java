@@ -129,7 +129,7 @@ public void statuszFrissites(Integer id, String ujStatusz) {
         }
 
         if (utkozesek > 0) {
-            throw new AsztalMarFoglaltException("Sajnos ez az asztal ebben az időpontban már foglalt!");
+            throw new AsztalMarFoglaltException("Unfortunately, this table is already occupied at this time!");
         } else {
             return repo.save(ujFoglalas);
         }

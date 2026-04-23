@@ -136,7 +136,7 @@ public List<JatekFoglalas> getJatekFoglalasokByHely(Integer szid) {
             ujJatekFoglalas.setAllapot(Allapot.PENDING);
         }
         if (utkozesek > 0) {
-            throw new JatekMarFoglaltException("Sajnos ez a játék ebben az időpontban már foglalt!");
+            throw new JatekMarFoglaltException("Unfortunately, this game is already booked at this time!");
         } else {
             return repo.save(ujJatekFoglalas);
         }

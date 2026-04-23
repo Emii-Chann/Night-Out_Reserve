@@ -101,7 +101,7 @@ public void helyszinStatuszFrissites(Integer id, String ujStatusz) {
             ujHelyFoglalas.setAllapot(Allapot.PENDING);
         }
         if (utkozesek > 0) {
-           throw new HelyMarFoglaltException("Sajnos ebben az időpontban a helyszín már foglalt!");
+           throw new HelyMarFoglaltException("Unfortunately, the venue is already booked at this time!");
         } else {
             return repo.save(ujHelyFoglalas);
         }
