@@ -300,7 +300,7 @@ async function frissitFoglaltHelyIdopontok() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const helyDatumMezo = document.getElementById('hely-foglalas-datum');
+    const helyDatumMezo = document.getElementById('hely-datum');
 
     if (helyDatumMezo) {
         helyDatumMezo.addEventListener('change', frissitFoglaltHelyIdopontok);
