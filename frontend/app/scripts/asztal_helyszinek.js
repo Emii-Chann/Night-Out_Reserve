@@ -1,4 +1,3 @@
-// asztal_helyszinek.js
 const helyszinekDiv = document.getElementById('asztal-helyszinek-lista');
 
 async function asztalHelyszinekBetoltese() {
@@ -7,10 +6,29 @@ async function asztalHelyszinekBetoltese() {
         const helyszinek = await response.json();
 
         helyszinekDiv.innerHTML = ''; // Kiürítjük betöltés előtt
+        let megjelenitettHelyekSzama = 0; // Számoljuk, hányat rajzolunk ki
 
-        helyszinek.forEach(hely => {
+        for (const hely of helyszinek) {
+            
+            // --- ÚJ SZŰRŐ RÉSZ: Vannak asztalok? ---
+            try {
+                // Lekérjük az asztalokat az adott helyhez
+                const asztalResponse = await fetch(`https://nigth-out-reserve.org/api/asztalok/${hely.id}/list`);
+                const asztalok = await asztalResponse.json();
 
+                // Ha egyáltalán nincsenek asztalok feltöltve, ÁTUGORJUK EZT A HELYSZÍNT!
+                if (!asztalok || asztalok.length === 0) {
+                    continue; 
+                }
+            } catch (e) {
+                console.error("Nem sikerült lekérni az asztalokat a helyhez:", hely.nev);
+                continue; // Ha hiba van a szerverrel, inkább elrejtjük a helyet
+            }
+            // ---------------------------------------
+
+            megjelenitettHelyekSzama++; // Ha eljutott ide, akkor van asztal, számoljuk!
             const kepUrl = `https://nigth-out-reserve.org${hely.keputvonal}`;
+            
             helyszinekDiv.innerHTML += `
                 <div class="card">
                     <div class="card-image" style="background-image: url('${kepUrl}');">
@@ -32,10 +50,16 @@ async function asztalHelyszinekBetoltese() {
                     </div>
                 </div>
             `;
-        });
+        }
+
+        // BÓNUSZ: Ha egyetlen helynek sincs még asztala, kiírunk egy szép üzenetet
+        if (megjelenitettHelyekSzama === 0) {
+            helyszinekDiv.innerHTML = '<p class="text-center text-secondary mt-5 fs-4">There are currently no venues with available tables.</p>';
+        }
+
     } catch (hiba) {
         console.error("Hiba történt a helyszínek betöltésekor:", hiba);
-        helyszinekDiv.innerHTML = '<p>Could not load venues.</p>';
+        helyszinekDiv.innerHTML = '<p class="text-center text-danger mt-5">Could not load venues.</p>';
     }
 }
 
